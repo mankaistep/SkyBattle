@@ -1,0 +1,49 @@
+map: example-map
+time: 1800
+boss: d5_1_easy
+setting:
+  build-allow: true
+  water-dps: 0
+  lava-dps: 0
+chest:
+  CENTER:
+    random: 1-2
+    items:
+      - dch
+      - bm1
+      - bm2
+      - EMERALD 3
+      - DIAMOND 5
+      - STONE 10
+  NEAR_CENTER:
+    random: 1-2
+    items:
+      - dch
+      - bm1
+      - bm2
+      - EMERALD 3
+      - DIAMOND 5
+      - STONE 10
+  EDGE:
+    random: 1-2
+    items:
+      - dch
+      - bm1
+      - bm2
+      - EMERALD 3
+      - DIAMOND 5
+      - STONE 10
+supply-chest:
+  random: 1-2
+  items:
+    - EMERALD
+    - STONE 2
+    - DIAMOND 3
+command:
+  block:
+    ANVIL:
+      - [oppplayer] tiemren
+  lose:
+    - {100} [title] You lost the game;Keep trying
+  win:
+    - {100} [title] You won the game;Congratulations!

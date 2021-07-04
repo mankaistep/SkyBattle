@@ -1,0 +1,21 @@
+world-name: world_battle_1
+boss-location: lboss
+map:
+  center: lcenter
+  radius:
+    CENTER: 10
+    NEAR_CENTER: 50
+    EDGE: 100
+border:
+  b1:
+    center: center1
+    range: 100
+    start-time: 1800
+  b2:
+    center: center2
+    range: 50
+    start-time: 600
+chest-group:
+  gr1:
+    location: [lc1, lc2, lc3, lc4, lc5]
+    random: 2-4

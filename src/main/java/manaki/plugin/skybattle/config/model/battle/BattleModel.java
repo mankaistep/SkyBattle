@@ -1,6 +1,6 @@
 package manaki.plugin.skybattle.config.model.battle;
 
-import manaki.plugin.skybattle.area.Area;
+import manaki.plugin.skybattle.area.AreaType;
 import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Material;
 
@@ -12,23 +12,25 @@ public class BattleModel {
     private final String id;
     private final String mapId;
     private final int time;
+    private final String bossId;
     private final SettingModel setting;
-    private final Map<Area, ChestModel> chest;
-    private final ChestModel supplyChest;
+    private final MobModel mobModel;
+    private final Map<AreaType, ChestModel> chest;
+    private final SupplyModel supplyChest;
     private final Map<Material, List<Command>> blockCommands;
     private final List<Command> winCommands;
-    private final List<Command> loseCommands;
 
-    public BattleModel(String id, String mapId, int time, SettingModel setting, Map<Area, ChestModel> chest, ChestModel supplyChest, Map<Material, List<Command>> blockCommands, List<Command> winCommands, List<Command> loseCommands) {
+    public BattleModel(String id, String mapId, String bossId, int time, SettingModel setting, MobModel mobModel, Map<AreaType, ChestModel> chest, SupplyModel supplyChest, Map<Material, List<Command>> blockCommands, List<Command> winCommands) {
         this.id = id;
         this.mapId = mapId;
+        this.bossId = bossId;
         this.time = time;
         this.setting = setting;
+        this.mobModel = mobModel;
         this.chest = chest;
         this.supplyChest = supplyChest;
         this.blockCommands = blockCommands;
         this.winCommands = winCommands;
-        this.loseCommands = loseCommands;
     }
 
     public String getId() {
@@ -39,6 +41,10 @@ public class BattleModel {
         return mapId;
     }
 
+    public String getBossId() {
+        return bossId;
+    }
+
     public int getTime() {
         return time;
     }
@@ -47,11 +53,15 @@ public class BattleModel {
         return setting;
     }
 
-    public Map<Area, ChestModel> getChests() {
+    public MobModel getMobModel() {
+        return mobModel;
+    }
+
+    public Map<AreaType, ChestModel> getChests() {
         return chest;
     }
 
-    public ChestModel getSupplyChest() {
+    public SupplyModel getSupplyModel() {
         return supplyChest;
     }
 
@@ -63,7 +73,4 @@ public class BattleModel {
         return winCommands;
     }
 
-    public List<Command> getLoseCommands() {
-        return loseCommands;
-    }
 }

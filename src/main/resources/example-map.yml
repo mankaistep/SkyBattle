@@ -1,5 +1,4 @@
 world-name: world_battle_1
-boss-location: lboss
 map:
   center: lcenter
   radius:
@@ -7,15 +6,17 @@ map:
     NEAR_CENTER: 50
     EDGE: 100
 border:
-  b1:
-    center: center1
+  1:
+    center: [center1_1, center1_2, center1_3]
     range: 100
-    start-time: 1800
-  b2:
-    center: center2
+    start-time: 0
+  2:
+    center: [center2_1, center2_2, center2_3]
     range: 50
-    start-time: 600
+    start-time: 200
+supply-locations: [lsc1, lsc2, lsc3]
+spawn-locations: [lt1, lt2, lt3, lt4, lt5]
 chest-group:
-  gr1:
+  1:
     location: [lc1, lc2, lc3, lc4, lc5]
     random: 2-4

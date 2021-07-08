@@ -1,0 +1,7 @@
+name: SkyBattle
+version: 1.0
+main: manaki.plugin.skybattle.SkyBattle
+commands:
+  skybattle:
+    permission: skybattle.admin
+    aliases: [sb]

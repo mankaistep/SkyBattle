@@ -18,6 +18,11 @@
             <id>minevn</id>
             <url>http://pack.minefs.net/repo/</url>
         </repository>
+        <repository>
+            <id>nexus</id>
+            <name>Lumine Releases</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -25,6 +30,18 @@
             <groupId>minevn.depend</groupId>
             <artifactId>Tuinity</artifactId>
             <version>1.16.5-b203</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>minevn.depend</groupId>
+            <artifactId>Shops</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine.xikage</groupId>
+            <artifactId>MythicMobs</artifactId>
+            <version>4.9.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

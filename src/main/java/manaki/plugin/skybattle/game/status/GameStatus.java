@@ -1,4 +1,4 @@
-package manaki.plugin.skybattle.game;
+package manaki.plugin.skybattle.game.status;
 
 public enum GameStatus {
 

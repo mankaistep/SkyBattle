@@ -21,5 +21,10 @@
       <option name="name" value="minevn" />
       <option name="url" value="http://pack.minefs.net/repo/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus" />
+      <option name="name" value="Lumine Releases" />
+      <option name="url" value="https://mvn.lumine.io/repository/maven-public/" />
+    </remote-repository>
   </component>
 </project>

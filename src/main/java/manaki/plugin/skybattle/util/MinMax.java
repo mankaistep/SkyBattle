@@ -24,4 +24,12 @@ public class MinMax {
         return new Random().nextInt(max - min) + min;
     }
 
+    public static MinMax parse(String s) {
+        var a = s.split("-");
+        int min = Integer.parseInt(a[0]);
+        int max = min;
+        if (a.length > 1) max = Integer.parseInt(a[1]);
+        return new MinMax(min, max);
+    }
+
 }

@@ -5,6 +5,14 @@ setting:
   build-allow: true
   water-dps: 0
   lava-dps: 0
+mob:
+  mob-type:
+    EDGE: [m1, m2, m3]
+    NEAR_CENTER: [m4, m5, m6]
+    CENTER: [m7, m8, m9]
+  check:
+    limit-per-player: 5
+    rate: 0.05
 chest:
   CENTER:
     random: 1-2
@@ -12,18 +20,18 @@ chest:
       - dch
       - bm1
       - bm2
-      - EMERALD 3
-      - DIAMOND 5
-      - STONE 10
+      - EMERALD 3-5
+      - DIAMOND 5-10
+      - STONE 10-12
   NEAR_CENTER:
     random: 1-2
     items:
       - dch
       - bm1
       - bm2
-      - EMERALD 3
-      - DIAMOND 5
-      - STONE 10
+      - EMERALD 3-5
+      - DIAMOND 5-8
+      - STONE 10-20
   EDGE:
     random: 1-2
     items:
@@ -34,6 +42,11 @@ chest:
       - DIAMOND 5
       - STONE 10
 supply-chest:
+  appear-time:
+    - 1200
+    - 600
+    - 400
+    - 200
   random: 1-2
   items:
     - EMERALD
@@ -42,8 +55,6 @@ supply-chest:
 command:
   block:
     ANVIL:
-      - [oppplayer] tiemren
-  lose:
-    - {100} [title] You lost the game;Keep trying
+      - '[opplayercmd] tiemren'
   win:
-    - {100} [title] You won the game;Congratulations!
+    - '{100} [title] You won the game;Congratulations!'

@@ -1,5 +1,6 @@
-package manaki.plugin.skybattle.config.model;
+package manaki.plugin.skybattle.config.model.map;
 
+import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -34,7 +35,11 @@ public class LocationModel {
     }
 
     public Location toLocation(World w) {
-        return new Location(w, x, y, z);
+        if (r == 0) return new Location(w, x, y, z);
+        var cl = new Location(w, x, y, z).clone();
+        cl.setX(cl.getX() + Utils.random(-1 * r, r));
+        cl.setZ(cl.getZ() + Utils.random(-1 * r, r));
+        return cl;
     }
 
 }

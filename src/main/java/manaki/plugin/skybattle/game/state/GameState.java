@@ -13,6 +13,7 @@ import manaki.plugin.skybattle.team.Team;
 import manaki.plugin.skybattle.world.WorldState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -34,6 +35,7 @@ public class GameState {
     private final List<Team> currentTeams;
 
     // Data
+    private List<BossBar> bossbars;
     private LivingEntity boss;
 
     // Other state
@@ -50,6 +52,7 @@ public class GameState {
         this.currentTeams = List.copyOf(teams);
         this.worldState = ws;
         this.supplyStates = Lists.newArrayList();
+        this.bossbars = Lists.newArrayList();
 
         // Players
         playerStates = Maps.newConcurrentMap();
@@ -186,6 +189,18 @@ public class GameState {
             if (Games.isTeamAlive(this, team)) return team;
         }
         return null;
+    }
+
+    public List<BossBar> getBossbars() {
+        return bossbars;
+    }
+
+    public void addBossbar(BossBar bb) {
+        this.bossbars.add(bb);
+    }
+
+    public void removeBossbar(BossBar bb) {
+        this.bossbars.remove(bb);
     }
 
 }

@@ -1,0 +1,8 @@
+world:
+  world_battle_1:
+    # NORMAL/NETHER/THE_END
+    environment: NORMAL
+    # Can add if u need those behind
+    #type: NORMAL
+    #seed: 0
+    #generator: something

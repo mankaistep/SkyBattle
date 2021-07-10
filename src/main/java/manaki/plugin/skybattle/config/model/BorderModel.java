@@ -4,19 +4,19 @@ import java.util.List;
 
 public class BorderModel {
 
-    private final String id;
+    private final int id;
     private final List<String> centers;
     private final int radius;
     private final int time;
 
-    public BorderModel(String id, List<String> center, int radius, int time) {
+    public BorderModel(int id, List<String> center, int radius, int time) {
         this.id = id;
         this.centers = center;
         this.radius = radius;
         this.time = time;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -61,25 +61,27 @@ public abstract class APendingTask extends ATask {
                 this.checkedSeconds = Sets.newHashSet();
                 this.bossbar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SOLID);
                 for (Player p : this.getState().getPlayers()) this.bossbar.addPlayer(p);
+                this.getState().addBossbar(bossbar);
             }
 
             // Set bossbar
             long remain = period - (System.currentTimeMillis() - start);
             long secondRemain = remain / 1000;
             bossbar.setTitle(this.message + ": §e§l" + secondRemain + "s");
-            bossbar.setProgress(Math.max(0, Math.min(1, (System.currentTimeMillis() - start) / period)));
+            bossbar.setProgress(Math.max(0, Math.min(1, (double) remain / period)));
 
             // Sound
             if (!checkedSeconds.contains(secondRemain)) {
                 checkedSeconds.add(secondRemain);
                 if (secondRemain <= 3) {
-                    for (Player p : this.getState().getPlayers()) p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+                    for (Player p : this.getState().getPlayers()) p.playSound(p.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
                 }
             }
 
             // Check time
             if (remain <= 0) {
                 bossbar.removeAll();
+                this.getState().removeBossbar(bossbar);
                 this.getStarter().run();
                 this.selfDestroy();
             }

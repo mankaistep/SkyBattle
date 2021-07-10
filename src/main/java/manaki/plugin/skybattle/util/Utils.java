@@ -1,22 +1,37 @@
 package manaki.plugin.skybattle.util;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.PacketPlayOutWorldBorder;
-import net.minecraft.server.v1_16_R3.WorldBorder;
-import net.minecraft.server.v1_16_R3.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
 
 public class Utils {
+
+    public static boolean isSameBlock(Location l1, Location l2) {
+        if (l1.getWorld() != l2.getWorld()) return false;
+        if (Math.abs(l1.getBlockX() - l2.getBlockX()) > 0.5) return false;
+        if (Math.abs(l1.getBlockY() - l2.getBlockY()) > 0.5) return false;
+        if (Math.abs(l1.getBlockZ() - l2.getBlockZ()) > 0.5) return false;
+        return true;
+
+    }
+
+    public static int calR(int vstart, int vend, long start, long end) {
+        int vd = vstart - vend;
+        long period = end - start;
+        long passed = System.currentTimeMillis() - start;
+
+        int vreduced = Double.valueOf((double) vd * passed / period).intValue();
+
+        return vstart - vreduced;
+    }
 
     public static void random(List list, int amount) {
         int toRemove = list.size() - amount;
@@ -86,17 +101,10 @@ public class Utils {
     }
 
     public static void sendBorder(Player p, int centerX, int centerZ, int radius) {
-        WorldBorder wb = new WorldBorder();
-        wb.world = ((CraftWorld) p.getWorld()).getHandle();
+        @NotNull WorldBorder wb = p.getWorld().getWorldBorder();
         wb.setCenter(centerX, centerZ);
-        wb.setSize(radius);
+        wb.setSize(radius * 2);
         wb.setWarningDistance(0);
-        EntityPlayer player = ((CraftPlayer) p).getHandle();
-        wb.world = (WorldServer) player.world;
-        player.playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.SET_SIZE));
-        player.playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.SET_CENTER));
-        player.playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.SET_WARNING_BLOCKS));
-        player.playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.LERP_SIZE));
     }
 
 }

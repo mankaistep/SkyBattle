@@ -31,7 +31,13 @@ public class Readers {
             var x = Double.parseDouble(a[1]);
             var y = Double.parseDouble(a[2]);
             var z = Double.parseDouble(a[3]);
-            var lmodel = new LocationModel(r, x, y, z);
+            double pitch = 0;
+            double yaw = 0;
+            if (a.length > 4) {
+                pitch = Double.parseDouble(a[4]);
+                yaw = Double.parseDouble(a[5]);
+            }
+            var lmodel = new LocationModel(r, x, y, z, pitch, yaw);
             m.put(id, lmodel);
         }
         return m;
@@ -49,15 +55,14 @@ public class Readers {
             ar.put(at, r);
         }
 
-        LinkedHashMap<String, BorderModel> borders = Maps.newLinkedHashMap();
+        LinkedHashMap<Integer, BorderModel> borders = Maps.newLinkedHashMap();
         int i = 1;
         while (config.contains("border." + i)) {
-            var bid = i + "";
             var centers = config.getStringList("border." + i + ".center");
             var range = config.getInt("border." + i + ".range");
             var start = config.getInt("border." + i + ".start-time");
-            var bm = new BorderModel(bid, centers, range, start);
-            borders.put(bid, bm);
+            var bm = new BorderModel(i, centers, range, start);
+            borders.put(i, bm);
 
             i++;
         }
@@ -66,15 +71,11 @@ public class Readers {
         var spawns = config.getStringList("spawn-locations");
 
         Map<String, ChestGroupModel> chestGroups = Maps.newHashMap();
-        i = 1;
-        while (config.contains("chest-group." + i)) {
-            var cid = i + "";
-            var l = config.getStringList("chest-group." + i + ".location");
-            var random = MinMax.parse(config.getString("chest-group." + i + ".random"));
+        for (String cid : config.getConfigurationSection("chest-group").getKeys(false)) {
+            var l = config.getStringList("chest-group." + cid + ".location");
+            var random = MinMax.parse(config.getString("chest-group." + cid + ".random"));
             var cgm = new ChestGroupModel(cid, l, random);
             chestGroups.put(cid, cgm);
-
-            i++;
         }
 
         return new MapModel(id, w, center, ar, borders, supplys, spawns, chestGroups, locations);

@@ -25,25 +25,28 @@ public class BorderManagerTask extends ATask {
         this.getState().setBorderState(bs);
 
         // Check radius timing
-        int oldR = bs.getCurrentRadius();
-        var nextbdm = Games.getNextBorder(state);
-        if (nextbdm != null) {
-            var cbdm = Games.mapFromState(state).getBorders().get(bs.getBorderId());
-            int dR = cbdm.getRadius() - nextbdm.getRadius();
+        var mm = Games.mapFromState(state);
+        var currentBM = mm.getBorder(bs.getBorderId());
+        var nextBorder = Games.getNextBorder(state);
+        if (nextBorder == null) {
+            this.selfDestroy();
+            return;
+        }
+        var startR = currentBM.getRadius();
+        var currentR = bs.getCurrentRadius();
+        var targetR = nextBorder.getRadius();
 
-            long timePassed = System.currentTimeMillis() - state.getStartTime();
-            long period = (cbdm.getTime() - nextbdm.getTime()) * 1000L;
+        var bStartTime = state.getStartTime() + currentBM.getTime() * 1000L;
+        var bEndTime = state.getStartTime() + nextBorder.getTime() * 1000L;
 
-            int newR = Long.valueOf(cbdm.getRadius() - dR * timePassed / period).intValue();
-            if (newR != oldR) {
-                int sub = newR - oldR;
-                Games.broadcast(state, "§6§l>> Bo đã được thu lại thêm " + sub + " đơn vị (" + newR + ")");
-                bs.setCurrentRadius(newR);
-            }
+        var r = Utils.calR(startR, targetR, bStartTime, bEndTime);
+        if (r != currentR) {
+            bs.setCurrentRadius(r);
         }
 
         // Packet
         for (Player p : this.getState().getPlayers()) {
+            if (r != currentR) p.sendMessage("§6Vòng bo đã thu hẹp lại " + (currentR - r) + " đơn vị (Hiện tại: " + r + ")");
             Utils.sendBorder(p, bs.getCenter().getBlockX(), bs.getCenter().getBlockZ(), bs.getCurrentRadius());
         }
     }

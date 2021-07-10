@@ -20,9 +20,10 @@ public abstract class AConfig {
         this.path = path.replace(".yml", "");
 
         // Load
-        var file = new File(path + ".yml");
+        var file = new File(this.path + ".yml");
         if (!file.exists()) {
             try {
+                file.createNewFile();
                 var is = this.getPlugin().getResource(file.getName());
                 if (is != null) {
                     try {

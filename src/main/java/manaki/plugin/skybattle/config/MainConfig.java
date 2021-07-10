@@ -5,9 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import manaki.plugin.skybattle.config.a.AConfig;
 import manaki.plugin.skybattle.config.model.battle.BattleModel;
+import manaki.plugin.skybattle.config.model.map.LocationModel;
 import manaki.plugin.skybattle.config.model.map.MapModel;
 import manaki.plugin.skybattle.config.model.reader.Readers;
 import manaki.plugin.skybattle.world.WorldTemplate;
+import org.bukkit.World;
+import org.bukkit.WorldType;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.plugin.Plugin;
 
@@ -20,17 +24,36 @@ public class MainConfig extends AConfig {
     private Map<String, BattleModel> battleModels;
     private Map<String, MapModel> mapModels;
 
+    private Map<String, WorldTemplate> worldTemplates;
+
     public MainConfig(Plugin plugin, String path) {
         super(plugin, path);
     }
 
     @Override
     public void reload() {
+        // World templates
+        this.reloadWorldTemplates();
+
         // Map
         this.reloadMaps();
 
         // Battle
         this.reloadBattles();
+    }
+
+    private void reloadWorldTemplates() {
+        var config = this.get();
+        worldTemplates = Maps.newHashMap();
+        for (String world : config.getConfigurationSection("world").getKeys(false)) {
+            var path = "world." + world;
+            var seed = config.getInt(path + ".seed", 0);
+            var environment = World.Environment.valueOf(config.getString(path + ".environment", "NORMAL"));
+            var type = config.contains(path + ".type") ? WorldType.valueOf(config.getString(path + ".type")) : null;
+            var generator = config.getString(".generator");
+            worldTemplates.put(world, new WorldTemplate(world, seed, environment, type, generator));
+        }
+
     }
 
     private void reloadMaps() {
@@ -71,6 +94,29 @@ public class MainConfig extends AConfig {
         }
     }
 
+    public void saveMapData(String mapId) {
+        var mm = getMapModel(mapId);
+        var l = mm.getLocations();
+
+        var datafile = new File(this.getPlugin().getDataFolder() + "//models//maps//" + mapId + "-data.yml");
+        var config = YamlConfiguration.loadConfiguration(datafile);
+        config.set("location", null);
+
+        for (Map.Entry<String, LocationModel> e : l.entrySet()) {
+            var lid = e.getKey();
+            var lm = e.getValue();
+            var s = lm.getRadius() + ";" + lm.getX() + ";" + lm.getY() + ";" + lm.getZ() + ";" + lm.getPitch() + ";" + lm.getYaw();
+            config.set("location." + lid, s);
+        }
+
+        try {
+            config.save(datafile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void reloadBattles() {
         var folder = new File(this.getPlugin().getDataFolder() + "//models//battles");
         if (!folder.exists()) {
@@ -109,7 +155,7 @@ public class MainConfig extends AConfig {
     }
 
     public WorldTemplate getWorldTemplate(String name) {
-        return null;
+        return worldTemplates.getOrDefault(name, null);
     }
 
 }

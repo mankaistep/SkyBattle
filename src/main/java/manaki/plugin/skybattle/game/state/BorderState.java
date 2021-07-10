@@ -4,19 +4,19 @@ import org.bukkit.Location;
 
 public class BorderState {
 
-    private String borderId;
+    private int borderId;
     private Location center;
     private int radius;
     private int currentRadius;
 
-    public BorderState(String borderId, Location center, int radius, int currentRadius) {
+    public BorderState(int borderId, Location center, int radius, int currentRadius) {
         this.borderId = borderId;
         this.center = center;
         this.radius = radius;
         this.currentRadius = currentRadius;
     }
 
-    public String getBorderId() {
+    public int getBorderId() {
         return borderId;
     }
 
@@ -36,7 +36,7 @@ public class BorderState {
         this.currentRadius = currentRadius;
     }
 
-    public void setBorderId(String borderId) {
+    public void setBorderId(int borderId) {
         this.borderId = borderId;
     }
 

@@ -11,7 +11,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameManager {
 
@@ -77,7 +79,7 @@ public class GameManager {
             if (!teamAlive) {
                 for (String pn : team.getPlayers()) {
                     var p = Bukkit.getPlayer(pn);
-                    p.sendTitle("§c§lTOP #" + state.getTeamAlive(), "§fKết thúc", 10, 60, 10);
+                    p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10);
 
                     // Kick
                     Tasks.sync(() -> {
@@ -89,7 +91,12 @@ public class GameManager {
         }
     }
 
-    public void finish() {
+    public void finish(boolean instantly) {
+        if (instantly) {
+            this.clean();
+            return;
+        }
+
         // Winner
         Team team = state.getWinTeam();
 
@@ -101,30 +108,37 @@ public class GameManager {
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
             }
             var start = System.currentTimeMillis();
-            Tasks.async(() -> {
-                // Notification
-                var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
-                var seconds = remain / 1000;
-                for (String pn : team.getPlayers()) {
-                    var p = Bukkit.getPlayer(pn);
-                    p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    // Notification
+                    var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
+                    var seconds = remain / 1000;
+                    for (String pn : team.getPlayers()) {
+                        var p = Bukkit.getPlayer(pn);
+                        p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
+                    }
+
+                    // Check
+                    if (remain <= 0) {
+                        this.cancel();
+
+                        // Back to main server
+                        Tasks.sync(() -> {
+                            for (String pn : team.getPlayers()) {
+                                var p = Bukkit.getPlayer(pn);
+                                Utils.toSpawn(p);
+                            }
+
+                        });
+
+                        // Do the finish
+                        Tasks.sync(() -> {
+                            clean();
+                        }, 200);
+                    }
                 }
-
-                // Check
-                if (remain <= 0) {
-                    // Back to main server
-                    Tasks.sync(() -> {
-                        for (String pn : team.getPlayers()) {
-                            var p = Bukkit.getPlayer(pn);
-                            Utils.toSpawn(p);
-                        }
-
-                    });
-
-                    // Do the finish
-                    Tasks.sync(this::clean, 200);
-                }
-            }, 0, 5);
+            }.runTaskTimerAsynchronously(SkyBattle.get(), 0, 5);
         }
         else {
             // Do the finish
@@ -137,6 +151,11 @@ public class GameManager {
         // Cancel tasks
         for (ATask task : state.getTasks()) {
             if (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId())) task.cancel();
+        }
+
+        // Cancel bossbars
+        for (BossBar bb : state.getBossbars()) {
+            bb.removeAll();
         }
 
         // Unload world

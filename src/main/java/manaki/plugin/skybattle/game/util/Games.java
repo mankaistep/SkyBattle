@@ -2,6 +2,7 @@ package manaki.plugin.skybattle.game.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.area.Areas;
 import manaki.plugin.skybattle.config.model.BorderModel;
@@ -66,6 +67,9 @@ public class Games {
                 // Cancel task
                 this.cancel();
 
+                // Clear entities
+                clearEntities(finalWorldState.toWorld());
+
                 // Create state object
                 maxId++;
                 var state = new GameState(maxId, battleId, teams, finalWorldState);
@@ -100,6 +104,10 @@ public class Games {
         return null;
     }
 
+    public static List<GameManager> getManagers() {
+        return managers;
+    }
+
     public static void removeManager(GameManager manager) {
         managers.remove(manager);
     }
@@ -131,7 +139,7 @@ public class Games {
             var group = e.getValue();
 
             // Get location models
-            List<String> locations = List.copyOf(group.getLocations());
+            List<String> locations = Lists.newArrayList(group.getLocations());
             Utils.random(group.getLocations(), group.getRandom().random());
 
             // Spawn
@@ -147,7 +155,7 @@ public class Games {
                 // Random items
                 var at = Areas.check(l);
                 var cm = bm.getChests().get(at);
-                var items = List.copyOf(cm.getItems());
+                var items = Lists.newArrayList(cm.getItems());
                 Utils.random(items, cm.getRandom().random());
 
                 // Put into chest
@@ -197,7 +205,7 @@ public class Games {
         // Randomize items
         var sm = bm.getSupplyModel();
         int amount = sm.getRandom().random();
-        var list = List.copyOf(sm.getItems());
+        var list = Lists.newArrayList(sm.getItems());
         List<ItemStack> lr = Lists.newArrayList();
         for (int i = 0 ; i < amount ; i++ ){
             var ri = new Random().nextInt(list.size());
@@ -216,9 +224,9 @@ public class Games {
 
     public static BorderState randomizeBorder(GameState state) {
         // Get next border
-        var nextBorder = "1";
+        var nextBorder = 1;
         var bs = state.getBorderState();
-        if (bs != null) nextBorder = (Integer.parseInt(bs.getBorderId()) + 1) + "";
+        if (bs != null) nextBorder = bs.getBorderId() + 1;
 
         // Check available
         var mm = mapFromState(state);
@@ -226,7 +234,7 @@ public class Games {
 
         // Check time
         var bdm = mm.getBorders().get(nextBorder);
-        if (bdm.getTime() >= state.getTime()) return bs;
+        if (bdm.getTime() > state.getTime()) return bs;
 
         // Generate state
         var center = mm.getLocation(bdm.getCenters().get(new Random().nextInt(bdm.getCenters().size())));
@@ -235,14 +243,15 @@ public class Games {
             bs.setBorderId(bdm.getId());
             bs.setCenter(center.toLocation(state.getWorldState().toWorld()));
             bs.setRadius(bdm.getRadius());
+            bs.setCurrentRadius(bdm.getRadius());
         }
         return bs;
     }
 
     public static BorderModel getNextBorder(GameState state) {
-        var nextBorder = "1";
+        var nextBorder = 1;
         var bs = state.getBorderState();
-        if (bs != null) nextBorder = (Integer.parseInt(bs.getBorderId()) + 1) + "";
+        if (bs != null) nextBorder = bs.getBorderId() + 1;
 
         // Check available
         var mm = mapFromState(state);
@@ -250,9 +259,22 @@ public class Games {
         return mm.getBorders().get(nextBorder);
     }
 
+    public static long getPreBorderTime(GameState state) {
+        var bs = state.getBorderState();
+        if (bs == null) return 0;
+        if (bs.getBorderId() == 1) return 0;
+
+        var mm = mapFromState(state);
+        var preBId = bs.getBorderId() - 1;
+
+        return state.getStartTime() + mm.getBorders().get(preBId).getTime() * 1000L;
+    }
+
     public static boolean isTeamAlive(GameState state, Team team) {
         for (String pn : team.getPlayers()) {
-            if (!state.getPlayerState(pn).isDead()) return true;
+            var ps = state.getPlayerState(pn);
+            if (ps == null) return true;
+            if (!ps.isDead()) return true;
         }
         return false;
     }
@@ -280,6 +302,13 @@ public class Games {
         }
 
         return m;
+    }
+    
+    public static void clearEntities(World world) {
+        var list = world.getLivingEntities();
+        for (org.bukkit.entity.LivingEntity e : list) {
+            if (!MythicMobs.inst().getMobManager().isActiveMob(e.getUniqueId())) e.remove();
+        }
     }
 
 }

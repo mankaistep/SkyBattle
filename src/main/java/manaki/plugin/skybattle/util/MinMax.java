@@ -21,6 +21,7 @@ public class MinMax {
     }
 
     public int random() {
+        if (min == max) return min;
         return new Random().nextInt(max - min) + min;
     }
 

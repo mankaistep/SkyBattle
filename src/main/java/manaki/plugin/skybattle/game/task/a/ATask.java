@@ -23,7 +23,7 @@ public abstract class ATask extends BukkitRunnable {
 
     public ATask start() {
         state.addTask(this);
-        this.runTaskTimerAsynchronously(SkyBattle.get(), 0, 10);
+        this.runTaskTimer(SkyBattle.get(), 0, 20);
         return this;
     }
 

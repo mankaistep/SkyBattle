@@ -19,7 +19,7 @@ public class GameManagerTask extends ATask {
         var state = this.getState();
         if (state.canFinish()) {
             this.selfDestroy();
-            Games.managerFromState(state).finish();
+            Games.managerFromState(state).finish(false);
         }
     }
 

@@ -6,13 +6,11 @@ public class BorderState {
 
     private int borderId;
     private Location center;
-    private int radius;
     private int currentRadius;
 
-    public BorderState(int borderId, Location center, int radius, int currentRadius) {
+    public BorderState(int borderId, Location center, int currentRadius) {
         this.borderId = borderId;
         this.center = center;
-        this.radius = radius;
         this.currentRadius = currentRadius;
     }
 
@@ -22,10 +20,6 @@ public class BorderState {
 
     public Location getCenter() {
         return center;
-    }
-
-    public int getRadius() {
-        return radius;
     }
 
     public int getCurrentRadius() {
@@ -42,9 +36,5 @@ public class BorderState {
 
     public void setCenter(Location center) {
         this.center = center;
-    }
-
-    public void setRadius(int radius) {
-        this.radius = radius;
     }
 }

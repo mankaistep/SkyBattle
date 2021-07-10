@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.config.model.reader;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import manaki.plugin.skybattle.area.AreaType;
 import manaki.plugin.skybattle.config.model.BorderModel;
@@ -90,6 +91,7 @@ public class Readers {
         var boss = config.getString("boss");
         var sm = new SettingModel(config.getConfigurationSection("setting").getValues(false));
 
+        // Mob
         Map<AreaType, List<String>> mobTypes = Maps.newHashMap();
         for (String tn : config.getConfigurationSection("mob.mob-type").getKeys(false)) {
             var type = AreaType.valueOf(tn.toUpperCase());
@@ -98,8 +100,25 @@ public class Readers {
         }
         int limitPerPlayer = config.getInt("mob.check.limit-per-player");
         double rate = config.getDouble("mob.check.rate");
-        var mm = new MobModel(mobTypes, limitPerPlayer, Double.valueOf(rate).floatValue());
 
+        // Mob drop
+        Map<String, List<MobDropModel>>drops = Maps.newHashMap();
+        for (String mid : config.getConfigurationSection("mob.drop").getKeys(false)) {
+            List<MobDropModel> list = Lists.newArrayList();
+            for (String s : config.getStringList("mob.drop." + mid)) {
+                var itemId = s.split(" ")[0];
+                var amount = MinMax.parse(s.split(" ")[1]);
+                double dropRate = Double.parseDouble(s.split(" ")[2]);
+                var dm = new MobDropModel(itemId, amount, dropRate);
+                list.add(dm);
+            }
+            drops.put(mid, list);
+        }
+
+        var mm = new MobModel(mobTypes, limitPerPlayer, Double.valueOf(rate).floatValue(), drops);
+
+
+        // Chest
         Map<AreaType, ChestModel> chest = Maps.newHashMap();
         for (String tn : config.getConfigurationSection("chest").getKeys(false)) {
             var type = AreaType.valueOf(tn.toUpperCase());

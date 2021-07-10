@@ -64,12 +64,13 @@ public class GameManager {
             boolean teamAlive = false;
             for (String pn : team.getPlayers()) {
                 if (!state.getPlayerState(pn).isDead()) {
-                    player.setSpectatorTarget(Bukkit.getPlayer(pn));
-                    player.setGameMode(GameMode.SPECTATOR);
-                    player.sendTitle("§c§lBẠN ĐÃ CHẾT", "§fChỉ có thể theo dõi đồng đội", 10, 40, 10);
-                    Tasks.async(() -> {
-                        player.sendTitle("", "§cGhi &f/thoat &cđể thoát trận", 10, 40, 10);
-                    }, 60);
+                    Tasks.sync(() -> {
+                        player.spigot().respawn();
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.setSpectatorTarget(Bukkit.getPlayer(pn));
+                        player.sendTitle("§c§lBẠN ĐÃ CHẾT", "§fChỉ có thể theo dõi đồng đội", 10, 100, 10);
+                        player.sendMessage("§cGhi §f/thoat &cđể thoát trận");
+                    }, 5);
                     teamAlive = true;
                     break;
                 }

@@ -41,6 +41,19 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 Games.start(bid, teams);
             }
 
+            else if (args[0].equalsIgnoreCase("start2")) {
+                var bid = args[1];
+
+                List<Team> teams = Lists.newArrayList();
+                var a = args[2].split(";");
+                for (int i = 0 ; i < a.length ; i+=2) {
+                    var team = new Team(Color.RED, List.of(a[i], a[i + 1]));
+                    teams.add(team);
+                }
+
+                Games.start(bid, teams);
+            }
+
             else if (args[0].equalsIgnoreCase("setlocation")) {
                 var p = (Player) sender;
                 var mid = args[1];
@@ -79,7 +92,8 @@ public class AdminCommand implements @Nullable CommandExecutor {
 
     public void sendHelp(CommandSender sender) {
         sender.sendMessage("/skybattle reload");
-        sender.sendMessage("/skybattle start <id> <player1>;<player2>");
+        sender.sendMessage("/skybattle start <id> <player1>;<player2>;...");
+        sender.sendMessage("/skybattle start2 <id> <player1>;<player2>;...");
         sender.sendMessage("");
         sender.sendMessage("/skybattle setlocation <mapId> <radius> <id>");
         sender.sendMessage("/skybattle removelocation <mapId> <id>");

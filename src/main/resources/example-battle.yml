@@ -13,6 +13,10 @@ mob:
   check:
     limit-per-player: 5
     rate: 0.05
+  drop:
+    m1:
+      - stone 3 50 # Drop x3 stone with 50% rate
+      - dch 1 10 # Drop x1 dch with 10% rate
 chest:
   CENTER:
     random: 1-2

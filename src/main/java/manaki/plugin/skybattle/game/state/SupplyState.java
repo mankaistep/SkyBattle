@@ -1,12 +1,14 @@
 package manaki.plugin.skybattle.game.state;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Shulker;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class SupplyState {
 
+    private Shulker shulker = null;
     private final Location location;
     private final List<ItemStack> items;
     private boolean isOpened;
@@ -15,6 +17,14 @@ public class SupplyState {
         this.location = location;
         this.items = items;
         this.isOpened = false;
+    }
+
+    public Shulker getShulker() {
+        return shulker;
+    }
+
+    public void setShulker(Shulker shulker) {
+        this.shulker = shulker;
     }
 
     public Location getLocation() {

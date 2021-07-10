@@ -46,6 +46,10 @@ public class LocationModel {
         return yaw;
     }
 
+    public Location toCenterLocation(World w) {
+        return toBlockCenter(new Location(w, x, y, z).clone());
+    }
+
     public Location toLocation(World w) {
         if (r == 0) return new Location(w, x, y, z);
         var cl = toBlockCenter(new Location(w, x, y, z).clone());

@@ -18,7 +18,7 @@ public abstract class APendingTask extends ATask {
     private final String name;
     private final long start;
     private final long period;
-    private final String message;
+    private String message;
 
     public APendingTask(GameState state, String name, long period, String message) {
         super(state);
@@ -44,7 +44,13 @@ public abstract class APendingTask extends ATask {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public abstract Runnable getStarter();
+
+
 
 
     /*
@@ -59,7 +65,7 @@ public abstract class APendingTask extends ATask {
             // Create boss bar
             if (this.bossbar == null) {
                 this.checkedSeconds = Sets.newHashSet();
-                this.bossbar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SOLID);
+                this.bossbar = Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID);
                 for (Player p : this.getState().getPlayers()) this.bossbar.addPlayer(p);
                 this.getState().addBossbar(bossbar);
             }
@@ -82,12 +88,12 @@ public abstract class APendingTask extends ATask {
             if (remain <= 0) {
                 bossbar.removeAll();
                 this.getState().removeBossbar(bossbar);
-                this.getStarter().run();
+                if (this.getStarter() != null) this.getStarter().run();
                 this.selfDestroy();
             }
         }
         catch (Exception e) {
-            for (Player p : this.getState().getPlayers()) p.sendMessage("§c Có lỗi, vui lòng báo lại với admin (cụ thể thời điểm)");
+            for (Player p : this.getState().getPlayers()) p.sendMessage("§cCó lỗi, vui lòng báo lại với admin (cụ thể thời điểm)");
             SkyBattle.get().getLogger().severe("Catch an exception in a pending task: " + this.getName());
             this.selfDestroy();
             e.printStackTrace();

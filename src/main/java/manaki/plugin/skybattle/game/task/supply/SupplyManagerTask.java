@@ -22,34 +22,8 @@ public class SupplyManagerTask extends ATask {
 
     @Override
     public void run() {
-        this.checkValidSupply();
         this.spawnSupplyEffect();
         this.spawnPendingSupply();
-    }
-
-    public void checkValidSupply() {
-        var state = this.getState();
-        var iss = state.getSupplyStates().iterator();
-        while (iss.hasNext()) {
-            var ss = iss.next();
-            var l = ss.getLocation();
-            var b = l.getBlock();
-
-            // Check block
-            if (b.getType() != Material.CHEST) {
-                iss.remove();
-                continue;
-            }
-
-            // Check content
-            Chest chest = (Chest) b.getState();
-            var inv = chest.getInventory();
-            if (inv.isEmpty()) {
-                iss.remove();
-                continue;
-            }
-
-        }
     }
 
     public void spawnSupplyEffect() {
@@ -72,7 +46,11 @@ public class SupplyManagerTask extends ATask {
             int remain = time - currentTime;
             if (remain <= 10 && !supplySpawned.contains(time)) {
                 supplySpawned.add(time);
-                var spt = new SupplyPendingTask(state, remain * 1000L, "§6§lXuất hiện Hòm tiếp tế");
+                var ss = Games.randomizeSupply(this.getState());
+                var spt = new SupplyPendingTask(state,
+                        remain * 1000L,
+                        "§6§lXuất hiện Hòm tiếp tế (x: " + ss.getLocation().getBlockX() + ", z: " +ss.getLocation().getBlockZ() + ")",
+                        ss);
                 spt.start();
             }
         }

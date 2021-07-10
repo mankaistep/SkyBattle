@@ -17,17 +17,22 @@ import manaki.plugin.skybattle.team.Team;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
 import me.manaki.plugin.shops.storage.ItemStorage;
-import net.minecraft.server.v1_16_R3.is;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Games {
@@ -97,6 +102,13 @@ public class Games {
 
     }
 
+    public static GameManager managerFromWorld(World world) {
+        for (GameManager manager : managers) {
+            if (manager.getState().getWorldState().toWorld() == world) return manager;
+        }
+        return null;
+    }
+
     public static GameManager managerFromState(GameState state) {
         for (GameManager manager : managers) {
             if (manager.getState() == state) return manager;
@@ -134,6 +146,15 @@ public class Games {
         var mm = mapFromState(state);
         var bm = battleFromState(state);
 
+        // Set all to air
+        for (ChestGroupModel cgm : mm.getChestGroups().values()) {
+            for (String lid : cgm.getLocations()) {
+                var l = mm.getLocation(lid).toCenterLocation(state.getWorldState().toWorld());
+                l.getBlock().setType(Material.AIR);
+            }
+        }
+
+        // Random
         for (Map.Entry<String, ChestGroupModel> e : mm.getChestGroups().entrySet()) {
             var id = e.getKey();
             var group = e.getValue();
@@ -189,7 +210,7 @@ public class Games {
         var bs = state.getBorderState();
         for (Location l : list) {
             var r = l.distance(bs.getCenter());
-            if (r <= bs.getRadius()) lr.add(l);
+            if (r <= bs.getCurrentRadius()) lr.add(l);
         }
         return lr;
     }
@@ -238,11 +259,10 @@ public class Games {
 
         // Generate state
         var center = mm.getLocation(bdm.getCenters().get(new Random().nextInt(bdm.getCenters().size())));
-        if (bs == null) bs = new BorderState(bdm.getId(), center.toLocation(state.getWorldState().toWorld()), bdm.getRadius(), bdm.getRadius());
+        if (bs == null) bs = new BorderState(bdm.getId(), center.toLocation(state.getWorldState().toWorld()), bdm.getRadius());
         else {
             bs.setBorderId(bdm.getId());
             bs.setCenter(center.toLocation(state.getWorldState().toWorld()));
-            bs.setRadius(bdm.getRadius());
             bs.setCurrentRadius(bdm.getRadius());
         }
         return bs;
@@ -257,17 +277,6 @@ public class Games {
         var mm = mapFromState(state);
         if (!mm.getBorders().containsKey(nextBorder)) return null;
         return mm.getBorders().get(nextBorder);
-    }
-
-    public static long getPreBorderTime(GameState state) {
-        var bs = state.getBorderState();
-        if (bs == null) return 0;
-        if (bs.getBorderId() == 1) return 0;
-
-        var mm = mapFromState(state);
-        var preBId = bs.getBorderId() - 1;
-
-        return state.getStartTime() + mm.getBorders().get(preBId).getTime() * 1000L;
     }
 
     public static boolean isTeamAlive(GameState state, Team team) {
@@ -309,6 +318,20 @@ public class Games {
         for (org.bukkit.entity.LivingEntity e : list) {
             if (!MythicMobs.inst().getMobManager().isActiveMob(e.getUniqueId())) e.remove();
         }
+    }
+
+    public static BorderModel getLastBorder(GameState state) {
+        var mm = mapFromState(state);
+        return mm.getBorder(mm.getBorders().size());
+    }
+
+    public static boolean isSpeacialEntity(Entity e) {
+        return MythicMobs.inst().getMobManager().isActiveMob(e.getUniqueId())
+                || e.hasMetadata("skybattle.entity");
+    }
+
+    public static void setSpecialEntity(Entity e) {
+        e.setMetadata("skybattle.entity", new FixedMetadataValue(SkyBattle.get(), ""));
     }
 
 }

@@ -1,10 +1,7 @@
 package manaki.plugin.skybattle.util;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.WorldBorder;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -100,8 +97,8 @@ public class Utils {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
     }
 
-    public static void sendBorder(Player p, int centerX, int centerZ, int radius) {
-        @NotNull WorldBorder wb = p.getWorld().getWorldBorder();
+    public static void setBorder(World world, int centerX, int centerZ, int radius) {
+        @NotNull WorldBorder wb = world.getWorldBorder();
         wb.setCenter(centerX, centerZ);
         wb.setSize(radius * 2);
         wb.setWarningDistance(0);

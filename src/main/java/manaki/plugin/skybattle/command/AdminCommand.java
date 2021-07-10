@@ -35,7 +35,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
 
                 List<Team> teams = Lists.newArrayList();
                 for (String pn : args[2].split(";")) {
-                    teams.add(new Team(Color.RED, List.of(pn)));
+                    teams.add(new Team(Color.RED, Lists.newArrayList(pn)));
                 }
 
                 Games.start(bid, teams);
@@ -47,7 +47,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 List<Team> teams = Lists.newArrayList();
                 var a = args[2].split(";");
                 for (int i = 0 ; i < a.length ; i+=2) {
-                    var team = new Team(Color.RED, List.of(a[i], a[i + 1]));
+                    var team = new Team(Color.RED, Lists.newArrayList(a[i], a[i + 1]));
                     teams.add(team);
                 }
 

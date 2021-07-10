@@ -2,9 +2,8 @@ map: example-map
 time: 1800
 boss: d5_1_easy
 setting:
-  build-allow: true
-  water-dps: 0
-  lava-dps: 0
+  border-damage: 10
+  lava-damage: 0
 mob:
   mob-type:
     EDGE: [m1, m2, m3]

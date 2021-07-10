@@ -11,6 +11,15 @@ import java.util.Random;
 
 public class Utils {
 
+    public boolean isOutsideBorder(Player p) {
+        Location loc = p.getLocation();
+        WorldBorder border = p.getWorld().getWorldBorder();
+        double size = border.getSize()/2;
+        Location center = border.getCenter();
+        double x = loc.getX() - center.getX(), z = loc.getZ() - center.getZ();
+        return ((x > size || (-x) > size) || (z > size || (-z) > size));
+    }
+
     public static boolean isSameBlock(Location l1, Location l2) {
         if (l1.getWorld() != l2.getWorld()) return false;
         if (Math.abs(l1.getBlockX() - l2.getBlockX()) > 0.5) return false;
@@ -97,11 +106,12 @@ public class Utils {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
     }
 
-    public static void setBorder(World world, int centerX, int centerZ, int radius) {
+    public static void setBorder(World world, int centerX, int centerZ, int radius, double damage) {
         @NotNull WorldBorder wb = world.getWorldBorder();
         wb.setCenter(centerX, centerZ);
         wb.setSize(radius * 2);
         wb.setWarningDistance(0);
+        wb.setDamageAmount(damage);
     }
 
 }

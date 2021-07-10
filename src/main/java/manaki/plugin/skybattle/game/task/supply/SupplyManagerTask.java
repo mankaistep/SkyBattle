@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.game.task.supply;
 
+import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.task.a.ATask;
@@ -47,6 +48,10 @@ public class SupplyManagerTask extends ATask {
             if (remain <= 10 && !supplySpawned.contains(time)) {
                 supplySpawned.add(time);
                 var ss = Games.randomizeSupply(this.getState());
+                if (ss == null) {
+                    SkyBattle.get().getLogger().info("Can't find any appropriate locations for supply time: " + time);
+                    return;
+                }
                 var spt = new SupplyPendingTask(state,
                         remain * 1000L,
                         "§6§lXuất hiện Hòm tiếp tế (x: " + ss.getLocation().getBlockX() + ", z: " +ss.getLocation().getBlockZ() + ")",

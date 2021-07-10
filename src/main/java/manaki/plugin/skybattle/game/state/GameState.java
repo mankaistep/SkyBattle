@@ -10,9 +10,11 @@ import manaki.plugin.skybattle.game.task.mob.MobManagerTask;
 import manaki.plugin.skybattle.game.task.supply.SupplyManagerTask;
 import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -35,14 +37,19 @@ public class GameState {
     private final List<Team> currentTeams;
 
     // Data
-    private List<BossBar> bossbars;
+    private final List<BossBar> bossbars;
     private LivingEntity boss;
+    private final List<Location> blockPlaced;
+    private final List<Location> supplySpawned;
 
     // Other state
     private BorderState borderState;
     private final WorldState worldState;
     private final List<SupplyState> supplyStates;
     private final Map<String, PlayerState> playerStates;
+
+    // End
+    private boolean isEnded;
 
     public GameState(int id, String battleId, List<Team> teams, WorldState ws) {
         this.id = id;
@@ -53,6 +60,9 @@ public class GameState {
         this.worldState = ws;
         this.supplyStates = Lists.newArrayList();
         this.bossbars = Lists.newArrayList();
+        this.blockPlaced = Lists.newArrayList();
+        this.supplySpawned = Lists.newArrayList();
+        this.isEnded = false;
 
         // Players
         playerStates = Maps.newConcurrentMap();
@@ -137,16 +147,43 @@ public class GameState {
         this.tasks.remove(task);
     }
 
+    public List<Location> getBlockPlaced() {
+        return blockPlaced;
+    }
+
+    public void addBlockPlaced(Block b) {
+        this.blockPlaced.add(b.getLocation());
+    }
+
+    public void removeBlockPlaced(Block b) {
+        this.blockPlaced.removeIf(l -> Utils.isSameBlock(l, b.getLocation()));
+    }
+
+    public boolean isBlockPlaced(Block b) {
+        for (Location l : this.blockPlaced) {
+            if (Utils.isSameBlock(l, b.getLocation())) return true;
+        }
+        return false;
+    }
+
     public List<SupplyState> getSupplyStates() {
         return supplyStates;
     }
 
     public void addSupply(SupplyState supplyState) {
         this.supplyStates.add(supplyState);
+        this.supplySpawned.add(supplyState.getLocation());
     }
 
     public void removeSupply(Location l) {
         this.supplyStates.removeIf(ss -> ss.getLocation().distanceSquared(l) < 0.5 * 0.5);
+    }
+
+    public boolean isSupplySpawned(Location l) {
+        for (Location ls : this.supplySpawned) {
+            if (Utils.isSameBlock(ls, l)) return true;
+        }
+        return false;
     }
 
     public int getTime() {
@@ -172,6 +209,13 @@ public class GameState {
         return null;
     }
 
+    public Team getTeam(String player) {
+        for (Team team : this.getCurrentTeams()) {
+            if (team.getPlayers().contains(player)) return team;
+        }
+        return null;
+    }
+
     public int getTeamAlive() {
         int c = 0;
         for (Team team : this.getCurrentTeams()) {
@@ -181,6 +225,7 @@ public class GameState {
     }
 
     public boolean canFinish() {
+        if (getTeamAlive() <= 0) return true;
         return getTeamAlive() == 1 && this.boss != null && this.boss.isDead();
     }
 
@@ -203,4 +248,19 @@ public class GameState {
         this.bossbars.remove(bb);
     }
 
+    public void removeBossbar(String playerName) {
+        var p = Bukkit.getPlayer(playerName);
+        if (p == null) return;
+        for (BossBar bb : this.bossbars) {
+            bb.removePlayer(p);
+        }
+    }
+
+    public boolean isEnded() {
+        return isEnded;
+    }
+
+    public void setEnded(boolean ended) {
+        isEnded = ended;
+    }
 }

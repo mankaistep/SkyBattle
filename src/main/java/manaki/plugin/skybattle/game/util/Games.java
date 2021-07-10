@@ -14,6 +14,7 @@ import manaki.plugin.skybattle.game.state.BorderState;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
 import me.manaki.plugin.shops.storage.ItemStorage;
@@ -23,9 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Shulker;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -161,7 +160,8 @@ public class Games {
 
             // Get location models
             List<String> locations = Lists.newArrayList(group.getLocations());
-            Utils.random(group.getLocations(), group.getRandom().random());
+            int ranAmount = group.getRandom().random();
+            Utils.random(locations, ranAmount);
 
             // Spawn
             for (String lid : locations) {
@@ -221,6 +221,9 @@ public class Games {
 
         // Available supply locations that in border
         var avaiL = Games.filterInBorder(state, mm.getSupplyLocations().stream().map(lm -> mm.getLocation(lm).toLocation(state.getWorldState().toWorld())).collect(Collectors.toList()));
+        avaiL.removeIf(state::isSupplySpawned);
+        if (avaiL.size() <= 0) return null;
+
         var l = avaiL.get(new Random().nextInt(avaiL.size()));
 
         // Randomize items
@@ -325,13 +328,24 @@ public class Games {
         return mm.getBorder(mm.getBorders().size());
     }
 
-    public static boolean isSpeacialEntity(Entity e) {
+    public static boolean isSpecialEntity(Entity e) {
         return MythicMobs.inst().getMobManager().isActiveMob(e.getUniqueId())
                 || e.hasMetadata("skybattle.entity");
     }
 
     public static void setSpecialEntity(Entity e) {
         e.setMetadata("skybattle.entity", new FixedMetadataValue(SkyBattle.get(), ""));
+    }
+
+    public static void bypassInvalidCheck(Player p, long milis) {
+        p.setMetadata("skybattle.invalidbypass", new FixedMetadataValue(SkyBattle.get(), ""));
+        Tasks.sync(() -> {
+            p.removeMetadata("skybattle.invalidbypass", SkyBattle.get());
+        }, Long.valueOf(milis / 50).intValue());
+    }
+
+    public static boolean isByPassedInvalid(Player p) {
+        return p.hasMetadata("skybattle.invalidbypass");
     }
 
 }

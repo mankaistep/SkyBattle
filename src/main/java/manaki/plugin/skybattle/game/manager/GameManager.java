@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.game.manager;
 
+import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
@@ -29,23 +30,28 @@ public class GameManager {
         return state;
     }
 
-    public void playerQuit(Player player) {
+    public void playerQuit(String pname) {
         // Set state
-        var ps = state.getPlayerState(player.getName());
+        state.removeBossbar(pname);
+        var ps = state.getPlayerState(pname);
         ps.setDead(true);
 
         // If has anyone left
-        var team = state.getTeam(player);
+        var team = state.getTeam(pname);
         if (team != null) {
             // Kick if not alive
             if (!Games.isTeamAlive(state, team)) {
                 for (String pn : team.getPlayers()) {
+                    if (pn.equals(pname)) continue;
                     var p = Bukkit.getPlayer(pn);
+                    if (p == null) continue;
+
                     p.sendTitle("§c§lTOP #" + state.getTeamAlive(), "§fKết thúc", 10, 60, 10);
 
                     // Kick
                     Tasks.sync(() -> {
                         // Back to main server
+                        Games.bypassInvalidCheck(p, 10000);
                         Utils.toSpawn(p);
                     }, 80);
                 }
@@ -55,8 +61,13 @@ public class GameManager {
 
     public void playerDead(Player player) {
         // Set state
+        state.removeBossbar(player.getName());
         var ps = state.getPlayerState(player.getName());
         ps.setDead(true);
+
+        Tasks.sync(() -> {
+            player.spigot().respawn();
+        });
 
         // If has anyone left
         var team = state.getTeam(player);
@@ -64,8 +75,8 @@ public class GameManager {
             boolean teamAlive = false;
             for (String pn : team.getPlayers()) {
                 if (!state.getPlayerState(pn).isDead()) {
+                    Games.bypassInvalidCheck(player, 1000);
                     Tasks.sync(() -> {
-                        player.spigot().respawn();
                         player.setGameMode(GameMode.SPECTATOR);
                         player.setSpectatorTarget(Bukkit.getPlayer(pn));
                         player.sendTitle("§c§lBẠN ĐÃ CHẾT", "§fChỉ có thể theo dõi đồng đội", 10, 100, 10);
@@ -80,7 +91,11 @@ public class GameManager {
             if (!teamAlive) {
                 for (String pn : team.getPlayers()) {
                     var p = Bukkit.getPlayer(pn);
-                    p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10);
+
+                    // Title
+                    Tasks.sync(() -> {
+                        p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10);
+                    }, 5);
 
                     // Kick
                     Tasks.sync(() -> {
@@ -94,9 +109,11 @@ public class GameManager {
 
     public void finish(boolean instantly) {
         if (instantly) {
-            this.clean();
+            this.clean(true);
             return;
         }
+
+        state.setEnded(true);
 
         // Winner
         Team team = state.getWinTeam();
@@ -135,7 +152,7 @@ public class GameManager {
 
                         // Do the finish
                         Tasks.sync(() -> {
-                            clean();
+                            clean(false);
                         }, 200);
                     }
                 }
@@ -143,15 +160,17 @@ public class GameManager {
         }
         else {
             // Do the finish
-            Tasks.sync(this::clean, 200);
+            Tasks.sync(() -> {
+                this.clean(false);
+            }, 100);
         }
     }
 
     // Method after game finished
-    public void clean() {
+    public void clean(boolean instantly) {
         // Cancel tasks
-        for (ATask task : state.getTasks()) {
-            if (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId())) task.cancel();
+        for (ATask task : Lists.newArrayList(state.getTasks())) {
+            task.selfDestroy();
         }
 
         // Cancel bossbars
@@ -159,11 +178,14 @@ public class GameManager {
             bb.removeAll();
         }
 
-        // Unload world
-        SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), false);
-
         // Remove manager
         Games.removeManager(this);
+
+        if (!instantly) Tasks.async(() -> {
+            // Unload world
+            SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), true);
+        }, 20);
+        else SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), false);
     }
 
 }

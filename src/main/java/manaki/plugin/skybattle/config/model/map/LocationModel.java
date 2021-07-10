@@ -47,12 +47,12 @@ public class LocationModel {
     }
 
     public Location toCenterLocation(World w) {
-        return toBlockCenter(new Location(w, x, y, z).clone());
+        return toBlockCenter(new Location(w, x, y, z, Double.valueOf(yaw).floatValue(), Double.valueOf(pitch).floatValue()).clone());
     }
 
     public Location toLocation(World w) {
         if (r == 0) return new Location(w, x, y, z);
-        var cl = toBlockCenter(new Location(w, x, y, z).clone());
+        var cl = toBlockCenter(new Location(w, x, y, z, Double.valueOf(yaw).floatValue(), Double.valueOf(pitch).floatValue()).clone());
         cl.setX(cl.getX() + Utils.random(-1 * r, r));
         cl.setZ(cl.getZ() + Utils.random(-1 * r, r));
         return toBlockCenter(cl);

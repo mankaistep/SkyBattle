@@ -1,9 +1,7 @@
 package manaki.plugin.skybattle.listener;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import manaki.plugin.skybattle.SkyBattle;
-import manaki.plugin.skybattle.config.model.battle.MobDropModel;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.util.Utils;
@@ -25,7 +23,7 @@ public class MobListener implements Listener {
         if (!(e.getEntity() instanceof LivingEntity)) return;
         var le = (LivingEntity) e.getEntity();
         Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
-            if (!Games.isSpeacialEntity(le)) le.remove();
+            if (!Games.isSpecialEntity(le)) le.remove();
         }, 5);
     }
 
@@ -71,6 +69,7 @@ public class MobListener implements Listener {
         var state = gm.getState();
         for (SupplyState ss : state.getSupplyStates()) {
             if (ss.getShulker() == shulker) {
+                ss.setOpened(true);
                 var drops = e.getDrops();
                 drops.clear();
                 drops.addAll(ss.getItems());

@@ -20,6 +20,12 @@ public class MobManagerTask extends ATask {
 
     @Override
     public void run() {
+        // Check end
+        if (this.getState().isEnded()) {
+            this.selfDestroy();
+            return;
+        }
+
         this.spawnMobs();
     }
 
@@ -51,6 +57,9 @@ public class MobManagerTask extends ATask {
                 // Random mob
                 var area = Areas.check(l);
                 var availMobs = mobm.getMobTypes().get(area);
+                if (availMobs == null) continue;
+
+                // Spawn
                 var mid = availMobs.get(new Random().nextInt(availMobs.size()));
                 MythicMobs.inst().getMobManager().spawnMob(mid, l);
             }

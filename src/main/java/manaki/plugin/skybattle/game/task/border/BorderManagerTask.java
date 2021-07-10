@@ -76,7 +76,8 @@ public class BorderManagerTask extends ATask {
         bs.setCurrentRadius(r);
 
         // Packet
-        Utils.setBorder(state.getWorldState().toWorld(), bs.getCenter().getBlockX(), bs.getCenter().getBlockZ(), bs.getCurrentRadius());
+        var battle = Games.battleFromState(state);
+        Utils.setBorder(state.getWorldState().toWorld(), bs.getCenter().getBlockX(), bs.getCenter().getBlockZ(), bs.getCurrentRadius(), battle.getSetting().get("border-damage", Integer.class));
     }
 
 }

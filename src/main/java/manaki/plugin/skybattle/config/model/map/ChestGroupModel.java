@@ -27,4 +27,5 @@ public class ChestGroupModel {
     public MinMax getRandom() {
         return random;
     }
+
 }

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import manaki.plugin.skybattle.config.a.AConfig;
 import manaki.plugin.skybattle.config.model.battle.BattleModel;
+import manaki.plugin.skybattle.config.model.map.ChestGroupModel;
 import manaki.plugin.skybattle.config.model.map.LocationModel;
 import manaki.plugin.skybattle.config.model.map.MapModel;
 import manaki.plugin.skybattle.config.model.reader.Readers;
@@ -135,6 +136,26 @@ public class MainConfig extends AConfig {
         for (File file : folder.listFiles()) {
             var bm = Readers.readBattleModel(file);
             this.battleModels.put(bm.getId(), bm);
+        }
+    }
+
+    public void saveChestGroup(String mapId) {
+        var mm = getMapModel(mapId);
+        var datafile = new File(this.getPlugin().getDataFolder() + "//models//maps//" + mm.getId() + ".yml");
+        var config = YamlConfiguration.loadConfiguration(datafile);
+
+        config.set("chest-group", null);
+        for (Map.Entry<String, ChestGroupModel> e : mm.getChestGroups().entrySet()) {
+            var id = e.getKey();
+            var cgm = e.getValue();
+            config.set("chest-group." + id + ".random", cgm.getRandom().toString());
+            config.set("chest-group." + id + ".locations", cgm.getLocations());
+        }
+
+        try {
+            config.save(datafile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

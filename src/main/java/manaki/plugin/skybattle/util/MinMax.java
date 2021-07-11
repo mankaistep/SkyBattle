@@ -25,6 +25,11 @@ public class MinMax {
         return new Random().nextInt(max - min) + min;
     }
 
+    @Override
+    public String toString() {
+        return this.min + "-" + max;
+    }
+
     public static MinMax parse(String s) {
         var a = s.split("-");
         int min = Integer.parseInt(a[0]);

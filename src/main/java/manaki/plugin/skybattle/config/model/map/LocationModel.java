@@ -6,7 +6,7 @@ import org.bukkit.World;
 
 public class LocationModel {
 
-    private final double r;
+    private double r;
     private final double x;
     private final double y;
     private final double z;
@@ -20,6 +20,10 @@ public class LocationModel {
         this.z = z;
         this.pitch = pitch;
         this.yaw = yaw;
+    }
+
+    public void setRadius(double r) {
+        this.r = r;
     }
 
     public double getRadius() {

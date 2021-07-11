@@ -5,6 +5,7 @@ import manaki.plugin.skybattle.config.MainConfig;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.listener.MobListener;
+import manaki.plugin.skybattle.listener.PlacerListener;
 import manaki.plugin.skybattle.listener.PlayerListener;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
@@ -46,6 +47,7 @@ public class SkyBattle extends JavaPlugin {
     public void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new MobListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
     }
 
     public void registerCommands() {

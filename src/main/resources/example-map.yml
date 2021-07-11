@@ -18,5 +18,5 @@ supply-locations: [lsc1, lsc2, lsc3]
 spawn-locations: [lt1, lt2, lt3, lt4, lt5]
 chest-group:
   1:
-    location: [lc1, lc2, lc3, lc4, lc5]
+    locations: [lc1, lc2, lc3, lc4, lc5]
     random: 2-4

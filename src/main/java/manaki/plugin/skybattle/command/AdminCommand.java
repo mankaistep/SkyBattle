@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.config.model.map.LocationModel;
 import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.setup.chestgroup.ChestGroupPlacers;
 import manaki.plugin.skybattle.team.Team;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -54,6 +55,15 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 Games.start(bid, teams);
             }
 
+            else if (args[0].equalsIgnoreCase("setplacer")) {
+                var p = (Player) sender;
+                var mid = args[1];
+                var gid = args[2];
+
+                var is = ChestGroupPlacers.get(gid, mid, p.getInventory().getItemInMainHand().getType());
+                p.getInventory().setItemInMainHand(is);
+            }
+
             else if (args[0].equalsIgnoreCase("setlocation")) {
                 var p = (Player) sender;
                 var mid = args[1];
@@ -95,6 +105,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
         sender.sendMessage("/skybattle start <id> <player1>;<player2>;...");
         sender.sendMessage("/skybattle start2 <id> <player1>;<player2>;...");
         sender.sendMessage("");
+        sender.sendMessage("/skybattle setplacer <mapId> <groupId>");
         sender.sendMessage("/skybattle setlocation <mapId> <radius> <id>");
         sender.sendMessage("/skybattle removelocation <mapId> <id>");
 

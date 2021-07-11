@@ -73,7 +73,11 @@ public class Readers {
 
         Map<String, ChestGroupModel> chestGroups = Maps.newHashMap();
         for (String cid : config.getConfigurationSection("chest-group").getKeys(false)) {
-            var l = config.getStringList("chest-group." + cid + ".location");
+            List<String> l = null;
+            if (config.contains("chest-group." + cid + ".location")) {
+                l = config.getStringList("chest-group." + cid + ".location");
+            }
+            else l = config.getStringList("chest-group." + cid + ".locations");
             var random = MinMax.parse(config.getString("chest-group." + cid + ".random"));
             var cgm = new ChestGroupModel(cid, l, random);
             chestGroups.put(cid, cgm);

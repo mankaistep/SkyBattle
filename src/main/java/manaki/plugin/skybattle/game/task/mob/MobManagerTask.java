@@ -26,6 +26,10 @@ public class MobManagerTask extends ATask {
             return;
         }
 
+        // Check time
+        var bm = Games.battleFromState(this.getState());
+        if (this.getState().getTime() < bm.getMobSpawnAfter()) return;
+
         this.spawnMobs();
     }
 

@@ -31,12 +31,13 @@ public class GameState {
     private final List<Team> startTeams;
 
     // Task
-    private final List<ATask> tasks;
+    private List<ATask> tasks;
 
     // Current
     private final List<Team> currentTeams;
 
     // Data
+    private boolean isLoading;
     private final List<BossBar> bossbars;
     private LivingEntity boss;
     private final List<Location> blockPlaced;
@@ -63,14 +64,20 @@ public class GameState {
         this.blockPlaced = Lists.newArrayList();
         this.supplySpawned = Lists.newArrayList();
         this.isEnded = false;
+        this.isLoading = false;
 
         // Players
         playerStates = Maps.newConcurrentMap();
         for (Player p : this.getPlayers()) {
             playerStates.put(p.getName(), new PlayerState(p, false));
         }
+    }
 
-        // Tasks
+    /*
+     Methods
+     */
+
+    public void startTasks() {
         tasks = Lists.newArrayList();
         tasks.add(new BorderManagerTask(this).start());
         tasks.add(new BossManagerTask(this).start());
@@ -79,9 +86,13 @@ public class GameState {
         tasks.add(new SupplyManagerTask(this).start());
     }
 
-    /*
-     Methods
-     */
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
 
     public int getId() {
         return id;

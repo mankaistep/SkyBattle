@@ -23,20 +23,7 @@ public class SupplyManagerTask extends ATask {
 
     @Override
     public void run() {
-        this.spawnSupplyEffect();
         this.spawnPendingSupply();
-    }
-
-    public void spawnSupplyEffect() {
-        var state = this.getState();
-        for (SupplyState ss : state.getSupplyStates()) {
-            if (ss.isOpened()) continue;
-            var l = ss.getLocation();
-            for (int i = 0 ; i < 100 ; i++) {
-                var pl = l.clone().add(0, i + 1, 0);
-                pl.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, pl, 1, 0, 0, 0, 0);
-            }
-        }
     }
 
     public void spawnPendingSupply() {
@@ -45,7 +32,7 @@ public class SupplyManagerTask extends ATask {
         for (Integer time : bm.getSupplyModel().getAppearTime()) {
             var currentTime = state.getTime();
             int remain = time - currentTime;
-            if (remain <= 10 && !supplySpawned.contains(time)) {
+            if (remain <= 30 && !supplySpawned.contains(time)) {
                 supplySpawned.add(time);
                 var ss = Games.randomizeSupply(this.getState());
                 if (ss == null) {

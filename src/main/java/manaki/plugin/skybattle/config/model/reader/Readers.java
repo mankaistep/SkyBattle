@@ -24,7 +24,7 @@ public class Readers {
 
     public static Map<String, LocationModel> readMapData(@NotNull File file) {
         var config = YamlConfiguration.loadConfiguration(file);
-        Map<String, LocationModel> m = Maps.newHashMap();
+        Map<String, LocationModel> m = Maps.newTreeMap();
         for (String id : config.getConfigurationSection("location").getKeys(false)) {
             String l = config.getString("location." + id);
             var a = l.split(";");
@@ -123,18 +123,28 @@ public class Readers {
 
 
         // Chest
-        Map<AreaType, ChestModel> chest = Maps.newHashMap();
-        for (String tn : config.getConfigurationSection("chest").getKeys(false)) {
-            var type = AreaType.valueOf(tn.toUpperCase());
-            var random = MinMax.parse(config.getString("chest." + tn + ".random"));
-            var items = config.getStringList("chest." + tn + ".items").stream().map(ChestItemModel::parse).collect(Collectors.toList());
-            chest.put(type, new ChestModel(random, items));
+        Map<String, List<ChestGroupItemModel>> chest = Maps.newHashMap();
+        for (String cgs : config.getConfigurationSection("chest").getKeys(false)) {
+            for (String cg : cgs.split("_")) {
+                List<ChestGroupItemModel> list = Lists.newArrayList();
+                for (String s : config.getConfigurationSection("chest." + cgs).getKeys(false)) {
+                    var random = MinMax.parse(config.getString("chest." + cgs + "." + s + ".random", "1-2"));
+                    var items = config.getStringList("chest." + cgs + "." + s + ".items").stream().map(ChestItemModel::parse).collect(Collectors.toList());
+                    list.add(new ChestGroupItemModel(random, items));
+                }
+                chest.put(cg, list);
+            }
         }
 
         var sat = config.getStringList("supply-chest.appear-time").stream().map(Integer::parseInt).collect(Collectors.toList());
-        var sr = MinMax.parse(config.getString("supply-chest.random"));
-        var items = config.getStringList("supply-chest.items").stream().map(ChestItemModel::parse).collect(Collectors.toList());
-        var supplyModel = new SupplyModel(sat, sr, items);
+        List<ChestGroupItemModel> itemList = Lists.newArrayList();
+        for (String key : config.getConfigurationSection("supply-chest.items").getKeys(false)) {
+            var random = MinMax.parse(config.getString("supply-chest.items." + key + ".random", "1-2"));
+            var items = config.getStringList("supply-chest.items." + key + ".items").stream().map(ChestItemModel::parse).collect(Collectors.toList());
+            itemList.add(new ChestGroupItemModel(random, items));
+        }
+
+        var supplyModel = new SupplyModel(sat, itemList);
 
         Map<Material, List<Command>> blockCommands = Maps.newHashMap();
         for (String mn : config.getConfigurationSection("command.block").getKeys(false)) {
@@ -143,8 +153,9 @@ public class Readers {
             blockCommands.put(m, cmds);
         }
         List<Command> winCommands = config.getStringList("command.win").stream().map(Command::new).collect(Collectors.toList());
+        int mobSpawnAfter = config.getInt("mob-spawn-after", 60);
 
-        return new BattleModel(id, mapId, boss, time, sm, mm, chest, supplyModel, blockCommands, winCommands);
+        return new BattleModel(id, mapId, boss, time, mobSpawnAfter, sm, mm, chest, supplyModel, blockCommands, winCommands);
     }
 
 }

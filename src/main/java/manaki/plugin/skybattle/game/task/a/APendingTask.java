@@ -79,7 +79,7 @@ public abstract class APendingTask extends ATask {
             // Sound
             if (!checkedSeconds.contains(secondRemain)) {
                 checkedSeconds.add(secondRemain);
-                if (secondRemain <= 3) {
+                if (secondRemain <= 10) {
                     for (Player p : this.getState().getPlayers()) p.playSound(p.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
                 }
             }

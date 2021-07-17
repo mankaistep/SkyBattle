@@ -202,8 +202,12 @@ public class WorldLoader {
         if (world == null) return;
 
         // Check player
-        for (Player player : world.getPlayers()) {
-            Utils.toSpawn(player);
+        if (isAsync) {
+            Tasks.sync(() -> {
+                for (Player player : world.getPlayers()) {
+                    Utils.toSpawn(player);
+                }
+            });
         }
 
         // Unload async

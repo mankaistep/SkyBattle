@@ -4,12 +4,12 @@ import manaki.plugin.skybattle.util.MinMax;
 
 import java.util.List;
 
-public class ChestModel {
+public class ChestGroupItemModel {
 
     private final MinMax random;
     private final List<ChestItemModel> items;
 
-    public ChestModel(MinMax random, List<ChestItemModel> items) {
+    public ChestGroupItemModel(MinMax random, List<ChestItemModel> items) {
         this.random = random;
         this.items = items;
     }

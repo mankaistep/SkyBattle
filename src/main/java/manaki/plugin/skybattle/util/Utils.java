@@ -109,7 +109,7 @@ public class Utils {
     public static void setBorder(World world, int centerX, int centerZ, int radius, double damage) {
         @NotNull WorldBorder wb = world.getWorldBorder();
         wb.setCenter(centerX, centerZ);
-        wb.setSize(radius * 2);
+        wb.setSize(radius * 8);
         wb.setWarningDistance(0);
         wb.setDamageAmount(damage);
     }

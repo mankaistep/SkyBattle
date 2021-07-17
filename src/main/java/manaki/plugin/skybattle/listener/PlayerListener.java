@@ -1,9 +1,11 @@
 package manaki.plugin.skybattle.listener;
 
+import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
+import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -25,6 +27,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
+import java.util.Map;
 
 public class PlayerListener implements Listener {
 
@@ -113,19 +116,28 @@ public class PlayerListener implements Listener {
         state.removeBlockPlaced(b);
     }
 
-    // Explode
+    // Block click
     @EventHandler
-    public void onExplode(EntityExplodeEvent e) {
-        var w = e.getEntity().getWorld();
-        var gm = Games.managerFromWorld(w);
-        if (gm == null) return;
-        List<Block> blocks = List.copyOf(e.blockList());
-        e.blockList().clear();
-        Tasks.sync(() -> {
-            for (Block b : blocks) {
-                if (b.getType() != Material.CHEST) b.setType(Material.AIR);
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        var b = e.getClickedBlock();
+        if (b == null || b.getType() == Material.AIR) return;
+
+        var p = e.getPlayer();
+        var state = Games.getCurrentGame(p);
+        if (state == null) return;
+
+        var bm = Games.battleFromState(state);
+        for (Map.Entry<Material, List<Command>> entry : bm.getBlockCommands().entrySet()) {
+            var m = entry.getKey();
+            if (b.getType() == m) {
+                e.setCancelled(true);
+                for (Command cmd : entry.getValue()) {
+                    cmd.execute(SkyBattle.get(), p, Map.of("%player%", p.getName()));
+                }
+                break;
             }
-        });
+        }
+
     }
 
 }

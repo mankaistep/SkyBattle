@@ -4,6 +4,7 @@ import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import me.manaki.plugin.shops.storage.ItemStorage;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class MobListener implements Listener {
 
@@ -51,7 +53,10 @@ public class MobListener implements Listener {
                 if (!Utils.rate(mdm.getRate())) continue;
                 var is = ItemStorage.get(mdm.getItemId());
                 is.setAmount(mdm.getAmount().random());
-                drops.add(is);
+                Tasks.sync(() -> {
+                    var item = p.getWorld().dropItemNaturally(e.getEntity().getLocation(), is);
+                    item.setPickupDelay(20);
+                });
             }
         }
     }
@@ -72,7 +77,12 @@ public class MobListener implements Listener {
                 ss.setOpened(true);
                 var drops = e.getDrops();
                 drops.clear();
-                drops.addAll(ss.getItems());
+                Tasks.sync(() -> {
+                    for (ItemStack is : ss.getItems()) {
+                        var item = entity.getWorld().dropItemNaturally(entity.getLocation(), is);
+                        item.setPickupDelay(20);
+                    }
+                });
             }
         }
     }

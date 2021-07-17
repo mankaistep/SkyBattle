@@ -17,9 +17,15 @@ public class BossPendingTask extends APendingTask {
         return () -> {
             var state = this.getState();
             var bm = Games.battleFromState(state);
-            var l = state.getBorderState().getCenter().clone().add(0, 1, 0);
+            var mm = Games.mapFromState(state);
+            var l = mm.getLocation(mm.getCenterLocation()).toCenterLocation(state.getWorldState().toWorld());
             var am = MythicMobs.inst().getMobManager().spawnMob(bm.getBossId(), l);
-            state.setBoss((LivingEntity) am.getEntity().getBukkitEntity());
+
+            var le = (LivingEntity) am.getEntity().getBukkitEntity();
+            le.setRemoveWhenFarAway(false);
+            le.setGlowing(true);
+
+            state.setBoss(le);
         };
     }
 

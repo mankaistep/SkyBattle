@@ -1,22 +1,355 @@
 world-name: world_battle_1
 map:
-  center: lcenter
+  center: mapcenter
   radius:
-    CENTER: 10
-    NEAR_CENTER: 50
-    EDGE: 100
+    CENTER: 70
+    NEAR_CENTER: 150
+    EDGE: 10000
 border:
-  1:
-    center: [center1_1, center1_2, center1_3]
-    range: 100
+  '1':
+    center:
+      - bcenter
+    range: 120
     start-time: 0
-  2:
-    center: [center2_1, center2_2, center2_3]
-    range: 50
-    start-time: 200
-supply-locations: [lsc1, lsc2, lsc3]
-spawn-locations: [lt1, lt2, lt3, lt4, lt5]
+  '2':
+    center:
+      - bcenter
+    range: 9 # Down to 10
+    start-time: 1200
+supply-locations:
+  - supply1
+  - supply2
+  - supply3
+  - supply4
+  - supply5
+  - supply6
+  - supply7
+  - supply8
+  - supply9
+  - supply10
+spawn-locations:
+  - team1
+  - team2
+  - team3
+  - team4
+  - team5
+  - team6
+  - team7
+  - team8
 chest-group:
-  1:
-    locations: [lc1, lc2, lc3, lc4, lc5]
-    random: 2-4
+  gnear12:
+    random: 8
+    locations:
+      - map1-gnear12-1
+      - map1-gnear12-2
+      - map1-gnear12-3
+      - map1-gnear12-4
+      - map1-gnear12-5
+      - map1-gnear12-6
+      - map1-gnear12-7
+      - map1-gnear12-8
+      - map1-gnear12-9
+      - map1-gnear12-10
+      - map1-gnear12-11
+      - map1-gnear12-12
+      - map1-gnear12-13
+      - map1-gnear12-14
+      - map1-gnear12-15
+      - map1-gnear12-16
+      - map1-gnear12-17
+      - map1-gnear12-18
+      - map1-gnear12-19
+      - map1-gnear12-20
+  gnear34:
+    random: 8
+    locations:
+      - map1-gnear34-1
+      - map1-gnear34-2
+      - map1-gnear34-3
+      - map1-gnear34-4
+      - map1-gnear34-5
+      - map1-gnear34-6
+      - map1-gnear34-7
+      - map1-gnear34-8
+      - map1-gnear34-9
+      - map1-gnear34-10
+      - map1-gnear34-11
+      - map1-gnear34-12
+      - map1-gnear34-13
+      - map1-gnear34-14
+      - map1-gnear34-15
+      - map1-gnear34-16
+      - map1-gnear34-17
+      - map1-gnear34-18
+      - map1-gnear34-19
+      - map1-gnear34-20
+  gnear56:
+    random: 8
+    locations:
+      - map1-gnear56-1
+      - map1-gnear56-2
+      - map1-gnear56-3
+      - map1-gnear56-4
+      - map1-gnear56-5
+      - map1-gnear56-6
+      - map1-gnear56-7
+      - map1-gnear56-8
+      - map1-gnear56-9
+      - map1-gnear56-10
+      - map1-gnear56-11
+      - map1-gnear56-12
+      - map1-gnear56-13
+      - map1-gnear56-14
+      - map1-gnear56-15
+      - map1-gnear56-16
+      - map1-gnear56-17
+      - map1-gnear56-18
+      - map1-gnear56-19
+      - map1-gnear56-20
+  gnear78:
+    random: 8
+    locations:
+      - map1-gnear78-1
+      - map1-gnear78-2
+      - map1-gnear78-3
+      - map1-gnear78-4
+      - map1-gnear78-5
+      - map1-gnear78-6
+      - map1-gnear78-7
+      - map1-gnear78-8
+      - map1-gnear78-9
+      - map1-gnear78-10
+      - map1-gnear78-11
+      - map1-gnear78-12
+      - map1-gnear78-13
+      - map1-gnear78-14
+      - map1-gnear78-15
+      - map1-gnear78-16
+      - map1-gnear78-17
+      - map1-gnear78-18
+      - map1-gnear78-19
+      - map1-gnear78-20
+      - map1-gnear78-21
+      - map1-gnear78-22
+      - map1-gnear78-23
+      - map1-gnear78-24
+      - map1-gnear78-25
+      - map1-gnear78-26
+  gbase5:
+    random: 3
+    locations:
+      - map1-gbase5-1
+      - map1-gbase5-2
+      - map1-gbase5-3
+      - map1-gbase5-4
+      - map1-gbase5-5
+  gbase4:
+    random: 3
+    locations:
+      - map1-gbase4-1
+      - map1-gbase4-2
+      - map1-gbase4-3
+      - map1-gbase4-4
+      - map1-gbase4-5
+  gbase7:
+    random: 3
+    locations:
+      - map1-gbase7-1
+      - map1-gbase7-2
+      - map1-gbase7-3
+      - map1-gbase7-4
+      - map1-gbase7-5
+  gbase6:
+    random: 3
+    locations:
+      - map1-gbase6-1
+      - map1-gbase6-2
+      - map1-gbase6-3
+      - map1-gbase6-4
+      - map1-gbase6-5
+  gbase1:
+    random: 3
+    locations:
+      - map1-gbase1-1
+      - map1-gbase1-2
+      - map1-gbase1-3
+      - map1-gbase1-4
+      - map1-gbase1-5
+  gbase3:
+    random: 3
+    locations:
+      - map1-gbase3-1
+      - map1-gbase3-2
+      - map1-gbase3-3
+      - map1-gbase3-4
+      - map1-gbase3-5
+  gbase2:
+    random: 3
+    locations:
+      - map1-gbase2-1
+      - map1-gbase2-2
+      - map1-gbase2-3
+      - map1-gbase2-4
+      - map1-gbase2-5
+  gbase8:
+    random: 3
+    locations:
+      - map1-gbase8-1
+      - map1-gbase8-2
+      - map1-gbase8-3
+      - map1-gbase8-4
+      - map1-gbase8-5
+  gcenter:
+    random: 30
+    locations:
+      - map1-gcenter-1
+      - map1-gcenter-2
+      - map1-gcenter-3
+      - map1-gcenter-4
+      - map1-gcenter-5
+      - map1-gcenter-6
+      - map1-gcenter-7
+      - map1-gcenter-8
+      - map1-gcenter-9
+      - map1-gcenter-10
+      - map1-gcenter-11
+      - map1-gcenter-12
+      - map1-gcenter-13
+      - map1-gcenter-14
+      - map1-gcenter-15
+      - map1-gcenter-16
+      - map1-gcenter-17
+      - map1-gcenter-18
+      - map1-gcenter-19
+      - map1-gcenter-20
+      - map1-gcenter-21
+      - map1-gcenter-22
+      - map1-gcenter-23
+      - map1-gcenter-24
+      - map1-gcenter-25
+      - map1-gcenter-26
+      - map1-gcenter-27
+      - map1-gcenter-28
+      - map1-gcenter-29
+      - map1-gcenter-30
+      - map1-gcenter-31
+      - map1-gcenter-32
+      - map1-gcenter-33
+      - map1-gcenter-34
+      - map1-gcenter-35
+      - map1-gcenter-36
+      - map1-gcenter-37
+      - map1-gcenter-38
+      - map1-gcenter-39
+      - map1-gcenter-40
+      - map1-gcenter-41
+      - map1-gcenter-42
+      - map1-gcenter-43
+      - map1-gcenter-44
+      - map1-gcenter-45
+      - map1-gcenter-46
+      - map1-gcenter-47
+      - map1-gcenter-48
+      - map1-gcenter-49
+      - map1-gcenter-50
+      - map1-gcenter-51
+      - map1-gcenter-52
+      - map1-gcenter-53
+      - map1-gcenter-54
+      - map1-gcenter-55
+      - map1-gcenter-56
+      - map1-gcenter-57
+      - map1-gcenter-58
+      - map1-gcenter-59
+      - map1-gcenter-60
+      - map1-gcenter-61
+      - map1-gcenter-62
+      - map1-gcenter-63
+      - map1-gcenter-64
+      - map1-gcenter-65
+      - map1-gcenter-66
+      - map1-gcenter-67
+      - map1-gcenter-68
+      - map1-gcenter-69
+      - map1-gcenter-70
+      - map1-gcenter-71
+      - map1-gcenter-72
+      - map1-gcenter-73
+      - map1-gcenter-74
+      - map1-gcenter-75
+      - map1-gcenter-76
+      - map1-gcenter-77
+      - map1-gcenter-78
+      - map1-gcenter-79
+      - map1-gcenter-80
+      - map1-gcenter-81
+      - map1-gcenter-82
+      - map1-gcenter-83
+      - map1-gcenter-84
+      - map1-gcenter-85
+      - map1-gcenter-86
+      - map1-gcenter-87
+      - map1-gcenter-88
+      - map1-gcenter-89
+      - map1-gcenter-90
+      - map1-gcenter-91
+      - map1-gcenter-92
+      - map1-gcenter-93
+      - map1-gcenter-94
+      - map1-gcenter-95
+      - map1-gcenter-96
+      - map1-gcenter-97
+      - map1-gcenter-98
+      - map1-gcenter-99
+      - map1-gcenter-100
+      - map1-gcenter-101
+      - map1-gcenter-102
+      - map1-gcenter-103
+      - map1-gcenter-104
+      - map1-gcenter-105
+      - map1-gcenter-106
+      - map1-gcenter-107
+      - map1-gcenter-108
+      - map1-gcenter-109
+      - map1-gcenter-110
+      - map1-gcenter-111
+      - map1-gcenter-112
+      - map1-gcenter-113
+      - map1-gcenter-114
+      - map1-gcenter-115
+      - map1-gcenter-116
+      - map1-gcenter-117
+      - map1-gcenter-118
+      - map1-gcenter-119
+      - map1-gcenter-120
+      - map1-gcenter-121
+      - map1-gcenter-122
+      - map1-gcenter-123
+      - map1-gcenter-124
+      - map1-gcenter-125
+      - map1-gcenter-126
+      - map1-gcenter-127
+      - map1-gcenter-128
+      - map1-gcenter-129
+      - map1-gcenter-130
+      - map1-gcenter-131
+      - map1-gcenter-132
+      - map1-gcenter-133
+      - map1-gcenter-134
+      - map1-gcenter-135
+      - map1-gcenter-136
+      - map1-gcenter-137
+      - map1-gcenter-138
+      - map1-gcenter-139
+      - map1-gcenter-140
+      - map1-gcenter-141
+      - map1-gcenter-142
+      - map1-gcenter-143
+      - map1-gcenter-144
+      - map1-gcenter-145
+      - map1-gcenter-146
+      - map1-gcenter-147
+      - map1-gcenter-148
+      - map1-gcenter-149
+      - map1-gcenter-150
+

@@ -1,60 +1,259 @@
-map: example-map
-time: 1800
-boss: d5_1_easy
+map: map1
+time: 1200 # Useless
+mob-spawn-after: 60
+boss: b1_boss
 setting:
-  border-damage: 10
-  lava-damage: 0
+  border-damage: 1000
 mob:
   mob-type:
-    EDGE: [m1, m2, m3]
-    NEAR_CENTER: [m4, m5, m6]
-    CENTER: [m7, m8, m9]
+    EDGE: [b1_1, b1_2]
+    NEAR_CENTER: [b1_1, b1_2, b1_3, b1_4]
+    CENTER: [b1_4, b1_5, b1_6]
   check:
-    limit-per-player: 5
-    rate: 0.05
+    limit-per-player: 3
+    rate: 10
   drop:
-    m1:
-      - stone 3 50 # Drop x3 stone with 50% rate
-      - dch 1 10 # Drop x1 dch with 10% rate
+    b1_1:
+      - exp1 1 70
+      - exp2 1 30
+      - exp3 1 5
+      - tnt 1 5
+      - fireball 1 5
+    b1_2:
+      - exp1 1 60
+      - exp2 1 40
+      - exp3 1 5
+      - tnt 1 5
+      - fireball 1 5
+    b1_3:
+      - exp1 1 40
+      - exp2 1 50
+      - exp3 1 5
+      - tnt 1 5
+      - fireball 1 10
+    b1_4:
+      - exp1 1 30
+      - exp2 1 60
+      - exp3 1 10
+      - tnt 1 5
+      - fireball 1 10
+    b1_5:
+      - exp1 1 20
+      - exp2 1 60
+      - exp3 1 15
+      - tnt 1 10
+      - fireball 1 10
+    b1_6:
+      - exp1 1 25
+      - exp2 1 60
+      - exp3 1 20
+      - tnt 1 15
+      - fireball 1 15
 chest:
-  CENTER:
-    random: 1-2
+  gcenter:
+    0:
+      random: 2-4
+      items:
+        # Weapons
+        - santory_shooter4 1
+        - santory_ranged4 1
+        - santory_light4 1
+        - santory_heavy4 1
+        # Armors
+        - santory_armor4 1
+        - santory_armor5 1
+        # Blocks
+        - white_wool 16-64
+        - dirt 16-64
+        - cobblestone 16-64
+        - obsidian 16-64
+        - end_stone 16-64
+        - oak_planks 16-64
+        # Potions
+        - potion1 1
+        - potion2 1
+        - potion3 1
+        - potion4 1
+        - potion5 1
+        # Foods
+        - apple 2-8
+        - bread 2-8
+        - cooked_porkchop 2-8
+        - cooked_cod 2-8
+        - cooked_salmon 2-8
+        - cooked_beef 2-8
+        - cooked_chicken 2-8
+        - melon_slice 2-8
+        - rotten_flesh 2-8
+        # Special items
+        - tnt 1-5
+        - fireball 1-5
+        - ender_pearl 1-5
+        - water_bucket 1-5
+        - lava_bucket 1-5
+        - firework 1-5
+  gbase1_gbase2_gbase3_gbase4_gbase5_gbase6_gbase7_gbase8:
+    0:
+      random: 1-2
+      items:
+        # Weapons
+        - santory_shooter2 1
+        - santory_shooter3 1
+        - santory_ranged2 1
+        - santory_ranged3 1
+        - santory_light2 1
+        - santory_light3 1
+        - santory_heavy2 1
+        - santory_heavy3 1
+    1:
+      random: 1-2
+      items:
+        - santory_armor1 1
+        - santory_armor2 1
+        - santory_armor3 1
+    2:
+      random: 3-5
+      items:
+        - white_wool 16-64
+        - dirt 16-64
+        - cobblestone 16-64
+        - obsidian 16-64
+        - end_stone 16-64
+        - oak_planks 16-64
+    3:
+      random: 2-4
+      items:
+        # Foods
+        - apple 2-8
+        - bread 2-8
+        - cooked_porkchop 2-8
+        - cooked_cod 2-8
+        - cooked_salmon 2-8
+        - cooked_beef 2-8
+        - cooked_chicken 2-8
+        - melon_slice 2-8
+        - rotten_flesh 2-8
+        - porkchop 2-8
+        - cod 2-8
+        - salmon 2-8
+    4:
+      random: 2-5
+      items:
+        - dch 1-5
+        - dnthoa 1-5
+        - dntthuy 1-5
+        - dntmoc 1-5
+        - dnttho 1-5
+        - dntanhsang 1-5
+        - dntbongdem 1-5
+        - bm1 1-5
+        - bm2 1-5
+        - bm3 1-5
+        # Potions
+        - potion1 1
+        - potion2 1
+        - potion3 1
+        - potion4 1
+        - potion5 1
+        # Tools
+        - iron_pickaxe 1
+        - iron_shovel 1
+        - iron_axe 1
+        - diamond_pickaxe 1
+        - diamond_shovel 1
+        - diamond_axe 1
+        # Special items
+        - tnt 1-4
+        - fireball 1-4
+        - ender_pearl 1-4
+        - water_bucket 1-4
+        - lava_bucket 1-4
+        - firework 1-4
+  gnear12_gnear34_gnear56_gnear78:
+    random: 3-5
     items:
-      - dch
-      - bm1
-      - bm2
-      - EMERALD 3-5
-      - DIAMOND 5-10
-      - STONE 10-12
-  NEAR_CENTER:
-    random: 1-2
-    items:
-      - dch
-      - bm1
-      - bm2
-      - EMERALD 3-5
-      - DIAMOND 5-8
-      - STONE 10-20
-  EDGE:
-    random: 1-2
-    items:
-      - dch
-      - bm1
-      - bm2
-      - EMERALD 3
-      - DIAMOND 5
-      - STONE 10
+      # Weapons
+      - santory_shooter2 1
+      - santory_shooter3 1
+      - santory_ranged2 1
+      - santory_ranged3 1
+      - santory_light2 1
+      - santory_light3 1
+      - santory_heavy2 1
+      - santory_heavy3 1
+      # Armors
+      - santory_armor1 1
+      - santory_armor2 1
+      - santory_armor3 1
+      # Upgrade items
+      - dch 1-5
+      - dnthoa 1-5
+      - dntthuy 1-5
+      - dntmoc 1-5
+      - dnttho 1-5
+      - dntanhsang 1-5
+      - dntbongdem 1-5
+      - bm1 1-5
+      - bm2 1-5
+      - bm3 1-5
+      # Blocks
+      - white_wool 16-64
+      - dirt 16-64
+      - cobblestone 16-64
+      - obsidian 16-64
+      - end_stone 16-64
+      - oak_planks 16-64
+      # Potions
+      - potion1 1
+      - potion2 1
+      - potion3 1
+      - potion4 1
+      - potion5 1
+      # Tools
+      - iron_pickaxe 1
+      - iron_shovel 1
+      - iron_axe 1
+      - diamond_pickaxe 1
+      - diamond_shovel 1
+      - diamond_axe 1
+      # Foods
+      - apple 2-8
+      - bread 2-8
+      - cooked_porkchop 2-8
+      - cooked_cod 2-8
+      - cooked_salmon 2-8
+      - cooked_beef 2-8
+      - cooked_chicken 2-8
+      - melon_slice 2-8
+      - rotten_flesh 2-8
+      - porkchop 2-8
+      - cod 2-8
+      - salmon 2-8
+      # Special items
+      - tnt 1-4
+      - fireball 1-4
+      - ender_pearl 1-4
+      - water_bucket 1-4
+      - lava_bucket 1-4
+      - firework 1-4
 supply-chest:
   appear-time:
-    - 1200
-    - 600
-    - 400
-    - 200
+    - 180
+    - 360
+    - 540
+    - 720
+    - 900
   random: 1-2
   items:
-    - EMERALD
-    - STONE 2
-    - DIAMOND 3
+    - santory_armor5 1
+    - santory_ranged5 1
+    - santory_light5 1
+    - santory_heavy5 1
+    - santory_shooter5 1
+    - tnt 1-4
+    - fireball 1-4
+    - ender_pearl 1-4
+    - firework 1-4
 command:
   block:
     ANVIL:

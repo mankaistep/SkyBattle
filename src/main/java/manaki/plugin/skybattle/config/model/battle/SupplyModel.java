@@ -1,19 +1,22 @@
 package manaki.plugin.skybattle.config.model.battle;
 
-import manaki.plugin.skybattle.util.MinMax;
-
 import java.util.List;
 
-public class SupplyModel extends ChestModel {
+public class SupplyModel {
 
     private List<Integer> appearTime;
+    private List<ChestGroupItemModel> itemList;
 
-    public SupplyModel(List<Integer> appearTime, MinMax random, List<ChestItemModel> items) {
-        super(random, items);
+    public SupplyModel(List<Integer> appearTime, List<ChestGroupItemModel> itemList) {
         this.appearTime = appearTime;
+        this.itemList = itemList;
     }
 
     public List<Integer> getAppearTime() {
         return appearTime;
+    }
+
+    public List<ChestGroupItemModel> getItemList() {
+        return itemList;
     }
 }

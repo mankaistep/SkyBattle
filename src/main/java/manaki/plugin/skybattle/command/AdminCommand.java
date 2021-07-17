@@ -92,6 +92,14 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 sender.sendMessage("§aDone!");
             }
 
+            else if (args[0].equalsIgnoreCase("savealllocations")) {
+                var mid = args[1];
+
+                SkyBattle.get().getMainConfig().saveMapData(mid);
+
+                sender.sendMessage("§aDone!");
+            }
+
         }
         catch (ArrayIndexOutOfBoundsException e) {
             sendHelp(sender);
@@ -108,6 +116,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
         sender.sendMessage("/skybattle setplacer <mapId> <groupId>");
         sender.sendMessage("/skybattle setlocation <mapId> <radius> <id>");
         sender.sendMessage("/skybattle removelocation <mapId> <id>");
+        sender.sendMessage("/skybattle savealllocations <mapId>");
 
     }
 }

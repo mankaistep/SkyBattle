@@ -4,6 +4,7 @@ import manaki.plugin.skybattle.command.AdminCommand;
 import manaki.plugin.skybattle.config.MainConfig;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.listener.CustomItemListener;
 import manaki.plugin.skybattle.listener.MobListener;
 import manaki.plugin.skybattle.listener.PlacerListener;
 import manaki.plugin.skybattle.listener.PlayerListener;
@@ -40,7 +41,7 @@ public class SkyBattle extends JavaPlugin {
             e.printStackTrace();
         }
         finally {
-            this.getWorldLoader().unloadAllTemporaryWorlds(false);
+            if (worldLoader != null) this.worldLoader.unloadAllTemporaryWorlds(false);
         }
     }
 
@@ -48,6 +49,7 @@ public class SkyBattle extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new MobListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CustomItemListener(), this);
     }
 
     public void registerCommands() {

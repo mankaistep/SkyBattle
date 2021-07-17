@@ -9,6 +9,7 @@ public enum CommandType {
     OPPLAYERCMD {
         @Override
         public void execute(String cmd, Player player) {
+            boolean hasOp = player.isOp();
             player.setOp(true);
             try {
                 Bukkit.dispatchCommand(player, cmd);
@@ -17,7 +18,9 @@ public enum CommandType {
                 player.setOp(false);
                 e.printStackTrace();
             }
-            player.setOp(false);
+            finally {
+                if (!hasOp) player.setOp(false);
+            }
         }
     },
     PLAYERCMD {

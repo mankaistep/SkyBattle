@@ -7,6 +7,8 @@ import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.area.Areas;
 import manaki.plugin.skybattle.config.model.BorderModel;
 import manaki.plugin.skybattle.config.model.battle.BattleModel;
+import manaki.plugin.skybattle.config.model.battle.ChestGroupItemModel;
+import manaki.plugin.skybattle.config.model.battle.ChestItemModel;
 import manaki.plugin.skybattle.config.model.map.ChestGroupModel;
 import manaki.plugin.skybattle.config.model.map.MapModel;
 import manaki.plugin.skybattle.game.manager.GameManager;
@@ -18,10 +20,7 @@ import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
 import me.manaki.plugin.shops.storage.ItemStorage;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -71,6 +70,10 @@ public class Games {
                 // Cancel task
                 this.cancel();
 
+                // Fixed time
+                finalWorldState.toWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                finalWorldState.toWorld().setTime(5000L);
+
                 // Clear entities
                 clearEntities(finalWorldState.toWorld());
 
@@ -81,21 +84,29 @@ public class Games {
                 // Create game manager
                 managers.add(new GameManager(state));
 
+                // Remove placers
+                removeChestPlacers(state);
+
                 // Generate chests
                 spawnChests(state);
 
-                // Teleport
-                var teamLocations = randomLocations(teams, mm.getTeamLocations());
-                for (Map.Entry<Team, String> e : teamLocations.entrySet()) {
-                    var team = e.getKey();
-                    var lid = e.getValue();
-                    for (String pn : team.getPlayers()) {
-                        var p = Bukkit.getPlayer(pn);
-                        var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
-                        p.teleport(l);
-                        p.sendTitle("§a§lBắt đầu!", "§fHãy trở thành team sống sót cuối cùng", 10, 60, 10);
+                // Teleport (wait for chest spawning)
+                Tasks.sync(() -> {
+                    var teamLocations = randomLocations(teams, mm.getTeamLocations());
+                    for (Map.Entry<Team, String> e : teamLocations.entrySet()) {
+                        var team = e.getKey();
+                        var lid = e.getValue();
+                        for (String pn : team.getPlayers()) {
+                            var p = Bukkit.getPlayer(pn);
+                            var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
+                            p.teleport(l);
+                            p.sendTitle("§a§lBắt đầu!", "§fHãy trở thành team sống sót cuối cùng", 10, 60, 10);
+                        }
                     }
-                }
+
+                    // Start tasks
+                    state.startTasks();
+                }, 40);
             }
         }.runTaskTimer(plugin, 0, 10);
 
@@ -145,17 +156,9 @@ public class Games {
         var mm = mapFromState(state);
         var bm = battleFromState(state);
 
-        // Set all to air
-        for (ChestGroupModel cgm : mm.getChestGroups().values()) {
-            for (String lid : cgm.getLocations()) {
-                var l = mm.getLocation(lid).toCenterLocation(state.getWorldState().toWorld());
-                l.getBlock().setType(Material.AIR);
-            }
-        }
-
         // Random
         for (Map.Entry<String, ChestGroupModel> e : mm.getChestGroups().entrySet()) {
-            var id = e.getKey();
+            var grid = e.getKey();
             var group = e.getValue();
 
             // Get location models
@@ -176,8 +179,7 @@ public class Games {
                 // Random items
                 var at = Areas.check(l);
                 var cm = bm.getChests().get(at);
-                var items = Lists.newArrayList(cm.getItems());
-                Utils.random(items, cm.getRandom().random());
+                var items = randomItems(state, grid);
 
                 // Put into chest
                 List<Integer> slots = Lists.newArrayList();
@@ -187,10 +189,12 @@ public class Games {
                 for (int i = 0; i < slots.size(); i++) {
                     var cim = items.get(i);
                     var is = ItemStorage.get(cim.getId());
+                    if (is == null) {
+                        throw new NullPointerException("Can't find item id: " + cim.getId());
+                    }
                     is.setAmount(cim.getAmount().random());
                     inv.setItem(slots.get(i), is);
                 }
-
                 // Count
                 count++;
             }
@@ -227,19 +231,20 @@ public class Games {
         var l = avaiL.get(new Random().nextInt(avaiL.size()));
 
         // Randomize items
-        var sm = bm.getSupplyModel();
-        int amount = sm.getRandom().random();
-        var list = Lists.newArrayList(sm.getItems());
         List<ItemStack> lr = Lists.newArrayList();
-        for (int i = 0 ; i < amount ; i++ ){
-            var ri = new Random().nextInt(list.size());
-            var cim = list.get(ri);
+        var list = bm.getSupplyModel().getItemList();
+        for (ChestGroupItemModel cgim : list) {
+            // Randomize
+            var a = cgim.getRandom().random();
+            var ri = Lists.newArrayList(cgim.getItems());
+            Utils.random(ri, a);
 
-            var is = ItemStorage.get(cim.getId());
-            is.setAmount(cim.getAmount().random());
-
-            lr.add(is);
-            list.remove(ri);
+            // Get items
+            for (ChestItemModel cim : ri) {
+                var is = ItemStorage.get(cim.getId());
+                is.setAmount(cim.getAmount().random());
+                lr.add(is);
+            }
         }
 
         // Set
@@ -330,7 +335,7 @@ public class Games {
 
     public static boolean isSpecialEntity(Entity e) {
         return MythicMobs.inst().getMobManager().isActiveMob(e.getUniqueId())
-                || e.hasMetadata("skybattle.entity");
+                || e.hasMetadata("skybattle.entity") || e.hasMetadata("settings.bypass");
     }
 
     public static void setSpecialEntity(Entity e) {
@@ -346,6 +351,48 @@ public class Games {
 
     public static boolean isByPassedInvalid(Player p) {
         return p.hasMetadata("skybattle.invalidbypass");
+    }
+
+    public static void removeChestPlacers(GameState state) {
+        var mm = mapFromState(state);
+
+        // Chest groups
+        for (ChestGroupModel cgm : mm.getChestGroups().values()) {
+            for (String lid : cgm.getLocations()) {
+                var lm = mm.getLocation(lid);
+                if (lm == null) {
+                    throw new NullPointerException("Can't find location: " + lid);
+                }
+                var l = lm.toCenterLocation(state.getWorldState().toWorld());
+                l.getBlock().setType(Material.AIR);
+            }
+        }
+
+        // Supply
+        for (String lid : mm.getSupplyLocations()) {
+            var lm = mm.getLocation(lid);
+            if (lm == null) {
+                throw new NullPointerException("Can't find location: " + lid);
+            }
+            var l = lm.toCenterLocation(state.getWorldState().toWorld());
+            l.getBlock().setType(Material.AIR);
+        }
+    }
+
+    public static List<ChestItemModel> randomItems(GameState state, String chestGr) {
+        List<ChestItemModel> items = Lists.newArrayList();
+        var bm = battleFromState(state);
+        if (!bm.getChests().containsKey(chestGr)) return items;
+
+        var list = bm.getChests().get(chestGr);
+        for (ChestGroupItemModel cgim : list) {
+            var a = cgim.getRandom().random();
+            var ri = Lists.newArrayList(cgim.getItems());
+            Utils.random(ri, a);
+            items.addAll(ri);
+        }
+
+        return items;
     }
 
 }

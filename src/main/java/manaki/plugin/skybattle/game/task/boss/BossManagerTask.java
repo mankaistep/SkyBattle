@@ -2,6 +2,7 @@ package manaki.plugin.skybattle.game.task.boss;
 
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
+import manaki.plugin.skybattle.game.util.Games;
 
 public class BossManagerTask extends ATask {
 
@@ -25,8 +26,8 @@ public class BossManagerTask extends ATask {
             return;
         }
 
-        // Only spawn in last border
-        if (!state.isLastBorder()) {
+        // Only spawn in last border or one team left
+        if (!state.isLastBorder() && state.getTeamAlive() != 1) {
             return;
         }
 

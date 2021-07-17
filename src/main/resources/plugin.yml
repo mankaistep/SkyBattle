@@ -1,6 +1,7 @@
 name: SkyBattle
 version: 1.0
 main: manaki.plugin.skybattle.SkyBattle
+api-version: 1.16
 commands:
   skybattle:
     permission: skybattle.admin

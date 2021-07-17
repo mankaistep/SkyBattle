@@ -109,6 +109,9 @@ public class GameManager {
 
     public void finish(boolean instantly) {
         if (instantly) {
+            for (var p : state.getPlayers()) {
+                Utils.toSpawn(p);
+            }
             this.clean(true);
             return;
         }

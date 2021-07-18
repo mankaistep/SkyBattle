@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Utils {
 
-    public boolean isOutsideBorder(Player p) {
+    public static boolean isOutsideBorder(Player p) {
         Location loc = p.getLocation();
         WorldBorder border = p.getWorld().getWorldBorder();
         double size = border.getSize()/2;

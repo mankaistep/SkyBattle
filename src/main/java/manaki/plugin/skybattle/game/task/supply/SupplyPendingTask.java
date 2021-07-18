@@ -37,7 +37,7 @@ public class SupplyPendingTask extends APendingTask {
         var loc = l.clone().add(0, 70, 0);
         var parachute = new ItemStack(Material.SPRUCE_SAPLING);
         var meta = parachute.getItemMeta();
-        meta.setCustomModelData(1);
+        meta.setCustomModelData(2);
         parachute.setItemMeta(meta);
 
         var s = (Shulker) loc.getWorld().spawnEntity(loc, EntityType.SHULKER);

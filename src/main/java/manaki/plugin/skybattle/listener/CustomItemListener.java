@@ -7,8 +7,11 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.TNT;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +24,9 @@ import java.util.List;
 
 public class CustomItemListener implements Listener {
 
+    /*
+    TNT
+     */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlaceTNT(BlockPlaceEvent e) {
         var p = e.getPlayer();
@@ -39,7 +45,7 @@ public class CustomItemListener implements Listener {
     public void onThrowTNT(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
-        if (e.getAction() != Action.RIGHT_CLICK_AIR) return;
+        if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();
         if (ishand.getType() != Material.TNT) return;
@@ -51,10 +57,14 @@ public class CustomItemListener implements Listener {
         var v = p.getLocation().getDirection().multiply(0.5);
         if (p.isSneaking()) v = v.multiply(1.5);
 
-        var tnt = p.getWorld().spawnEntity(p.getLocation().add(0, 1.7, 0).add(p.getLocation().getDirection().multiply(2)), EntityType.PRIMED_TNT);
+        var tnt = (TNTPrimed) p.getWorld().spawnEntity(p.getLocation().add(0, 1.7, 0).add(p.getLocation().getDirection().multiply(2)), EntityType.PRIMED_TNT);
         tnt.setVelocity(v);
+        tnt.setFuseTicks(25);
     }
 
+    /*
+    FIREBALL
+     */
     @EventHandler
     public void onThrowFireball(PlayerInteractEvent e) {
         var p = e.getPlayer();
@@ -74,11 +84,14 @@ public class CustomItemListener implements Listener {
         fireball.setVelocity(v);
     }
 
+    /*
+    FIREWORK
+     */
     @EventHandler
     public void onFireworkLaunch(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
-        if (e.getAction() != Action.RIGHT_CLICK_AIR) return;
+        if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();
         if (ishand.getType() != Material.FIREWORK_ROCKET) return;
@@ -95,7 +108,36 @@ public class CustomItemListener implements Listener {
         p.setVelocity(v);
     }
 
-    // Explode
+
+
+    /*
+    END_ROD - ANG TEN
+     */
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        var p = e.getPlayer();
+        if (Games.getCurrentGame(p) == null) return;
+        if (!e.getAction().name().startsWith("RIGHT")) return;
+
+        var ishand = p.getInventory().getItemInMainHand();
+        if (ishand.getType() != Material.END_ROD) return;
+
+        e.setCancelled(true);
+        ishand.setAmount(ishand.getAmount() - 1);
+        p.updateInventory();
+
+        var state = Games.getCurrentGame(p);
+        for (Player player : state.getPlayers()) {
+            player.setGlowing(true);
+            player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
+            player.sendTitle("", "§aBạn đã bị lộ diện bởi Ăng ten", 5, 25, 5);
+            Tasks.sync(() -> {
+                player.setGlowing(false);
+            }, 60);
+        }
+    }
+
+    // EXPLODE WITHOUT DROP
     @EventHandler
     public void onExplode(EntityExplodeEvent e) {
         var w = e.getEntity().getWorld();

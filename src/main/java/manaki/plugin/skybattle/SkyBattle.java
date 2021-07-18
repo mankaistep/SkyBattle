@@ -8,6 +8,7 @@ import manaki.plugin.skybattle.listener.CustomItemListener;
 import manaki.plugin.skybattle.listener.MobListener;
 import manaki.plugin.skybattle.listener.PlacerListener;
 import manaki.plugin.skybattle.listener.PlayerListener;
+import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -28,8 +29,8 @@ public class SkyBattle extends JavaPlugin {
         this.worldManager = new WorldManager(this);
 
         this.registerCommands();
-
         this.registerListeners();
+        this.registerTasks();
     }
 
     @Override
@@ -51,6 +52,11 @@ public class SkyBattle extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomItemListener(), this);
     }
+
+    private void registerTasks() {
+        new Invisibles().runTaskTimer(this, 0, 10);
+    }
+
 
     public void registerCommands() {
         this.getCommand("skybattle").setExecutor(new AdminCommand());

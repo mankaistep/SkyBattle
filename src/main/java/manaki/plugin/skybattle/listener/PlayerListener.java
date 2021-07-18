@@ -3,33 +3,40 @@ package manaki.plugin.skybattle.listener;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.util.Games;
-import manaki.plugin.skybattle.util.Tasks;
+import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExpEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // Complete invisiable
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onInvisiable(EntityPotionEffectEvent e) {
+        if (e.getNewEffect() == null) return;
+        if (!(e.getEntity() instanceof Player)) return;
+        if (!e.getNewEffect().getType().equals(PotionEffectType.INVISIBILITY)) return;
+        var p = (Player) e.getEntity();
+        var time = e.getNewEffect().getDuration() * 50;
+
+        Invisibles.hide(p.getName(), time);
+        p.sendTitle("", "§aTàng hình (kể cả giáp, vũ khí) trong " + time / 1000 + " giây", 2, 25, 5);
+    }
 
     // Player death
     @EventHandler

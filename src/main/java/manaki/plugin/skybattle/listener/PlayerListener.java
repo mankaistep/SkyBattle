@@ -114,6 +114,7 @@ public class PlayerListener implements Listener {
         if (state == null) return;
 
         var b = e.getBlock();
+        if (!b.isSolid()) return;
         if (!state.isBlockPlaced(b)) {
             e.setCancelled(true);
             p.sendMessage("§cBạn chỉ được đặt những block đã đặt ra!");

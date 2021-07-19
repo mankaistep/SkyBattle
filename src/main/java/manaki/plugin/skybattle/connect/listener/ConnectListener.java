@@ -73,6 +73,8 @@ public class ConnectListener implements @NotNull PluginMessageListener {
                         p.setHealthScale(20);
                         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
+                        // Message
+                        p.sendMessage("§c§lGhi §f§l/thoat §c§lđể trở lại máy chủ chính");
                     }
                 }
             }, 20);

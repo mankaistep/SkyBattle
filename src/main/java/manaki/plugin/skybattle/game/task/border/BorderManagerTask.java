@@ -2,7 +2,7 @@ package manaki.plugin.skybattle.game.task.border;
 
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;

@@ -5,7 +5,7 @@ import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.connect.request.util.Requests;
 import manaki.plugin.skybattle.connect.team.Team;
 import manaki.plugin.skybattle.connect.team.player.TeamPlayer;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import mk.plugin.santory.item.Item;
@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sound.midi.SysexMessage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;

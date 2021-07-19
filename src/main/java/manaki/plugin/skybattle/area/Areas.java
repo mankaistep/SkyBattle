@@ -1,7 +1,7 @@
 package manaki.plugin.skybattle.area;
 
 import manaki.plugin.skybattle.SkyBattle;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import org.bukkit.Location;
 
 import java.util.Map;

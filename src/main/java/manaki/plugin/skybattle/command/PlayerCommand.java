@@ -1,6 +1,6 @@
 package manaki.plugin.skybattle.command;
 
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

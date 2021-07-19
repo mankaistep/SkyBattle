@@ -6,7 +6,7 @@ import manaki.plugin.skybattle.config.MainConfig;
 import manaki.plugin.skybattle.connect.executor.Executor;
 import manaki.plugin.skybattle.connect.listener.ConnectListener;
 import manaki.plugin.skybattle.game.manager.GameManager;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.listener.*;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.world.WorldLoader;

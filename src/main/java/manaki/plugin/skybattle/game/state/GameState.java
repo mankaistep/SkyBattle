@@ -8,7 +8,7 @@ import manaki.plugin.skybattle.game.task.boss.BossManagerTask;
 import manaki.plugin.skybattle.game.task.game.GameManagerTask;
 import manaki.plugin.skybattle.game.task.mob.MobManagerTask;
 import manaki.plugin.skybattle.game.task.supply.SupplyManagerTask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;

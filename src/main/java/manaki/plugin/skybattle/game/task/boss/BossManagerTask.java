@@ -2,7 +2,6 @@ package manaki.plugin.skybattle.game.task.boss;
 
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
-import manaki.plugin.skybattle.game.util.Games;
 
 public class BossManagerTask extends ATask {
 

@@ -3,7 +3,7 @@ package manaki.plugin.skybattle.game.task.boss;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.APendingTask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import org.bukkit.entity.LivingEntity;
 
 public class BossPendingTask extends APendingTask {

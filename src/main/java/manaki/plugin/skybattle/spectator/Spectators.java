@@ -3,7 +3,7 @@ package manaki.plugin.skybattle.spectator;
 import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.state.GameState;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;

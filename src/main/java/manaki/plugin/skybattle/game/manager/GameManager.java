@@ -4,14 +4,13 @@ import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.spectator.Spectators;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -61,6 +60,9 @@ public class GameManager {
     }
 
     public void playerDead(Player player) {
+        // Show tab
+        player.setPlayerListName(player.getName());
+        
         // Set state
         state.removeBossbar(player.getName());
         var ps = state.getPlayerState(player.getName());

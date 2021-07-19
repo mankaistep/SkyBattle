@@ -1,4 +1,4 @@
-package manaki.plugin.skybattle.game.util;
+package manaki.plugin.skybattle.game;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -104,6 +104,9 @@ public class Games {
                             p.teleport(l);
                             p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+
+                            // Hidden in tab
+                            p.setPlayerListName("Người chơi X");
                         }
                     }
 

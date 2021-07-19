@@ -3,7 +3,7 @@ package manaki.plugin.skybattle.command;
 import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.config.model.map.LocationModel;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.setup.chestgroup.ChestGroupPlacers;
 import manaki.plugin.skybattle.team.BattleTeam;
 import org.bukkit.Color;

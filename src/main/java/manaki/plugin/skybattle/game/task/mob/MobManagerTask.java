@@ -4,7 +4,7 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import manaki.plugin.skybattle.area.Areas;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.entity.Player;
 

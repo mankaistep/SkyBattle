@@ -3,7 +3,7 @@ package manaki.plugin.skybattle.listener;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.SupplyState;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import me.manaki.plugin.shops.storage.ItemStorage;

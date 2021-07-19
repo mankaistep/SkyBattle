@@ -1,9 +1,8 @@
 package manaki.plugin.skybattle.game.task.game;
 
-import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
-import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
 import org.bukkit.Bukkit;
 
@@ -37,19 +36,15 @@ public class GameManagerTask extends ATask {
 
                     // Invalid
                     if (p.getWorld() != state.getWorldState().toWorld()) {
-                        System.out.println("Before: " + state.getStartTeams().get(0).getPlayers().size() + " " + state.getStartTeams().get(1).getPlayers().size());
                         iter.remove();
                         gm.playerDead(p);
-                        System.out.println("After: " + state.getStartTeams().get(0).getPlayers().size() + " " + state.getStartTeams().get(1).getPlayers().size());
                     }
                 }
 
                 // Invalid
                 if (p == null) {
-                    System.out.println("Before quit: " + state.getStartTeams().get(0).getPlayers().size() + " " + state.getStartTeams().get(1).getPlayers().size());
                     iter.remove();
                     gm.playerQuit(pn);
-                    System.out.println("After quit: " + state.getStartTeams().get(0).getPlayers().size() + " " + state.getStartTeams().get(1).getPlayers().size());
                 }
             }
         }

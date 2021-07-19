@@ -11,11 +11,12 @@ import manaki.plugin.skybattle.config.model.battle.ChestGroupItemModel;
 import manaki.plugin.skybattle.config.model.battle.ChestItemModel;
 import manaki.plugin.skybattle.config.model.map.ChestGroupModel;
 import manaki.plugin.skybattle.config.model.map.MapModel;
+import manaki.plugin.skybattle.connect.request.QuitRequest;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.state.BorderState;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.state.SupplyState;
-import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
@@ -39,7 +40,7 @@ public class Games {
 
     private static int maxId = 0;
 
-    public static void start(String battleId, List<Team> teams) {
+    public static void start(String battleId, List<BattleTeam> battleTeams, boolean isAsync) {
         // Load template world
         var plugin = SkyBattle.get();
         var config = plugin.getMainConfig();
@@ -50,7 +51,7 @@ public class Games {
         var loader = plugin.getWorldLoader();
         WorldState worldState = null;
         try {
-            worldState = loader.load(worldTemplate, true, true);
+            worldState = loader.load(worldTemplate, true, isAsync);
         }
         catch (Exception e) {
             plugin.getLogger().warning("Exception appeared when world is being loaded");
@@ -79,7 +80,7 @@ public class Games {
 
                 // Create state object
                 maxId++;
-                var state = new GameState(maxId, battleId, teams, finalWorldState);
+                var state = new GameState(maxId, battleId, battleTeams, finalWorldState);
 
                 // Create game manager
                 managers.add(new GameManager(state));
@@ -92,15 +93,17 @@ public class Games {
 
                 // Teleport (wait for chest spawning)
                 Tasks.sync(() -> {
-                    var teamLocations = randomLocations(teams, mm.getTeamLocations());
-                    for (Map.Entry<Team, String> e : teamLocations.entrySet()) {
+                    var teamLocations = randomLocations(battleTeams, mm.getTeamLocations());
+                    for (Map.Entry<BattleTeam, String> e : teamLocations.entrySet()) {
                         var team = e.getKey();
                         var lid = e.getValue();
                         for (String pn : team.getPlayers()) {
                             var p = Bukkit.getPlayer(pn);
+                            if (p == null) continue;
                             var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
                             p.teleport(l);
-                            p.sendTitle("§a§lBắt đầu!", "§fHãy trở thành team sống sót cuối cùng", 10, 60, 10);
+                            p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
                         }
                     }
 
@@ -110,6 +113,11 @@ public class Games {
             }
         }.runTaskTimer(plugin, 0, 10);
 
+    }
+
+    public static void backToMainServer(Player player) {
+        var qr = new QuitRequest(player.getName(), "");
+        SkyBattle.get().getExecutor().sendQuit(qr);
     }
 
     public static GameManager managerFromWorld(World world) {
@@ -176,25 +184,28 @@ public class Games {
                 Chest chest = (Chest) b.getState();
                 var inv = chest.getInventory();
 
-                // Random items
-                var at = Areas.check(l);
-                var cm = bm.getChests().get(at);
-                var items = randomItems(state, grid);
+                Tasks.async(() -> {
+                    // Random items
+                    var at = Areas.check(l);
+                    var cm = bm.getChests().get(at);
+                    var items = randomItems(state, grid);
 
-                // Put into chest
-                List<Integer> slots = Lists.newArrayList();
-                int amount = items.size();
-                for (int i = 0 ; i < inv.getSize() ; i++) slots.add(i);
-                Utils.random(slots, amount);
-                for (int i = 0; i < slots.size(); i++) {
-                    var cim = items.get(i);
-                    var is = ItemStorage.get(cim.getId());
-                    if (is == null) {
-                        throw new NullPointerException("Can't find item id: " + cim.getId());
+                    // Put into chest
+                    List<Integer> slots = Lists.newArrayList();
+                    int amount = items.size();
+                    for (int i = 0 ; i < inv.getSize() ; i++) slots.add(i);
+                    Utils.random(slots, amount);
+                    for (int i = 0; i < slots.size(); i++) {
+                        var cim = items.get(i);
+                        var is = ItemStorage.get(cim.getId());
+                        if (is == null) {
+                            throw new NullPointerException("Can't find item id: " + cim.getId());
+                        }
+                        is.setAmount(cim.getAmount().random());
+                        inv.setItem(slots.get(i), is);
                     }
-                    is.setAmount(cim.getAmount().random());
-                    inv.setItem(slots.get(i), is);
-                }
+                });
+
                 // Count
                 count++;
             }
@@ -287,8 +298,8 @@ public class Games {
         return mm.getBorders().get(nextBorder);
     }
 
-    public static boolean isTeamAlive(GameState state, Team team) {
-        for (String pn : team.getPlayers()) {
+    public static boolean isTeamAlive(GameState state, BattleTeam battleTeam) {
+        for (String pn : battleTeam.getPlayers()) {
             var ps = state.getPlayerState(pn);
             if (ps == null) return true;
             if (!ps.isDead()) return true;
@@ -303,19 +314,19 @@ public class Games {
         return null;
     }
 
-    public static Map<Team, String> randomLocations(List<Team> teams, List<String> locations) {
+    public static Map<BattleTeam, String> randomLocations(List<BattleTeam> battleTeams, List<String> locations) {
         List<String> lr = Lists.newArrayList();
         List<String> clone = Lists.newArrayList(locations);
-        int size = teams.size();
+        int size = battleTeams.size();
         for (int i = 0 ; i < size ; i++) {
             int ri = new Random().nextInt(clone.size());
             lr.add(clone.get(ri));
             clone.remove(ri);
         }
 
-        Map<Team, String> m = Maps.newHashMap();
+        Map<BattleTeam, String> m = Maps.newHashMap();
         for (int i = 0 ; i < size ; i++) {
-            m.put(teams.get(i), lr.get(i));
+            m.put(battleTeams.get(i), lr.get(i));
         }
 
         return m;
@@ -393,6 +404,15 @@ public class Games {
         }
 
         return items;
+    }
+
+    public static List<Player> getWorldChatRecipients(Player player) {
+        List<Player> list = Lists.newArrayList();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.hasPermission("skybattle.admin")) list.add(p);
+            else if (p.getWorld() == player.getWorld()) list.add(p);
+        }
+        return list;
     }
 
 }

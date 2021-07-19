@@ -5,7 +5,8 @@ import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
 import manaki.plugin.skybattle.game.util.Games;
-import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.spectator.Spectators;
+import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,7 +35,7 @@ public class GameManager {
         // Set state
         state.removeBossbar(pname);
         var ps = state.getPlayerState(pname);
-        ps.setDead(true);
+        if (ps != null) ps.setDead(true);
 
         // If has anyone left
         var team = state.getTeam(pname);
@@ -52,7 +53,7 @@ public class GameManager {
                     Tasks.sync(() -> {
                         // Back to main server
                         Games.bypassInvalidCheck(p, 10000);
-                        Utils.toSpawn(p);
+                        Games.backToMainServer(p);
                     }, 80);
                 }
             }
@@ -61,7 +62,6 @@ public class GameManager {
 
     public void playerDead(Player player) {
         // Set state
-        state.removeBossbar(player.getName());
         var ps = state.getPlayerState(player.getName());
         ps.setDead(true);
 
@@ -77,10 +77,13 @@ public class GameManager {
                 if (!state.getPlayerState(pn).isDead()) {
                     Games.bypassInvalidCheck(player, 1000);
                     Tasks.sync(() -> {
-                        player.setGameMode(GameMode.SPECTATOR);
-                        player.setSpectatorTarget(Bukkit.getPlayer(pn));
+                        var teammate = Bukkit.getPlayer(pn);
+                        // Spectator
+                        Spectators.setSpectator(player, teammate);
+
+                        // Message
                         player.sendTitle("§c§lBẠN ĐÃ CHẾT", "§fChỉ có thể theo dõi đồng đội", 10, 100, 10);
-                        player.sendMessage("§cGhi §f/thoat &cđể thoát trận");
+                        player.sendMessage("§cGhi §f/thoat §cđể thoát trận");
                     }, 5);
                     teamAlive = true;
                     break;
@@ -100,7 +103,7 @@ public class GameManager {
                     // Kick
                     Tasks.sync(() -> {
                         // Back to main server
-                        Utils.toSpawn(p);
+                        Games.backToMainServer(p);
                     }, 80);
                 }
             }
@@ -110,7 +113,7 @@ public class GameManager {
     public void finish(boolean instantly) {
         if (instantly) {
             for (var p : state.getPlayers()) {
-                Utils.toSpawn(p);
+                Games.backToMainServer(p);
             }
             this.clean(true);
             return;
@@ -119,11 +122,11 @@ public class GameManager {
         state.setEnded(true);
 
         // Winner
-        Team team = state.getWinTeam();
+        BattleTeam battleTeam = state.getWinTeam();
 
         // Has winner
-        if (team != null) {
-            for (String pn : team.getPlayers()) {
+        if (battleTeam != null) {
+            for (String pn : battleTeam.getPlayers()) {
                 var p = Bukkit.getPlayer(pn);
                 p.sendTitle("§e§lTOP #" + state.getTeamAlive(), "§fChiến thắng", 10, 60, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
@@ -135,7 +138,7 @@ public class GameManager {
                     // Notification
                     var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
                     var seconds = remain / 1000;
-                    for (String pn : team.getPlayers()) {
+                    for (String pn : battleTeam.getPlayers()) {
                         var p = Bukkit.getPlayer(pn);
                         p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
                     }
@@ -146,9 +149,9 @@ public class GameManager {
 
                         // Back to main server
                         Tasks.sync(() -> {
-                            for (String pn : team.getPlayers()) {
+                            for (String pn : battleTeam.getPlayers()) {
                                 var p = Bukkit.getPlayer(pn);
-                                Utils.toSpawn(p);
+                                Games.backToMainServer(p);
                             }
 
                         });

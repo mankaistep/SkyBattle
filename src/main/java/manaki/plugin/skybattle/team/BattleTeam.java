@@ -4,12 +4,12 @@ import org.bukkit.Color;
 
 import java.util.List;
 
-public class Team {
+public class BattleTeam {
 
     private final Color color;
     private final List<String> players;
 
-    public Team(Color color, List<String> list) {
+    public BattleTeam(Color color, List<String> list) {
         this.color = color;
         this.players = list;
     }

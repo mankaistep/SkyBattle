@@ -1,8 +1,10 @@
 package manaki.plugin.skybattle.world;
 
 import manaki.plugin.skybattle.SkyBattle;
+import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
@@ -205,9 +207,14 @@ public class WorldLoader {
         if (isAsync) {
             Tasks.sync(() -> {
                 for (Player player : world.getPlayers()) {
-                    Utils.toSpawn(player);
+                    Games.backToMainServer(player);
                 }
             });
+        }
+        else {
+            for (Player player : world.getPlayers()) {
+                player.kick(null);
+            }
         }
 
         // Unload async

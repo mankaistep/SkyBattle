@@ -6,6 +6,7 @@ import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffectType;
@@ -145,7 +147,33 @@ public class PlayerListener implements Listener {
                 break;
             }
         }
-
     }
+
+    // World chat
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent e) {
+        var p = e.getPlayer();
+        var state = Games.getCurrentGame(p);
+
+        var message = e.getMessage();
+        var recipients = e.getRecipients();
+        recipients.clear();
+
+        // World chat
+        if (message.startsWith("@all ") || state == null) {
+            e.setFormat("§6[@all] " + p.getName() + ": §f"  + message.replace("@all ", ""));
+            recipients.addAll(Games.getWorldChatRecipients(p));
+        }
+
+        // Team chat
+        else {
+            e.setFormat("§a[@team] " + p.getName() + ": §f"  + message);
+            for (String tmname : state.getTeam(p).getPlayers()) {
+                var teammate = Bukkit.getPlayer(tmname);
+                if (teammate != null) recipients.add(teammate);
+            }
+        }
+    }
+
 
 }

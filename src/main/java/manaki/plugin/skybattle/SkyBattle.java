@@ -1,13 +1,13 @@
 package manaki.plugin.skybattle;
 
 import manaki.plugin.skybattle.command.AdminCommand;
+import manaki.plugin.skybattle.command.PlayerCommand;
 import manaki.plugin.skybattle.config.MainConfig;
+import manaki.plugin.skybattle.connect.executor.Executor;
+import manaki.plugin.skybattle.connect.listener.ConnectListener;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.util.Games;
-import manaki.plugin.skybattle.listener.CustomItemListener;
-import manaki.plugin.skybattle.listener.MobListener;
-import manaki.plugin.skybattle.listener.PlacerListener;
-import manaki.plugin.skybattle.listener.PlayerListener;
+import manaki.plugin.skybattle.listener.*;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
@@ -18,19 +18,25 @@ import java.util.List;
 
 public class SkyBattle extends JavaPlugin {
 
+    public static final String CHANNEL = "game:skybattle";
+
     private MainConfig mainConfig;
     private WorldLoader worldLoader;
     private WorldManager worldManager;
+
+    private Executor executor;
 
     @Override
     public void onEnable() {
         this.mainConfig = new MainConfig(this, this.getDataFolder() + "//config.yml");
         this.worldLoader = new WorldLoader(this);
         this.worldManager = new WorldManager(this);
+        this.executor = new Executor(this);
 
         this.registerCommands();
         this.registerListeners();
         this.registerTasks();
+        this.registerChannel();
     }
 
     @Override
@@ -51,6 +57,7 @@ public class SkyBattle extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MobListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomItemListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SpectatorListener(), this);
     }
 
     private void registerTasks() {
@@ -60,6 +67,12 @@ public class SkyBattle extends JavaPlugin {
 
     public void registerCommands() {
         this.getCommand("skybattle").setExecutor(new AdminCommand());
+        this.getCommand("quit").setExecutor(new PlayerCommand());
+    }
+
+    public void registerChannel() {
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, new ConnectListener());
     }
 
     public MainConfig getMainConfig() {
@@ -72,6 +85,10 @@ public class SkyBattle extends JavaPlugin {
 
     public WorldManager getWorldManager() {
         return worldManager;
+    }
+
+    public Executor getExecutor() {
+        return executor;
     }
 
     public void cancelAllGames() {

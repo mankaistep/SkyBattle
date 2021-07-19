@@ -9,7 +9,7 @@ import manaki.plugin.skybattle.game.task.game.GameManagerTask;
 import manaki.plugin.skybattle.game.task.mob.MobManagerTask;
 import manaki.plugin.skybattle.game.task.supply.SupplyManagerTask;
 import manaki.plugin.skybattle.game.util.Games;
-import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
 import org.bukkit.Bukkit;
@@ -28,13 +28,13 @@ public class GameState {
     private final int id;
     private final String battleId;
     private final long startTime;
-    private final List<Team> startTeams;
+    private final List<BattleTeam> startBattleTeams;
 
     // Task
     private List<ATask> tasks;
 
     // Current
-    private final List<Team> currentTeams;
+    private final List<BattleTeam> currentBattleTeams;
 
     // Data
     private boolean isLoading;
@@ -52,12 +52,12 @@ public class GameState {
     // End
     private boolean isEnded;
 
-    public GameState(int id, String battleId, List<Team> teams, WorldState ws) {
+    public GameState(int id, String battleId, List<BattleTeam> battleTeams, WorldState ws) {
         this.id = id;
         this.battleId = battleId;
         this.startTime = System.currentTimeMillis();
-        this.startTeams = List.copyOf(teams);
-        this.currentTeams = List.copyOf(teams);
+        this.startBattleTeams = List.copyOf(battleTeams);
+        this.currentBattleTeams = List.copyOf(battleTeams);
         this.worldState = ws;
         this.supplyStates = Lists.newArrayList();
         this.bossbars = Lists.newArrayList();
@@ -106,18 +106,18 @@ public class GameState {
         return startTime;
     }
 
-    public List<Team> getStartTeams() {
-        return startTeams;
+    public List<BattleTeam> getStartTeams() {
+        return startBattleTeams;
     }
 
-    public List<Team> getCurrentTeams() {
-        return currentTeams;
+    public List<BattleTeam> getCurrentTeams() {
+        return currentBattleTeams;
     }
 
     public List<Player> getPlayers() {
         List<Player> players = Lists.newArrayList();
-        for (Team team : this.currentTeams) {
-            for (String pn : team.getPlayers()) {
+        for (BattleTeam battleTeam : this.currentBattleTeams) {
+            for (String pn : battleTeam.getPlayers()) {
                 var p = Bukkit.getPlayer(pn);
                 if (p == null) continue;
                 players.add(p);
@@ -213,24 +213,24 @@ public class GameState {
         return this.playerStates.getOrDefault(name, null);
     }
 
-    public Team getTeam(Player player) {
-        for (Team team : this.getCurrentTeams()) {
-            if (team.getPlayers().contains(player.getName())) return team;
+    public BattleTeam getTeam(Player player) {
+        for (BattleTeam battleTeam : this.getCurrentTeams()) {
+            if (battleTeam.getPlayers().contains(player.getName())) return battleTeam;
         }
         return null;
     }
 
-    public Team getTeam(String player) {
-        for (Team team : this.getCurrentTeams()) {
-            if (team.getPlayers().contains(player)) return team;
+    public BattleTeam getTeam(String player) {
+        for (BattleTeam battleTeam : this.getCurrentTeams()) {
+            if (battleTeam.getPlayers().contains(player)) return battleTeam;
         }
         return null;
     }
 
     public int getTeamAlive() {
         int c = 0;
-        for (Team team : this.getCurrentTeams()) {
-            if (Games.isTeamAlive(this, team)) c++;
+        for (BattleTeam battleTeam : this.getCurrentTeams()) {
+            if (Games.isTeamAlive(this, battleTeam)) c++;
         }
         return c;
     }
@@ -240,9 +240,9 @@ public class GameState {
         return getTeamAlive() == 1 && this.boss != null && this.boss.isDead();
     }
 
-    public Team getWinTeam() {
-        for (Team team : this.getCurrentTeams()) {
-            if (Games.isTeamAlive(this, team)) return team;
+    public BattleTeam getWinTeam() {
+        for (BattleTeam battleTeam : this.getCurrentTeams()) {
+            if (Games.isTeamAlive(this, battleTeam)) return battleTeam;
         }
         return null;
     }

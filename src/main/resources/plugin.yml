@@ -6,3 +6,6 @@ commands:
   skybattle:
     permission: skybattle.admin
     aliases: [sb]
+  quit:
+    permission: skybattle.player
+    aliases: [thoat, out]

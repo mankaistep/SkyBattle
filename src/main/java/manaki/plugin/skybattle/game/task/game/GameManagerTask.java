@@ -3,7 +3,7 @@ package manaki.plugin.skybattle.game.task.game;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
 import manaki.plugin.skybattle.game.util.Games;
-import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.team.BattleTeam;
 import org.bukkit.Bukkit;
 
 public class GameManagerTask extends ATask {
@@ -26,8 +26,8 @@ public class GameManagerTask extends ATask {
     public void checkValidPlayer() {
         var state = this.getState();
         var gm = Games.managerFromState(state);
-        for (Team team : state.getCurrentTeams()) {
-            var iter = team.getPlayers().iterator();
+        for (BattleTeam battleTeam : state.getCurrentTeams()) {
+            var iter = battleTeam.getPlayers().iterator();
             while (iter.hasNext()) {
                 var pn = iter.next();
                 var p = Bukkit.getPlayer(pn);

@@ -5,7 +5,7 @@ import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.config.model.map.LocationModel;
 import manaki.plugin.skybattle.game.util.Games;
 import manaki.plugin.skybattle.setup.chestgroup.ChestGroupPlacers;
-import manaki.plugin.skybattle.team.Team;
+import manaki.plugin.skybattle.team.BattleTeam;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
@@ -34,25 +34,25 @@ public class AdminCommand implements @Nullable CommandExecutor {
             else if (args[0].equalsIgnoreCase("start")) {
                 var bid = args[1];
 
-                List<Team> teams = Lists.newArrayList();
+                List<BattleTeam> battleTeams = Lists.newArrayList();
                 for (String pn : args[2].split(";")) {
-                    teams.add(new Team(Color.RED, Lists.newArrayList(pn)));
+                    battleTeams.add(new BattleTeam(Color.RED, Lists.newArrayList(pn)));
                 }
 
-                Games.start(bid, teams);
+                Games.start(bid, battleTeams, false);
             }
 
             else if (args[0].equalsIgnoreCase("start2")) {
                 var bid = args[1];
 
-                List<Team> teams = Lists.newArrayList();
+                List<BattleTeam> battleTeams = Lists.newArrayList();
                 var a = args[2].split(";");
                 for (int i = 0 ; i < a.length ; i+=2) {
-                    var team = new Team(Color.RED, Lists.newArrayList(a[i], a[i + 1]));
-                    teams.add(team);
+                    var team = new BattleTeam(Color.RED, Lists.newArrayList(a[i], a[i + 1]));
+                    battleTeams.add(team);
                 }
 
-                Games.start(bid, teams);
+                Games.start(bid, battleTeams, false);
             }
 
             else if (args[0].equalsIgnoreCase("setplacer")) {

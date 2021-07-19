@@ -102,10 +102,6 @@ public class Utils {
         return c;
     }
 
-    public static void toSpawn(Player player) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
-    }
-
     public static void setBorder(World world, int centerX, int centerZ, int radius, double damage) {
         @NotNull WorldBorder wb = world.getWorldBorder();
         wb.setCenter(centerX, centerZ);

@@ -21,7 +21,7 @@ public class SupplyPendingTask extends APendingTask {
     private SupplyState ss;
 
     public SupplyPendingTask(GameState state, long period, String message, SupplyState ss) {
-        super(state, "supplyPending", period, message);
+        super(state, "supplyPending", period, message, 5);
         this.ss = ss;
     }
 

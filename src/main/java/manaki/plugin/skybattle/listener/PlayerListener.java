@@ -3,6 +3,7 @@ package manaki.plugin.skybattle.listener;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.util.Games;
+import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
@@ -17,6 +18,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -26,6 +29,17 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // GUI
+    @EventHandler
+    public void onInvClick(InventoryClickEvent e) {
+        SpectatorGUI.onClick(e);
+    }
+
+    @EventHandler
+    public void onInvDrag(InventoryDragEvent e) {
+        SpectatorGUI.onDrag(e);
+    }
 
     // Complete invisiable
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

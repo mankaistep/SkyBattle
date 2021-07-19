@@ -15,7 +15,7 @@ public class MobManagerTask extends ATask {
     private final double RADIUS_CHECK = 10;
 
     public MobManagerTask(GameState state) {
-        super(state);
+        super(state, 20);
     }
 
     @Override

@@ -68,6 +68,7 @@ public class SkyBattle extends JavaPlugin {
     public void registerCommands() {
         this.getCommand("skybattle").setExecutor(new AdminCommand());
         this.getCommand("quit").setExecutor(new PlayerCommand());
+        this.getCommand("spectator").setExecutor(new PlayerCommand());
     }
 
     public void registerChannel() {

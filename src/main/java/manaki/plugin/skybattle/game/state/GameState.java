@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameState {
 
@@ -56,8 +57,8 @@ public class GameState {
         this.id = id;
         this.battleId = battleId;
         this.startTime = System.currentTimeMillis();
-        this.startBattleTeams = List.copyOf(battleTeams);
-        this.currentBattleTeams = List.copyOf(battleTeams);
+        this.startBattleTeams = battleTeams.stream().map(BattleTeam::cloneTeam).collect(Collectors.toList());
+        this.currentBattleTeams = Lists.newArrayList(battleTeams);
         this.worldState = ws;
         this.supplyStates = Lists.newArrayList();
         this.bossbars = Lists.newArrayList();

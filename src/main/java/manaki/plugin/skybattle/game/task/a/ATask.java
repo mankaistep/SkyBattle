@@ -7,9 +7,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class ATask extends BukkitRunnable {
 
     private final GameState state;
+    private final int tickLoop;
 
-    public ATask(GameState state) {
+    public ATask(GameState state, int tickLoop) {
         this.state = state;
+        this.tickLoop = tickLoop;
     }
 
     public GameState getState() {
@@ -23,7 +25,7 @@ public abstract class ATask extends BukkitRunnable {
 
     public ATask start() {
         state.addTask(this);
-        this.runTaskTimer(SkyBattle.get(), 0, 20);
+        this.runTaskTimer(SkyBattle.get(), 0, this.tickLoop);
         return this;
     }
 

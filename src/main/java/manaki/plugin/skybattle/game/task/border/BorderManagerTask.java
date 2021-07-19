@@ -15,7 +15,7 @@ public class BorderManagerTask extends ATask {
     private BossBar bossbar = null;
 
     public BorderManagerTask(GameState state) {
-        super(state);
+        super(state, 5);
     }
 
     @Override

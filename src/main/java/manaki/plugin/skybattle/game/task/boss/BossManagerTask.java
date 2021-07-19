@@ -9,7 +9,7 @@ public class BossManagerTask extends ATask {
     private boolean spawned;
 
     public BossManagerTask(GameState state) {
-        super(state);
+        super(state, 5);
         this.spawned = false;
     }
 

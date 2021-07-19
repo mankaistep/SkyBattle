@@ -207,13 +207,13 @@ public class WorldLoader {
         if (isAsync) {
             Tasks.sync(() -> {
                 for (Player player : world.getPlayers()) {
-                    Games.backToMainServer(player);
+                    Utils.toSpawn(player);
                 }
             });
         }
         else {
             for (Player player : world.getPlayers()) {
-                player.kick(null);
+                Utils.toSpawn(player);
             }
         }
 

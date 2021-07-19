@@ -9,7 +9,7 @@ import org.bukkit.entity.LivingEntity;
 public class BossPendingTask extends APendingTask {
 
     public BossPendingTask(GameState state, long period, String message) {
-        super(state, "bossPending", period, message);
+        super(state, "bossPending", period, message, 5);
     }
 
     @Override

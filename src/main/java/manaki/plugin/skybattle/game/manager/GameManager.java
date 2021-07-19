@@ -62,6 +62,7 @@ public class GameManager {
 
     public void playerDead(Player player) {
         // Set state
+        state.removeBossbar(player.getName());
         var ps = state.getPlayerState(player.getName());
         ps.setDead(true);
 
@@ -113,7 +114,7 @@ public class GameManager {
     public void finish(boolean instantly) {
         if (instantly) {
             for (var p : state.getPlayers()) {
-                Games.backToMainServer(p);
+                Utils.toSpawn(p);
             }
             this.clean(true);
             return;

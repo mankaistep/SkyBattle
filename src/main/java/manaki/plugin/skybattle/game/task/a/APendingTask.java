@@ -20,8 +20,8 @@ public abstract class APendingTask extends ATask {
     private final long period;
     private String message;
 
-    public APendingTask(GameState state, String name, long period, String message) {
-        super(state);
+    public APendingTask(GameState state, String name, long period, String message, int tickLoop) {
+        super(state, tickLoop);
         this.name = name;
         this.start = System.currentTimeMillis();
         this.period = period;

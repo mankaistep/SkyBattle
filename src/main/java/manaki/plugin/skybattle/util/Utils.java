@@ -110,4 +110,12 @@ public class Utils {
         wb.setDamageAmount(damage);
     }
 
+    public static String format(int seconds) {
+        return seconds / 60 + "m " + seconds % 60 + "s";
+    }
+
+    public static void toSpawn(Player player) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
+    }
+
 }

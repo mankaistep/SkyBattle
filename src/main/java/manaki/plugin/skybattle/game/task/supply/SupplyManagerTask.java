@@ -17,7 +17,7 @@ public class SupplyManagerTask extends ATask {
     private final List<Integer> supplySpawned;
 
     public SupplyManagerTask(GameState state) {
-        super(state);
+        super(state, 5);
         this.supplySpawned = new ArrayList<>();
     }
 

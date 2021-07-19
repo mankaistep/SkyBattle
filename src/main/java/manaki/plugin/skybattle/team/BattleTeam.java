@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.team;
 
+import com.google.common.collect.Lists;
 import org.bukkit.Color;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public class BattleTeam {
         players.remove(player);
     }
 
+    public BattleTeam cloneTeam() {
+        return new BattleTeam(this.color, Lists.newArrayList(this.players));
+    }
 }

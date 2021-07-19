@@ -9,3 +9,6 @@ commands:
   quit:
     permission: skybattle.player
     aliases: [thoat, out]
+  spectator:
+    permission: skybattle.player
+    aliases: [khangia, quansat, theodoi]

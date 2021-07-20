@@ -1,9 +1,8 @@
 package manaki.plugin.skybattle.listener;
 
 import manaki.plugin.skybattle.SkyBattle;
-import manaki.plugin.skybattle.game.manager.GameManager;
-import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.Games;
+import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
@@ -23,16 +22,21 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // Velocity not in battle world
+    @EventHandler
+    public void onVelocity(PlayerVelocityEvent e) {
+        var p = e.getPlayer();
+        var gm = Games.managerFromWorld(p.getWorld());
+        if (gm == null) e.setCancelled(true);
+    }
 
     // Spectator move to another world
     @EventHandler

@@ -105,8 +105,8 @@ public class GameManager {
 
                     // Kick
                     Tasks.sync(() -> {
-                        // Back to main server
-                        Games.backToMainServer(p);
+                        // Back to spawn
+                        Utils.toSpawn(p);
                     }, 80);
                 }
             }

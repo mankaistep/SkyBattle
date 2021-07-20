@@ -66,7 +66,10 @@ public abstract class APendingTask extends ATask {
             if (this.bossbar == null) {
                 this.checkedSeconds = Sets.newHashSet();
                 this.bossbar = Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID);
-                for (Player p : this.getState().getPlayers()) this.bossbar.addPlayer(p);
+
+                // Add players in world
+                for (var p: this.getState().getWorldState().toWorld().getPlayers()) this.bossbar.addPlayer(p);
+
                 this.getState().addBossbar(bossbar);
             }
 

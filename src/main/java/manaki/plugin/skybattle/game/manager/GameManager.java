@@ -51,7 +51,7 @@ public class GameManager {
                     // Kick
                     Tasks.sync(() -> {
                         // Back to main server
-                        Games.bypassInvalidCheck(p, 10000);
+                        Games.bypassInvalidCheck(p, 1000);
                         Games.backToMainServer(p);
                     }, 80);
                 }

@@ -1,6 +1,7 @@
 package manaki.plugin.skybattle.listener;
 
 import manaki.plugin.skybattle.SkyBattle;
+import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
@@ -8,7 +9,9 @@ import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,12 +26,30 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // Spectator move to another world
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        var p = e.getPlayer();
+        var pw = e.getFrom().getWorld();
+        var aw = e.getTo().getWorld();
+        if (pw != aw && p.getGameMode() == GameMode.SPECTATOR) {
+            p.setGameMode(GameMode.SURVIVAL);
+            var gm = Games.managerFromWorld(pw);
+            if (gm == null) return;
+
+            for (BossBar bb : gm.getState().getBossbars()) {
+                bb.removePlayer(p);
+            }
+        }
+    }
 
     // GUI
     @EventHandler
@@ -71,9 +92,6 @@ public class PlayerListener implements Listener {
         var p = e.getPlayer();
         var state = Games.getCurrentGame(p);
         if (state == null) return;
-
-        // Back to main server
-        if (Games.isByPassedInvalid(p)) return;
 
         var gm = Games.managerFromState(state);
         gm.playerQuit(p.getName());

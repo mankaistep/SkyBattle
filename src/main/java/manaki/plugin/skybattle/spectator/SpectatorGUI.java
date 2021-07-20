@@ -47,6 +47,7 @@ public class SpectatorGUI {
 
         var player = (Player) e.getWhoClicked();
         int slot = e.getSlot();
+        if (Games.getManagers().size() <= slot) return;
         var gm = Games.getManagers().get(slot);
         if (gm == null) return;
 

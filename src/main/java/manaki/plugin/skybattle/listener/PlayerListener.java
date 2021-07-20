@@ -30,6 +30,13 @@ import java.util.Map;
 
 public class PlayerListener implements Listener {
 
+    // Survival on join
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        var p = e.getPlayer();
+        p.setGameMode(GameMode.SURVIVAL);
+    }
+
     // Velocity not in battle world
     @EventHandler
     public void onVelocity(PlayerVelocityEvent e) {

@@ -200,12 +200,29 @@ public class Games {
                     Utils.random(slots, amount);
                     for (int i = 0; i < slots.size(); i++) {
                         var cim = items.get(i);
-                        var is = ItemStorage.get(cim.getId());
-                        if (is == null) {
-                            throw new NullPointerException("Can't find item id: " + cim.getId());
+                        int slot = slots.get(i);
+
+                        // Santory core sync item load
+                        if (cim.getId().contains("santory_")) {
+                            Tasks.sync(() -> {
+                                var is = ItemStorage.get(cim.getId());
+                                if (is == null) {
+                                    throw new NullPointerException("Can't find item id: " + cim.getId());
+                                }
+                                is.setAmount(cim.getAmount().random());
+                                inv.setItem(slot, is);
+                            });
                         }
-                        is.setAmount(cim.getAmount().random());
-                        inv.setItem(slots.get(i), is);
+
+                        // Not santory item
+                        else {
+                            var is = ItemStorage.get(cim.getId());
+                            if (is == null) {
+                                throw new NullPointerException("Can't find item id: " + cim.getId());
+                            }
+                            is.setAmount(cim.getAmount().random());
+                            inv.setItem(slot, is);
+                        }
                     }
                 });
 

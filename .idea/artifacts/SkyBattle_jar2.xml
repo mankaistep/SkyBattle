@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SkyBattle:jar2">
+    <output-path>D:/Minecraft/Server/_Skybattle/plugins</output-path>
+    <root id="archive" name="SkyBattle.jar">
+      <element id="module-output" name="SkyBattle" />
+    </root>
+  </artifact>
+</component>

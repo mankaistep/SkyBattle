@@ -21,7 +21,7 @@ public class GameManager {
 
     private final int WIN_WAITING_TIME = 30000;
 
-    private GameState state;
+    private final GameState state;
 
     public GameManager(GameState state) {
         this.state = state;
@@ -77,14 +77,10 @@ public class GameManager {
         var ps = state.getPlayerState(player.getName());
         ps.setDead(true);
 
-        Tasks.sync(() -> {
-            player.spigot().respawn();
-        });
+        Tasks.sync(() -> player.spigot().respawn());
 
         // Clear data
-        Tasks.async(() -> {
-            ConnectListener.clearData(player);
-        });
+        Tasks.async(() -> ConnectListener.clearData(player));
 
         // If has anyone left
         var team = state.getTeam(player);
@@ -95,6 +91,7 @@ public class GameManager {
                     Games.bypassInvalidCheck(player, 1000);
                     Tasks.sync(() -> {
                         var teammate = Bukkit.getPlayer(pn);
+
                         // Spectator
                         Spectators.setSpectator(player, teammate);
 
@@ -109,13 +106,9 @@ public class GameManager {
 
             // Kick if not alive
             if (!teamAlive) {
-                for (String pn : team.getPlayers()) {
-                    var p = Bukkit.getPlayer(pn);
-
+                for (Player p : team.getOnlinePlayers()) {
                     // Title
-                    Tasks.sync(() -> {
-                        p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10);
-                    }, 5);
+                    Tasks.sync(() -> p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10), 5);
 
                     // Kick
                     Tasks.sync(() -> {
@@ -143,8 +136,7 @@ public class GameManager {
 
         // Has winner
         if (battleTeam != null) {
-            for (String pn : battleTeam.getPlayers()) {
-                var p = Bukkit.getPlayer(pn);
+            for (Player p : battleTeam.getOnlinePlayers()) {
                 p.sendTitle("§e§lTOP #" + state.getTeamAlive(), "§fChiến thắng", 10, 60, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
             }
@@ -155,8 +147,7 @@ public class GameManager {
                     // Notification
                     var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
                     var seconds = remain / 1000;
-                    for (String pn : battleTeam.getPlayers()) {
-                        var p = Bukkit.getPlayer(pn);
+                    for (Player p : battleTeam.getOnlinePlayers()) {
                         p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
                     }
 
@@ -166,11 +157,9 @@ public class GameManager {
 
                         // Back to main server
                         Tasks.sync(() -> {
-                            for (String pn : battleTeam.getPlayers()) {
-                                var p = Bukkit.getPlayer(pn);
+                            for (Player p : battleTeam.getOnlinePlayers()) {
                                 Games.backToMainServer(p);
                             }
-
                         });
 
                         // Do the finish

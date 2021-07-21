@@ -1,7 +1,9 @@
 package manaki.plugin.skybattle.team;
 
 import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -21,6 +23,15 @@ public class BattleTeam {
 
     public List<String> getPlayers() {
         return players;
+    }
+
+    public List<Player> getOnlinePlayers() {
+        List<Player> list = Lists.newArrayList();
+        for (String pn : this.players) {
+            var p = Bukkit.getPlayer(pn);
+            if (p != null) list.add(p);
+        }
+        return list;
     }
 
     public void add(String player) {

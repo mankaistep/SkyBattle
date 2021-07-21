@@ -115,6 +115,7 @@ public class Utils {
     }
 
     public static void toSpawn(Player player) {
+        if (player == null || !player.isOnline()) return;
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
     }
 

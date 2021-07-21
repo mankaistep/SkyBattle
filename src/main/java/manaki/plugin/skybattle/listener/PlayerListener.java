@@ -19,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,6 +32,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // No fall damage
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onFall(EntityDamageEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.FALL) e.setCancelled(true);
+    }
 
     // Death message
     @EventHandler(priority = EventPriority.LOWEST)

@@ -72,8 +72,12 @@ public class Games {
                 this.cancel();
 
                 // Fixed time
-                finalWorldState.toWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                finalWorldState.toWorld().setTime(5000L);
+                var world = finalWorldState.toWorld();
+                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                world.setTime(5000L);
+
+                // No archivement
+                world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
                 // Clear entities
                 clearEntities(finalWorldState.toWorld());

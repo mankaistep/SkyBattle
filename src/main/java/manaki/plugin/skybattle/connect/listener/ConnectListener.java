@@ -80,7 +80,7 @@ public class ConnectListener implements @NotNull PluginMessageListener {
             }, 20);
 
             // Title
-            long wait = 7000L;
+            long wait = 20000L;
             long start = System.currentTimeMillis();
             Tasks.async(() -> {
                 long s = (wait - (System.currentTimeMillis() - start)) / 1000;
@@ -95,7 +95,7 @@ public class ConnectListener implements @NotNull PluginMessageListener {
                 }
             }, 0, 20, wait);
 
-            // Start game after 5s
+            // Start game after
             Tasks.sync(() -> {
                 // Convert to skybattle object
                 List<BattleTeam> teams = Lists.newArrayList();
@@ -127,14 +127,15 @@ public class ConnectListener implements @NotNull PluginMessageListener {
         Travelers.updateState(p);
     }
 
+    // Temporary not equiping armor + weapon
     private static void equip(Player p, ItemStack is, Item item) {
         var it = item.getModel().getType();
         switch (it) {
             case ARMOR:
-                p.getInventory().setChestplate(is);
+//                p.getInventory().setChestplate(is);
                 break;
             case WEAPON:
-                p.getInventory().setItemInMainHand(is);
+//                p.getInventory().setItemInMainHand(is);
                 break;
             case SKIN:
                 var skin = Skins.read(is);

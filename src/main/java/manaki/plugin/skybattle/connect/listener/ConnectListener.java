@@ -9,6 +9,7 @@ import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import mk.plugin.santory.item.Item;
+import mk.plugin.santory.item.ItemType;
 import mk.plugin.santory.item.Items;
 import mk.plugin.santory.skin.Skins;
 import mk.plugin.santory.traveler.Travelers;
@@ -118,7 +119,7 @@ public class ConnectListener implements @NotNull PluginMessageListener {
 
     }
 
-    private static void clearData(Player p) {
+    public static void clearData(Player p) {
         p.getInventory().clear();
         var t = Travelers.get(p);
         t.getData().setExp(0);
@@ -127,27 +128,19 @@ public class ConnectListener implements @NotNull PluginMessageListener {
         Travelers.updateState(p);
     }
 
-    // Temporary not equiping armor + weapon
+
     private static void equip(Player p, ItemStack is, Item item) {
         var it = item.getModel().getType();
-        switch (it) {
-            case ARMOR:
-//                p.getInventory().setChestplate(is);
-                break;
-            case WEAPON:
-//                p.getInventory().setItemInMainHand(is);
-                break;
-            case SKIN:
-                var skin = Skins.read(is);
-                switch (skin.getType()) {
-                    case HEAD:
-                        p.getInventory().setHelmet(is);
-                        break;
-                    case OFFHAND:
-                        p.getInventory().setItemInOffHand(is);
-                        break;
-                }
-                break;
+        if (it == ItemType.SKIN) {
+            var skin = Skins.read(is);
+            switch (skin.getType()) {
+                case HEAD:
+                    p.getInventory().setHelmet(is);
+                    break;
+                case OFFHAND:
+                    p.getInventory().setItemInOffHand(is);
+                    break;
+            }
         }
     }
 

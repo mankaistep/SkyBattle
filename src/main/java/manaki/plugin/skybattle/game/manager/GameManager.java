@@ -2,6 +2,7 @@ package manaki.plugin.skybattle.game.manager;
 
 import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
+import manaki.plugin.skybattle.connect.listener.ConnectListener;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
 import manaki.plugin.skybattle.game.Games;
@@ -28,6 +29,14 @@ public class GameManager {
 
     public GameState getState() {
         return state;
+    }
+
+    public void playerQuit(Player player) {
+        // Clear data
+        ConnectListener.clearData(player);
+
+        // Call quit
+        playerQuit(player.getName());
     }
 
     public void playerQuit(String pname) {
@@ -70,6 +79,11 @@ public class GameManager {
 
         Tasks.sync(() -> {
             player.spigot().respawn();
+        });
+
+        // Clear data
+        Tasks.async(() -> {
+            ConnectListener.clearData(player);
         });
 
         // If has anyone left

@@ -7,6 +7,7 @@ import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -24,11 +25,28 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // Death message
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onDeathMessage(PlayerDeathEvent e) {
+        var player = e.getEntity();
+        var killer = player.getKiller();
+        e.setDeathMessage(null);
+
+        var state = Games.getCurrentGame(player);
+        if (state == null) return;
+
+        for (Player p : state.getPlayers()) {
+            if (killer != null) p.sendMessage("§f" + player.getName() + " §cbị hạ bởi §e" + killer.getName());
+            else p.sendMessage("§f" + player.getName() + " §cbị loại khỏi cuộc chơi");
+        }
+    }
 
     // Survival on join
     @EventHandler
@@ -105,7 +123,7 @@ public class PlayerListener implements Listener {
         if (state == null) return;
 
         var gm = Games.managerFromState(state);
-        gm.playerQuit(p.getName());
+        gm.playerQuit(p);
     }
 
     // Open supply

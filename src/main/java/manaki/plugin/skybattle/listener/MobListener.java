@@ -2,6 +2,7 @@ package manaki.plugin.skybattle.listener;
 
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import manaki.plugin.skybattle.SkyBattle;
+import manaki.plugin.skybattle.config.model.battle.KillCmdModel;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.util.Tasks;
@@ -42,23 +43,38 @@ public class MobListener implements Listener {
 
         var bm = Games.battleFromState(state);
         var mobm = bm.getMobModel();
-        if (mobm.getDrops().containsKey(mid)) {
-            // Clear default drops
-            var list = mobm.getDrops().get(mid);
-            var drops = e.getDrops();
-            drops.clear();
 
-            // Random
-            for (var mdm : list) {
-                if (!Utils.rate(mdm.getRate())) continue;
-                var is = ItemStorage.get(mdm.getItemId());
-                is.setAmount(mdm.getAmount().random());
-                Tasks.sync(() -> {
-                    var item = p.getWorld().dropItemNaturally(e.getEntity().getLocation(), is);
-                    item.setPickupDelay(20);
-                });
+        // Commands
+        try {
+            if (mobm.getKillCmds().containsKey(mid)) {
+                var list = mobm.getKillCmds().get(mid);
+                for (KillCmdModel kcmd : list) {
+                    if (!Utils.rate(kcmd.getRate())) continue;
+                    kcmd.getCmd().execute(SkyBattle.get(), p, Utils.getPlaceholders(p));
+                }
             }
         }
+        finally {
+            // Drops
+            if (mobm.getDrops().containsKey(mid)) {
+                // Clear default drops
+                var list = mobm.getDrops().get(mid);
+                var drops = e.getDrops();
+                drops.clear();
+
+                // Random
+                for (var mdm : list) {
+                    if (!Utils.rate(mdm.getRate())) continue;
+                    var is = ItemStorage.get(mdm.getItemId());
+                    is.setAmount(mdm.getAmount().random());
+                    Tasks.sync(() -> {
+                        var item = p.getWorld().dropItemNaturally(e.getEntity().getLocation(), is);
+                        item.setPickupDelay(20);
+                    });
+                }
+            }
+        }
+
     }
 
     // Supply entity death

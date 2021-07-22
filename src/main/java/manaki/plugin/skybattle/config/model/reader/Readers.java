@@ -119,7 +119,19 @@ public class Readers {
             drops.put(mid, list);
         }
 
-        var mm = new MobModel(mobTypes, limitPerPlayer, Double.valueOf(rate).floatValue(), drops);
+        // Kill cmds
+        Map<String, List<KillCmdModel>> killCmds = Maps.newHashMap();
+        for (String mid : config.getConfigurationSection("mob.kill-command").getKeys(false)) {
+            List<KillCmdModel> list = Lists.newArrayList();
+            for (String index : config.getConfigurationSection("mob.kill-command." + mid).getKeys(false)) {
+                var cmd = config.getString("mob.kill-command." + mid + "." + index + ".cmd");
+                var chance = config.getDouble("mob.kill-command." + mid + "." + index + ".rate");
+                list.add(new KillCmdModel(new Command(cmd), chance));
+            }
+            killCmds.put(mid, list);
+        }
+
+        var mm = new MobModel(mobTypes, limitPerPlayer, Double.valueOf(rate).floatValue(), drops, killCmds);
 
 
         // Chest

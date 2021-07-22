@@ -7,10 +7,10 @@ import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.util.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,13 +25,52 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-import org.w3c.dom.Text;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class PlayerListener implements Listener {
+
+    // Death drop chest
+    @EventHandler
+    public void onDeathDrop(PlayerDeathEvent e) {
+        var p = e.getEntity();
+        var state = Games.getCurrentGame(p);
+        if (state == null) return;
+
+        // Set block
+        var l1 = p.getLocation();
+        var l2 = l1.clone().add(1, 0, 0);
+        l1.getBlock().setType(Material.CHEST);
+        l2.getBlock().setType(Material.CHEST);
+
+        // To one chest
+        var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
+        bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
+        var bd2 = ((org.bukkit.block.data.type.Chest) l2.getBlock().getBlockData());
+        bd2.setType(org.bukkit.block.data.type.Chest.Type.RIGHT);
+
+        l1.getBlock().setBlockData(bd1);
+        l2.getBlock().setBlockData(bd2);
+
+        // Shuffle drops
+        var drops = e.getDrops();
+        for (int i = drops.size() ; i < 54 ; i++) {
+            drops.add(new ItemStack(Material.AIR));
+        }
+        Collections.shuffle(drops);
+
+        var c1 = (Chest) l1.getBlock().getState();
+        c1.setCustomName("§4Đồ của " + p.getName());
+        c1.update();
+        for (ItemStack is : drops) c1.getInventory().addItem(is);
+
+        // Clear drops
+        e.getDrops().clear();
+    }
 
     // No fall damage
     @EventHandler(priority = EventPriority.LOWEST)

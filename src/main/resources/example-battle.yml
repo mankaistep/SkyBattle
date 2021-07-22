@@ -12,6 +12,11 @@ mob:
   check:
     limit-per-player: 3
     rate: 10
+  kill-command:
+    b1_1:
+      0:
+        cmd: '[consolecmd] str player addexp %player% %random_500_1000%'
+        rate: 100
   drop:
     b1_1:
       - exp1 1 70

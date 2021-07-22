@@ -144,23 +144,35 @@ public class GameManager {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // Notification
-                    var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
-                    var seconds = remain / 1000;
-                    for (Player p : battleTeam.getOnlinePlayers()) {
-                        p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
+                    try {
+                        // Notification
+                        var remain = WIN_WAITING_TIME - (System.currentTimeMillis() - start);
+                        var seconds = remain / 1000;
+                        for (Player p : battleTeam.getOnlinePlayers()) {
+                            p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
+                        }
+
+                        // Check
+                        if (remain <= 0) {
+                            // Cancel
+                            this.cancel();
+
+                            // Back to main server
+                            Tasks.sync(() -> {
+                                for (Player p : battleTeam.getOnlinePlayers()) {
+                                    Games.backToMainServer(p);
+                                }
+                            });
+
+                            // Do the finish
+                            Tasks.sync(() -> {
+                                clean(false);
+                            }, 200);
+                        }
                     }
-
-                    // Check
-                    if (remain <= 0) {
+                    catch (Exception e) {
+                        e.printStackTrace();
                         this.cancel();
-
-                        // Back to main server
-                        Tasks.sync(() -> {
-                            for (Player p : battleTeam.getOnlinePlayers()) {
-                                Games.backToMainServer(p);
-                            }
-                        });
 
                         // Do the finish
                         Tasks.sync(() -> {

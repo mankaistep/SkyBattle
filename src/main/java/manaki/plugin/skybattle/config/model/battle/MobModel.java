@@ -11,12 +11,18 @@ public class MobModel {
     private final int limitPerPlayer;
     private final float spawnRate;
     private final Map<String, List<MobDropModel>> drops;
+    private final Map<String, List<KillCmdModel>> killCmds;
 
-    public MobModel(Map<AreaType, List<String>> mobTypes, int limitPerPlayer, float spawnRate, Map<String, List<MobDropModel>> drops) {
+    public MobModel(Map<AreaType, List<String>> mobTypes, int limitPerPlayer, float spawnRate, Map<String, List<MobDropModel>> drops, Map<String, List<KillCmdModel>> killCmds) {
         this.mobTypes = mobTypes;
         this.limitPerPlayer = limitPerPlayer;
         this.spawnRate = spawnRate;
         this.drops = drops;
+        this.killCmds = killCmds;
+    }
+
+    public Map<String, List<KillCmdModel>> getKillCmds() {
+        return killCmds;
     }
 
     public Map<AreaType, List<String>> getMobTypes() {

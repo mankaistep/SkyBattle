@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.util.command;
 
+import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -50,6 +51,22 @@ public class Command {
         for (Map.Entry<String, String> e : placeholders.entrySet()) {
             cmd = cmd.replace(e.getKey(), e.getValue());
         }
+
+        // Random placeholder
+        if (cmd.contains("%random")) {
+            var regex = "(?<placeholder>%random_(?<min>(\\d)+)_(?<max>(\\d)+)%)";
+            var p = Pattern.compile(regex);
+            var m = p.matcher(cmd);
+            while (m.find()) {
+                var plh = m.group("placeholder");
+                int min = Integer.parseInt(m.group("min"));
+                int max = Integer.parseInt(m.group("max"));
+
+                int value = Utils.randomInt(min, max);
+                cmd = cmd.replace(plh, value + "");
+            }
+        }
+
         execute(plugin, player, cmd);
     }
 

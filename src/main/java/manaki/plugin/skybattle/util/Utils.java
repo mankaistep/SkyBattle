@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.util;
 
+import com.google.common.collect.Maps;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Utils {
@@ -117,6 +119,12 @@ public class Utils {
     public static void toSpawn(Player player) {
         if (player == null || !player.isOnline()) return;
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
+    }
+
+    public static Map<String, String> getPlaceholders(Player player) {
+        Map<String, String> map = Maps.newHashMap();
+        map.put("%player%", player.getName());
+        return map;
     }
 
 }

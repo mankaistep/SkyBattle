@@ -55,7 +55,8 @@ public class MobManagerTask extends ATask {
             // Rate
             if (Utils.rate(mobm.getSpawnRate())) {
                 // Get safe location
-                var l = Utils.randomSafeLocation(p.getLocation(), Double.valueOf(RADIUS_CHECK).intValue());
+                var r = Double.valueOf(RADIUS_CHECK).intValue();
+                var l = Utils.randomSafeLocation(p.getLocation(), r / 2, r);
                 if (l == null) continue;
 
                 // Random mob

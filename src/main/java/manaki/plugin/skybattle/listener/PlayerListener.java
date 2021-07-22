@@ -1,10 +1,12 @@
 package manaki.plugin.skybattle.listener;
 
+import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.SupplyState;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.util.Invisibles;
+import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Bukkit;
@@ -38,14 +40,18 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDeathDrop(PlayerDeathEvent e) {
         var p = e.getEntity();
-        var state = Games.getCurrentGame(p);
-        if (state == null) return;
+//        var state = Games.getCurrentGame(p);
+//        if (state == null) return;
 
         // Set block
         var l1 = p.getLocation();
         var l2 = l1.clone().add(1, 0, 0);
         l1.getBlock().setType(Material.CHEST);
         l2.getBlock().setType(Material.CHEST);
+
+        // Update
+        l1.getBlock().getState().update();
+        l2.getBlock().getState().update();
 
         // To one chest
         var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
@@ -56,8 +62,12 @@ public class PlayerListener implements Listener {
         l1.getBlock().setBlockData(bd1);
         l2.getBlock().setBlockData(bd2);
 
+        List<ItemStack> drops = Lists.newArrayList();
+        drops.addAll(e.getDrops());
+        e.getDrops().clear();
+
+
         // Shuffle drops
-        var drops = e.getDrops();
         for (int i = drops.size() ; i < 54 ; i++) {
             drops.add(new ItemStack(Material.AIR));
         }
@@ -66,10 +76,9 @@ public class PlayerListener implements Listener {
         var c1 = (Chest) l1.getBlock().getState();
         c1.setCustomName("§4Đồ của " + p.getName());
         c1.update();
+
         for (ItemStack is : drops) c1.getInventory().addItem(is);
 
-        // Clear drops
-        e.getDrops().clear();
     }
 
     // No fall damage

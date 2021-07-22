@@ -48,8 +48,9 @@ public class Utils {
         }
     }
 
-    public static Location randomSafeLocation(Location center, int r) {
+    public static Location randomSafeLocation(Location center, int rmin, int rmax) {
         for (int i = 0 ; i < 5 ; i++) {
+            var r = Utils.randomInt(rmin, rmax);
             var rx = center.getBlockX() + randomInt(-1 * r, r);
             var rz = center.getBlockZ() + randomInt(-1 * r, r);
             var ry = center.getY() + 10;

@@ -91,6 +91,7 @@ public class Readers {
 
         var id = file.getName().replace(".yml", "");
         var mapId = config.getString("map");
+        var name = config.getString("name", "Không tên");
         var time = config.getInt("time");
         var boss = config.getString("boss");
         var sm = new SettingModel(config.getConfigurationSection("setting").getValues(false));
@@ -167,7 +168,7 @@ public class Readers {
         List<Command> winCommands = config.getStringList("command.win").stream().map(Command::new).collect(Collectors.toList());
         int mobSpawnAfter = config.getInt("mob-spawn-after", 60);
 
-        return new BattleModel(id, mapId, boss, time, mobSpawnAfter, sm, mm, chest, supplyModel, blockCommands, winCommands);
+        return new BattleModel(id, mapId, name, boss, time, mobSpawnAfter, sm, mm, chest, supplyModel, blockCommands, winCommands);
     }
 
 }

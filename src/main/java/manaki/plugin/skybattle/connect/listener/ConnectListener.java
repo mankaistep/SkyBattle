@@ -113,7 +113,10 @@ public class ConnectListener implements @NotNull PluginMessageListener {
                     }
                 }
                 // Start
-                Games.start(sr.getBattleId(), teams, false);
+                Tasks.async(() -> {
+                    Games.start(sr.getBattleId(), teams, true);
+                });
+
             }, Long.valueOf(wait).intValue() / 50);
         }
 

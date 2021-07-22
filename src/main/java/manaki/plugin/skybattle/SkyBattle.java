@@ -10,6 +10,8 @@ import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.listener.*;
 import manaki.plugin.skybattle.hide.Invisibles;
+import manaki.plugin.skybattle.placeholder.GamePlaceholder;
+import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldListener;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
@@ -39,6 +41,9 @@ public class SkyBattle extends JavaPlugin {
         this.registerListeners();
         this.registerTasks();
         this.registerChannel();
+        this.registerPlaceholders();
+
+        Utils.clearWorldGuardTemporaryData();
     }
 
     @Override
@@ -62,6 +67,7 @@ public class SkyBattle extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new SpectatorListener(), this);
+        Bukkit.getPluginManager().registerEvents(new StatisticListener(), this);
     }
 
     private void registerTasks() {
@@ -79,6 +85,10 @@ public class SkyBattle extends JavaPlugin {
     public void registerChannel() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         this.getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, new ConnectListener());
+    }
+
+    private void registerPlaceholders() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new GamePlaceholder().register();
     }
 
     public MainConfig getMainConfig() {

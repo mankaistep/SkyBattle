@@ -179,4 +179,7 @@ public class MainConfig extends AConfig {
         return worldTemplates.getOrDefault(name, null);
     }
 
+    public Map<String, WorldTemplate> getWorldTemplates() {
+        return worldTemplates;
+    }
 }

@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.units.qual.min;
 
 import java.util.List;
 import java.util.Map;
@@ -110,8 +111,7 @@ public class Games {
                             p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
 
-                            // Hidden in tab
-                            p.setPlayerListName("Người chơi X");
+                            p.setPlayerListName("§2§l#" + state.getId() + " §a" + p.getName());
                         }
                     }
 
@@ -445,7 +445,20 @@ public class Games {
         if (state == null) return false;
         if (getCurrentGame(p2) != state) return false;
 
-        return state.getTeam(p1) == state.getTeam(p2);
+        return state.getTeam(p1) != null && (state.getTeam(p1) == state.getTeam(p2));
+    }
+
+    public static int getSupplyRemain(GameState state) { ;
+        var currentTime = state.getTime();
+        var bm = Games.battleFromState(state);
+
+        int min = Integer.MAX_VALUE;
+        for (Integer time : bm.getSupplyModel().getAppearTime()) {
+            int remain = time - currentTime;
+            if (remain > 0 && remain < min) min = remain;
+        }
+
+        return min;
     }
 
 }

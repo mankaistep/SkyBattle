@@ -6,6 +6,7 @@ import manaki.plugin.skybattle.config.model.map.LocationModel;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.setup.chestgroup.ChestGroupPlacers;
 import manaki.plugin.skybattle.team.BattleTeam;
+import manaki.plugin.skybattle.util.Tasks;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
@@ -39,7 +40,9 @@ public class AdminCommand implements @Nullable CommandExecutor {
                     battleTeams.add(new BattleTeam(Color.RED, Lists.newArrayList(pn)));
                 }
 
-                Games.start(bid, battleTeams, false);
+                Tasks.async(() -> {
+                    Games.start(bid, battleTeams, true);
+                });
             }
 
             else if (args[0].equalsIgnoreCase("start2")) {
@@ -52,7 +55,9 @@ public class AdminCommand implements @Nullable CommandExecutor {
                     battleTeams.add(team);
                 }
 
-                Games.start(bid, battleTeams, false);
+                Tasks.async(() -> {
+                    Games.start(bid, battleTeams, true);
+                });
             }
 
             else if (args[0].equalsIgnoreCase("setplacer")) {

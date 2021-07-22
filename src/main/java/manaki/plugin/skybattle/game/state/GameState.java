@@ -9,6 +9,7 @@ import manaki.plugin.skybattle.game.task.game.GameManagerTask;
 import manaki.plugin.skybattle.game.task.mob.MobManagerTask;
 import manaki.plugin.skybattle.game.task.supply.SupplyManagerTask;
 import manaki.plugin.skybattle.game.Games;
+import manaki.plugin.skybattle.game.type.GameType;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldState;
@@ -30,6 +31,7 @@ public class GameState {
     private final String battleId;
     private final long startTime;
     private final List<BattleTeam> startBattleTeams;
+    private final GameType type;
 
     // Task
     private List<ATask> tasks;
@@ -66,12 +68,15 @@ public class GameState {
         this.supplySpawned = Lists.newArrayList();
         this.isEnded = false;
         this.isLoading = false;
+        this.type = GameType.parse(this.startBattleTeams);
 
         // Players
         playerStates = Maps.newConcurrentMap();
         for (Player p : this.getPlayers()) {
             playerStates.put(p.getName(), new PlayerState(p, false));
         }
+
+
     }
 
     /*
@@ -93,6 +98,10 @@ public class GameState {
 
     public void setLoading(boolean loading) {
         isLoading = loading;
+    }
+
+    public GameType getType() {
+        return type;
     }
 
     public int getId() {

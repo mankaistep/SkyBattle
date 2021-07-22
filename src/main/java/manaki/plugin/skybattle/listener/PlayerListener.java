@@ -63,35 +63,35 @@ public class PlayerListener implements Listener {
         l1.getBlock().setType(Material.CHEST);
         l2.getBlock().setType(Material.CHEST);
 
-        // Update
-        l1.getBlock().getState().update();
-        l2.getBlock().getState().update();
-
-        // To one chest
-        var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
-        bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
-        var bd2 = ((org.bukkit.block.data.type.Chest) l2.getBlock().getBlockData());
-        bd2.setType(org.bukkit.block.data.type.Chest.Type.RIGHT);
-
-        l1.getBlock().setBlockData(bd1);
-        l2.getBlock().setBlockData(bd2);
-
+        // Clear drops
         List<ItemStack> drops = Lists.newArrayList();
         drops.addAll(e.getDrops());
         e.getDrops().clear();
 
+        // To one chest
+        Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
+            var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
+            bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
+            var bd2 = ((org.bukkit.block.data.type.Chest) l2.getBlock().getBlockData());
+            bd2.setType(org.bukkit.block.data.type.Chest.Type.RIGHT);
+
+            l1.getBlock().setBlockData(bd1);
+            l2.getBlock().setBlockData(bd2);
+        }, 5);
 
         // Shuffle drops
-        for (int i = drops.size() ; i < 54 ; i++) {
-            drops.add(new ItemStack(Material.AIR));
-        }
-        Collections.shuffle(drops);
+        Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
+            for (int i = drops.size() ; i < 54 ; i++) {
+                drops.add(new ItemStack(Material.AIR));
+            }
+            Collections.shuffle(drops);
 
-        var c1 = (Chest) l1.getBlock().getState();
-        c1.setCustomName("§4Đồ của " + p.getName());
-        c1.update();
+            var c1 = (Chest) l1.getBlock().getState();
+            c1.setCustomName("§4Đồ của " + p.getName());
+            c1.update();
 
-        for (ItemStack is : drops) c1.getInventory().addItem(is);
+            for (ItemStack is : drops) c1.getInventory().addItem(is);
+        }, 10);
 
     }
 
@@ -221,7 +221,7 @@ public class PlayerListener implements Listener {
         if (state == null) return;
         if (state != Games.getCurrentGame(damager)) return;
 
-        if (state.getTeam(target) == state.getTeam(damager)) {
+        if (Games.isTeammate(target, damager)) {
             e.setCancelled(true);
             damager.sendMessage("§cKhông được tấn công đồng đội!");
         }

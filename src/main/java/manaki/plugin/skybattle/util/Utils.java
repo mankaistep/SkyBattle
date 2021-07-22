@@ -2,16 +2,41 @@ package manaki.plugin.skybattle.util;
 
 import com.google.common.collect.Maps;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import manaki.plugin.skybattle.SkyBattle;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class Utils {
+
+    public static void clearWorldGuardTemporaryData() {
+        var plugin = SkyBattle.get();
+        var path = plugin.getDataFolder().getPath().replace("SkyBattle", "WorldGuard//worlds");
+        var folder = new File(path);
+        File[] files = folder.listFiles();
+        assert files != null;
+        for (File file : files) {
+            var name = file.getName();
+            for (String world : plugin.getMainConfig().getWorldTemplates().keySet()) {
+                if (name.startsWith(world)) {
+                    try {
+                        FileUtils.deleteDirectory(file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    plugin.getLogger().warning("Delete config " + name + " from WorldGuard");
+                }
+            }
+        }
+    }
 
     public static boolean isOutsideBorder(Player p) {
         Location loc = p.getLocation();
@@ -114,7 +139,13 @@ public class Utils {
     }
 
     public static String format(int seconds) {
-        return seconds / 60 + "m " + seconds % 60 + "s";
+        int m = seconds / 60;
+        int s = seconds % 60;
+
+        var ms = m >= 10 ? m + "" : "0" + m;
+        var ss = s >= 10 ? s + "" : "0" + s;
+
+        return ms + ":" + ss;
     }
 
     public static void toSpawn(Player player) {

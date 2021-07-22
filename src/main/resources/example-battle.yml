@@ -1,5 +1,6 @@
 map: map1
 time: 1200 # Useless
+name: Đảo trên không
 mob-spawn-after: 60
 boss: b1_boss
 setting:

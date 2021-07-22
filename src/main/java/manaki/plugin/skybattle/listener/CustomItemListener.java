@@ -1,6 +1,7 @@
 package manaki.plugin.skybattle.listener;
 
 import manaki.plugin.skybattle.game.Games;
+import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.util.Tasks;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -128,6 +129,7 @@ public class CustomItemListener implements Listener {
             player.setGlowing(true);
             player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
             player.sendTitle("", "§aBạn đã bị lộ diện bởi Ăng ten", 5, 25, 5);
+            VisionHides.addBypass(player, 3000);
             Tasks.sync(() -> {
                 player.setGlowing(false);
             }, 60);

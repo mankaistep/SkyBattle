@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.SupplyState;
+import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
-import manaki.plugin.skybattle.util.Invisibles;
-import manaki.plugin.skybattle.util.Tasks;
+import manaki.plugin.skybattle.hide.Invisibles;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.util.command.Command;
 import org.bukkit.Bukkit;
@@ -36,12 +36,26 @@ import java.util.Map;
 
 public class PlayerListener implements Listener {
 
+    // Hidden players join
+    @EventHandler
+    public void onHiddenPlayerJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        VisionHides.show(p);
+    }
+
+    // Hidden players quit
+    @EventHandler
+    public void onHiddenPlayerQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        VisionHides.show(p);
+    }
+
     // Death drop chest
     @EventHandler
     public void onDeathDrop(PlayerDeathEvent e) {
         var p = e.getEntity();
-//        var state = Games.getCurrentGame(p);
-//        if (state == null) return;
+        var state = Games.getCurrentGame(p);
+        if (state == null) return;
 
         // Set block
         var l1 = p.getLocation();

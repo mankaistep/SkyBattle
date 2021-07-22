@@ -106,6 +106,7 @@ public class Games {
                             if (p == null) continue;
                             var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
                             p.teleport(l);
+
                             p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
 

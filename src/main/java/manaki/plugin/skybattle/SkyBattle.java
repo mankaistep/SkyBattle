@@ -7,8 +7,9 @@ import manaki.plugin.skybattle.connect.executor.Executor;
 import manaki.plugin.skybattle.connect.listener.ConnectListener;
 import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.Games;
+import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.listener.*;
-import manaki.plugin.skybattle.util.Invisibles;
+import manaki.plugin.skybattle.hide.Invisibles;
 import manaki.plugin.skybattle.world.WorldListener;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
@@ -43,6 +44,7 @@ public class SkyBattle extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
+            VisionHides.showAll();
             this.cancelAllGames();
         }
         catch (Exception e) {
@@ -64,6 +66,7 @@ public class SkyBattle extends JavaPlugin {
 
     private void registerTasks() {
         new Invisibles().runTaskTimer(this, 0, 10);
+        new VisionHides().runTaskTimer(this, 0, 2);
     }
 
 

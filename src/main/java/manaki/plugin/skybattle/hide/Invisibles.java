@@ -1,4 +1,4 @@
-package manaki.plugin.skybattle.util;
+package manaki.plugin.skybattle.hide;
 
 import com.google.common.collect.Maps;
 import manaki.plugin.skybattle.SkyBattle;

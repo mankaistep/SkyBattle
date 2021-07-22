@@ -440,4 +440,12 @@ public class Games {
         return list;
     }
 
+    public static boolean isTeammate(Player p1, Player p2) {
+        var state = getCurrentGame(p1);
+        if (state == null) return false;
+        if (getCurrentGame(p2) != state) return false;
+
+        return state.getTeam(p1) == state.getTeam(p2);
+    }
+
 }

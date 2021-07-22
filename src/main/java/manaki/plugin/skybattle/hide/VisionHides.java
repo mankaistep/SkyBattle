@@ -3,6 +3,7 @@ package manaki.plugin.skybattle.hide;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import manaki.plugin.skybattle.SkyBattle;
+import manaki.plugin.skybattle.game.Games;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,6 +40,9 @@ public class VisionHides extends BukkitRunnable {
         if (!p.hasLineOfSight(target)) {
             // Check hidden
             if (isHidden(p, target)) return;
+
+            // Check teammate
+            if (Games.isTeammate(p, target)) return;
 
             // Hide
             p.hidePlayer(SkyBattle.get(), target);

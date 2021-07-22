@@ -70,6 +70,9 @@ public class PlayerListener implements Listener {
 
         // To one chest
         Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
+            l1.getBlock().getState().update();
+            l2.getBlock().getState().update();
+
             var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
             bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
             var bd2 = ((org.bukkit.block.data.type.Chest) l2.getBlock().getBlockData());
@@ -86,6 +89,8 @@ public class PlayerListener implements Listener {
             }
             Collections.shuffle(drops);
 
+            l1.getBlock().getState().update();
+            l2.getBlock().getState().update();
             var c1 = (Chest) l1.getBlock().getState();
             c1.setCustomName("§4Đồ của " + p.getName());
             c1.update();

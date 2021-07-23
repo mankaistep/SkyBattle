@@ -32,8 +32,9 @@ public class Spectators {
         var mm = Games.mapFromState(state);
 
         if (target != null) {
+            p.teleport(target);
             p.setGameMode(GameMode.SPECTATOR);
-            p.setSpectatorTarget(target);
+//            p.setSpectatorTarget(target);
         }
         else {
             p.teleport(mm.getLocation(mm.getCenterLocation()).toLocation(state.getWorldState().toWorld()));

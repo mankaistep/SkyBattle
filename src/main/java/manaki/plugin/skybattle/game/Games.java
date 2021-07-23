@@ -461,4 +461,12 @@ public class Games {
         return min;
     }
 
+    public static BattleTeam getTeamIn(String name) {
+        for (GameManager gm : managers) {
+            var t = gm.getState().getStartTeam(name);
+            if (t != null) return t;
+        }
+        return null;
+    }
+
 }

@@ -237,6 +237,13 @@ public class GameState {
         return null;
     }
 
+    public BattleTeam getStartTeam(String player) {
+        for (BattleTeam t : this.getStartTeams()) {
+            if (t.getPlayers().contains(player)) return t;
+        }
+        return null;
+    }
+
     public int getTeamAlive() {
         int c = 0;
         for (BattleTeam battleTeam : this.getCurrentTeams()) {

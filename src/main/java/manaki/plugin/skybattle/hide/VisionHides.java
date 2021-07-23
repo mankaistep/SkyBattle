@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.Games;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -34,6 +35,25 @@ public class VisionHides extends BukkitRunnable {
         if (isBypassed(target)) {
             show(p, target);
             return;
+        }
+
+        // Check spectator
+        if (p.getGameMode() == GameMode.SPECTATOR) {
+            var team = Games.getTeamIn(p.getName());
+            if (team != null) {
+                boolean has = false;
+                for (Player mate : team.getOnlinePlayers()) {
+                    if (mate == p) continue;
+                    if (mate.hasLineOfSight(target)) {
+                        has = true;
+                        // Not hidden
+                        if (isHidden(p, target)) show(p, target);
+                        break;
+                    }
+                }
+                if (!has && !isHidden(p, target)) hide(p, target);
+                return;
+            }
         }
 
         // Vision blocked

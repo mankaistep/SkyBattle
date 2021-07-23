@@ -27,6 +27,8 @@ public class StatisticListener implements Listener {
         var state = Games.getCurrentGame(damager);
         if (state == null) return;
 
+        if (Games.isTeammate(damager, target)) return;
+
         var ps = state.getPlayerState(damager.getName());
         ps.addDamaged(target.getName());
     }

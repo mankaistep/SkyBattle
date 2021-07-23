@@ -62,12 +62,11 @@ public class PlayerListener implements Listener {
         var l1 = p.getLocation();
         var l2 = l1.clone().add(1, 0, 0);
 
-        var b1Before = l1.getBlock().getType();
-        var b2Before = l2.getBlock().getType();
-
         var b1 = l1.getBlock();
         var b2 = l2.getBlock();
-        
+
+        if (b1.getType() == Material.VOID_AIR || b2.getType() == Material.VOID_AIR) return;
+
         b1.setType(Material.CHEST);
         b2.setType(Material.CHEST);
 
@@ -78,10 +77,6 @@ public class PlayerListener implements Listener {
 
         // To one chest
         if (!(b1.getBlockData() instanceof org.bukkit.block.data.type.Chest) || !(b2.getBlockData() instanceof org.bukkit.block.data.type.Chest)) {
-            SkyBattle.get().getLogger().severe("Error block data cast (info below)");
-            SkyBattle.get().getLogger().severe("Block 1 type: " + b1.getType().name() + " (Before: " + b1Before.name() + ")");
-            SkyBattle.get().getLogger().severe("Block 2 type: " + b2.getType().name() + " (Before: " + b2Before.name() + ")");
-            SkyBattle.get().getLogger().severe("Player: " + p.getLocation());
             return;
         }
         var bd1 = ((org.bukkit.block.data.type.Chest) b1.getBlockData());
@@ -92,13 +87,7 @@ public class PlayerListener implements Listener {
         b1.setBlockData(bd1);
         b2.setBlockData(bd2);
 
-        if (!(b1.getState() instanceof Chest)) {
-            SkyBattle.get().getLogger().severe("Error block state cast (info below)");
-            SkyBattle.get().getLogger().severe("Block 1 type: " + b1.getType().name() + " (Before: " + b1Before.name() + ")");
-            SkyBattle.get().getLogger().severe("Block 2 type: " + b2.getType().name() + " (Before: " + b2Before.name() + ")");
-            SkyBattle.get().getLogger().severe("Player: " + p.getLocation());
-            return;
-        }
+        if (!(b1.getState() instanceof Chest)) return;
 
         var c1 = (Chest) b1.getState();
         c1.setCustomName("§4Đồ của " + p.getName());

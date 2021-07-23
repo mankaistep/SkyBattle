@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -54,8 +55,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDeathDrop(PlayerDeathEvent e) {
         var p = e.getEntity();
-//        var state = Games.getCurrentGame(p);
-//        if (state == null) return;
+        var state = Games.getCurrentGame(p);
+        if (state == null) return;
 
         // Set block
         var l1 = p.getLocation();
@@ -227,12 +228,30 @@ public class PlayerListener implements Listener {
         }
     }
 
-    // PvP
+    // PvP (player - player)
     @EventHandler
     public void onPvP(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
         var target = (Player) e.getEntity();
         var damager = (Player) e.getDamager();
+
+        var state = Games.getCurrentGame(target);
+        if (state == null) return;
+        if (state != Games.getCurrentGame(damager)) return;
+
+        if (Games.isTeammate(target, damager)) {
+            e.setCancelled(true);
+            damager.sendMessage("§cKhông được tấn công đồng đội!");
+        }
+    }
+
+    // PvP (player - projectile)
+    @EventHandler
+    public void onPvP2(EntityDamageByEntityEvent e) {
+        if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Projectile)) return;
+        if (!(((Projectile) e.getDamager()).getShooter() instanceof Player)) return;
+        var target = (Player) e.getEntity();
+        var damager = (Player) ((Projectile) e.getDamager()).getShooter();
 
         var state = Games.getCurrentGame(target);
         if (state == null) return;

@@ -57,10 +57,11 @@ public class StatisticListener implements Listener {
             var assistant = Bukkit.getPlayer(name);
             if (assistant == null) return;
             if (assistant == killer) return;
-            if (ps.getDamaged().contains(p.getName())) ps.addAssist(1);
-
-            assistant.sendTitle("", "§6§l⚒ Hỗ trợ ⚒", 0, 50, 0);
-            assistant.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
+            if (ps.getDamaged().contains(p.getName())) {
+                ps.addAssist(1);
+                assistant.sendTitle("", "§6§l⚒ Hỗ trợ ⚒", 0, 50, 0);
+                assistant.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
+            }
 
         }
     }

@@ -54,14 +54,21 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDeathDrop(PlayerDeathEvent e) {
         var p = e.getEntity();
-        var state = Games.getCurrentGame(p);
-        if (state == null) return;
+//        var state = Games.getCurrentGame(p);
+//        if (state == null) return;
 
         // Set block
         var l1 = p.getLocation();
         var l2 = l1.clone().add(1, 0, 0);
-        l1.getBlock().setType(Material.CHEST);
-        l2.getBlock().setType(Material.CHEST);
+
+        var b1Before = l1.getBlock().getType();
+        var b2Before = l2.getBlock().getType();
+
+        var b1 = l1.getBlock();
+        var b2 = l2.getBlock();
+        
+        b1.setType(Material.CHEST);
+        b2.setType(Material.CHEST);
 
         // Clear drops
         List<ItemStack> drops = Lists.newArrayList();
@@ -69,34 +76,39 @@ public class PlayerListener implements Listener {
         e.getDrops().clear();
 
         // To one chest
-        Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
-            l1.getBlock().getState().update();
-            l2.getBlock().getState().update();
+        if (!(b1.getBlockData() instanceof org.bukkit.block.data.type.Chest) || !(b2.getBlockData() instanceof org.bukkit.block.data.type.Chest)) {
+            SkyBattle.get().getLogger().severe("Error block data cast (info below)");
+            SkyBattle.get().getLogger().severe("Block 1 type: " + b1.getType().name() + " (Before: " + b1Before.name() + ")");
+            SkyBattle.get().getLogger().severe("Block 2 type: " + b2.getType().name() + " (Before: " + b2Before.name() + ")");
+            SkyBattle.get().getLogger().severe("Player: " + p.getLocation());
+            return;
+        }
+        var bd1 = ((org.bukkit.block.data.type.Chest) b1.getBlockData());
+        bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
+        var bd2 = ((org.bukkit.block.data.type.Chest) b2.getBlockData());
+        bd2.setType(org.bukkit.block.data.type.Chest.Type.RIGHT);
 
-            var bd1 = ((org.bukkit.block.data.type.Chest) l1.getBlock().getBlockData());
-            bd1.setType(org.bukkit.block.data.type.Chest.Type.LEFT);
-            var bd2 = ((org.bukkit.block.data.type.Chest) l2.getBlock().getBlockData());
-            bd2.setType(org.bukkit.block.data.type.Chest.Type.RIGHT);
+        b1.setBlockData(bd1);
+        b2.setBlockData(bd2);
 
-            l1.getBlock().setBlockData(bd1);
-            l2.getBlock().setBlockData(bd2);
-        }, 5);
+        if (!(b1.getState() instanceof Chest)) {
+            SkyBattle.get().getLogger().severe("Error block state cast (info below)");
+            SkyBattle.get().getLogger().severe("Block 1 type: " + b1.getType().name() + " (Before: " + b1Before.name() + ")");
+            SkyBattle.get().getLogger().severe("Block 2 type: " + b2.getType().name() + " (Before: " + b2Before.name() + ")");
+            SkyBattle.get().getLogger().severe("Player: " + p.getLocation());
+            return;
+        }
+
+        var c1 = (Chest) b1.getState();
+        c1.setCustomName("§4Đồ của " + p.getName());
+        c1.update();
 
         // Shuffle drops
-        Bukkit.getScheduler().runTaskLater(SkyBattle.get(), () -> {
-            for (int i = drops.size() ; i < 54 ; i++) {
-                drops.add(new ItemStack(Material.AIR));
-            }
-            Collections.shuffle(drops);
-
-            l1.getBlock().getState().update();
-            l2.getBlock().getState().update();
-            var c1 = (Chest) l1.getBlock().getState();
-            c1.setCustomName("§4Đồ của " + p.getName());
-            c1.update();
-
-            for (ItemStack is : drops) c1.getInventory().addItem(is);
-        }, 10);
+        for (int i = drops.size() ; i < 54 ; i++) {
+            drops.add(new ItemStack(Material.AIR));
+        }
+        Collections.shuffle(drops);
+        for (ItemStack is : drops) c1.getInventory().addItem(is);
 
     }
 

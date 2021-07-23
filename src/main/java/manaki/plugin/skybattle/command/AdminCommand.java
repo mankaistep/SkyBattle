@@ -8,6 +8,7 @@ import manaki.plugin.skybattle.setup.chestgroup.ChestGroupPlacers;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +38,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
 
                 List<BattleTeam> battleTeams = Lists.newArrayList();
                 for (String pn : args[2].split(";")) {
-                    battleTeams.add(new BattleTeam(Color.RED, Lists.newArrayList(pn)));
+                    battleTeams.add(new BattleTeam(null, Lists.newArrayList(pn)));
                 }
 
                 Tasks.async(() -> {
@@ -51,7 +52,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 List<BattleTeam> battleTeams = Lists.newArrayList();
                 var a = args[2].split(";");
                 for (int i = 0 ; i < a.length ; i+=2) {
-                    var team = new BattleTeam(Color.RED, Lists.newArrayList(a[i], a[i + 1]));
+                    var team = new BattleTeam(null, Lists.newArrayList(a[i], a[i + 1]));
                     battleTeams.add(team);
                 }
 

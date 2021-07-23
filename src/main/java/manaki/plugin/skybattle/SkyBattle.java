@@ -11,11 +11,13 @@ import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.listener.*;
 import manaki.plugin.skybattle.hide.Invisibles;
 import manaki.plugin.skybattle.placeholder.GamePlaceholder;
+import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldListener;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -73,6 +75,9 @@ public class SkyBattle extends JavaPlugin {
     private void registerTasks() {
         new Invisibles().runTaskTimer(this, 0, 10);
         new VisionHides().runTaskTimer(this, 0, 2);
+        Tasks.async(() -> {
+            Bukkit.getOnlinePlayers().forEach(Games::setListName);
+        }, 0, 20);
     }
 
 

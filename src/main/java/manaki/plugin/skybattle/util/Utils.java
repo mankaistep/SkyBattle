@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.util;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import manaki.plugin.skybattle.SkyBattle;
@@ -157,6 +158,22 @@ public class Utils {
         Map<String, String> map = Maps.newHashMap();
         map.put("%player%", player.getName());
         return map;
+    }
+
+    public static List<ChatColor> getColors() {
+        List<ChatColor> l = Lists.newArrayList(ChatColor.values());
+        l.remove(ChatColor.BOLD);
+        l.remove(ChatColor.BLACK);
+        l.remove(ChatColor.DARK_BLUE);
+        l.remove(ChatColor.DARK_RED);
+        l.remove(ChatColor.DARK_PURPLE);
+        l.remove(ChatColor.ITALIC);
+        l.remove(ChatColor.MAGIC);
+        l.remove(ChatColor.UNDERLINE);
+        l.remove(ChatColor.STRIKETHROUGH);
+        l.remove(ChatColor.RESET);
+
+        return l;
     }
 
 }

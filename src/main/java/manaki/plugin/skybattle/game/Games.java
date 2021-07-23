@@ -28,7 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.units.qual.min;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,13 @@ public class Games {
     private static int maxId = 0;
 
     public static void start(String battleId, List<BattleTeam> battleTeams, boolean isAsync) {
+        // Randomize color
+        var colors = Utils.getColors();
+        for (int i = 0; i < battleTeams.size(); i++) {
+            var team = battleTeams.get(i);
+            team.setColor(colors.get(i));
+        }
+
         // Load template world
         var plugin = SkyBattle.get();
         var config = plugin.getMainConfig();
@@ -110,8 +116,6 @@ public class Games {
 
                             p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
                             p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
-
-                            p.setPlayerListName("§2§l#" + state.getId() + " §a" + p.getName());
                         }
                     }
 
@@ -467,6 +471,25 @@ public class Games {
             if (t != null) return t;
         }
         return null;
+    }
+
+    public static void setListName(Player p) {
+        // Spec
+        if (p.getGameMode() == GameMode.SPECTATOR) {
+            p.setPlayerListName("§b§oSpectator §7§o" + p.getName());
+            return;
+        }
+
+        // In battle
+        var state = getCurrentGame(p);
+        if (state != null) {
+            var team = state.getTeam(p);
+            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName());
+            return;
+        }
+
+        // Lobby
+        p.setPlayerListName("§6Ready §f" + p.getName());
     }
 
 }

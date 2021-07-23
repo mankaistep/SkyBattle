@@ -39,6 +39,13 @@ public class VisionHides extends BukkitRunnable {
 
         // Check spectator
         if (p.getGameMode() == GameMode.SPECTATOR) {
+            // If same spec
+            if (target.getGameMode() == GameMode.SPECTATOR) {
+                if (isHidden(p, target)) show(p, target);
+                return;
+            }
+
+            // Not spec
             var team = Games.getTeamIn(p.getName());
             if (team != null) {
                 boolean has = false;

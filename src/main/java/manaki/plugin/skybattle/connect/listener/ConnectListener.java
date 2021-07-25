@@ -8,6 +8,7 @@ import manaki.plugin.skybattle.connect.team.player.TeamPlayer;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
+import manaki.plugin.skybattle.util.Utils;
 import mk.plugin.santory.item.Item;
 import mk.plugin.santory.item.ItemType;
 import mk.plugin.santory.item.Items;
@@ -46,6 +47,9 @@ public class ConnectListener implements @NotNull PluginMessageListener {
         // Start request
         if (type.equalsIgnoreCase("skybattle-start")) {
             var sr = Requests.parseStart(data);
+
+            var datamap = Utils.read(sr.getData());
+            boolean isRanked = Boolean.parseBoolean(datamap.get("ranked"));
 
             // Check equip after 1s
             Tasks.sync(() -> {
@@ -114,7 +118,7 @@ public class ConnectListener implements @NotNull PluginMessageListener {
                 }
                 // Start
                 Tasks.async(() -> {
-                    Games.start(sr.getBattleId(), teams, true);
+                    Games.start(sr.getBattleId(), teams, true, isRanked);
                 });
 
             }, Long.valueOf(wait).intValue() / 50);

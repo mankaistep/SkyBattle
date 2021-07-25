@@ -16,6 +16,7 @@ import manaki.plugin.skybattle.game.manager.GameManager;
 import manaki.plugin.skybattle.game.state.BorderState;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.state.SupplyState;
+import manaki.plugin.skybattle.game.state.result.PlayerResult;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
@@ -40,7 +41,7 @@ public class Games {
 
     private static int maxId = 0;
 
-    public static void start(String battleId, List<BattleTeam> battleTeams, boolean isAsync) {
+    public static void start(String battleId, List<BattleTeam> battleTeams, boolean isAsync, boolean isRanked) {
         // Randomize color
         var colors = Utils.getColors();
         for (int i = 0; i < battleTeams.size(); i++) {
@@ -91,7 +92,7 @@ public class Games {
 
                 // Create state object
                 maxId++;
-                var state = new GameState(maxId, battleId, battleTeams, finalWorldState);
+                var state = new GameState(maxId, battleId, battleTeams, finalWorldState, isRanked);
 
                 // Create game manager
                 managers.add(new GameManager(state));
@@ -130,6 +131,10 @@ public class Games {
     public static void backToMainServer(Player player) {
         var qr = new QuitRequest(player.getName(), "");
         SkyBattle.get().getExecutor().sendQuit(qr);
+    }
+
+    public static void sendResult(PlayerResult result) {
+        SkyBattle.get().getExecutor().sendResult(result);
     }
 
     public static GameManager managerFromWorld(World world) {

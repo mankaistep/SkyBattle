@@ -42,7 +42,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 }
 
                 Tasks.async(() -> {
-                    Games.start(bid, battleTeams, true);
+                    Games.start(bid, battleTeams, true, false);
                 });
             }
 
@@ -57,7 +57,7 @@ public class AdminCommand implements @Nullable CommandExecutor {
                 }
 
                 Tasks.async(() -> {
-                    Games.start(bid, battleTeams, true);
+                    Games.start(bid, battleTeams, true, false);
                 });
             }
 

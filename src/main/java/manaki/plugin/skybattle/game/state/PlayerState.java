@@ -1,6 +1,7 @@
 package manaki.plugin.skybattle.game.state;
 
 import com.google.common.collect.Sets;
+import manaki.plugin.skybattle.game.state.result.PlayerResult;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -11,15 +12,13 @@ public class PlayerState {
     private boolean isDead;
 
     private final Set<String> damaged;
-    private int kill;
-    private int assist;
+    private final PlayerResult result;
 
-    public PlayerState(Player player, boolean isDead) {
+    public PlayerState(GameState state, Player player, boolean isDead) {
         this.player = player;
         this.isDead = isDead;
         this.damaged = Sets.newHashSet();
-        this.kill = 0;
-        this.assist = 0;
+        this.result = new PlayerResult(player.getName(), state.getType().getPlayersInTeam(), state.isRanked());
     }
 
     public Player getPlayer() {
@@ -38,12 +37,13 @@ public class PlayerState {
         return damaged;
     }
 
+
     public int getKill() {
-        return kill;
+        return this.result.getStatistic().getKill();
     }
 
     public int getAssist() {
-        return assist;
+        return this.result.getStatistic().getAssist();
     }
 
     public void addDamaged(String name) {
@@ -51,11 +51,14 @@ public class PlayerState {
     }
 
     public void addKill(int value) {
-        this.kill += value;
+        this.result.getStatistic().addKill(value);
     }
 
     public void addAssist(int value) {
-        this.assist += value;
+        this.result.getStatistic().addAssist(value);
     }
 
+    public PlayerResult getResult() {
+        return result;
+    }
 }

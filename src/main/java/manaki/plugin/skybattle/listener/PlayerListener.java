@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import manaki.plugin.skybattle.SkyBattle;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.SupplyState;
+import manaki.plugin.skybattle.game.state.result.PlayerResult;
 import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.spectator.SpectatorGUI;
 import manaki.plugin.skybattle.hide.Invisibles;
@@ -195,6 +196,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         var p = e.getPlayer();
+
+        if (PlayerResult.hasPending(p.getName())) PlayerResult.remove(p.getName());
+
         var state = Games.getCurrentGame(p);
         if (state == null) return;
 

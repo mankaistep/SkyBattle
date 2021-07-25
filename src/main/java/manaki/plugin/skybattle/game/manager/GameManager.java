@@ -6,6 +6,7 @@ import manaki.plugin.skybattle.connect.listener.ConnectListener;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
 import manaki.plugin.skybattle.game.Games;
+import manaki.plugin.skybattle.game.task.game.GameManagerTask;
 import manaki.plugin.skybattle.spectator.Spectators;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
@@ -43,7 +44,9 @@ public class GameManager {
         // Set state
         state.removeBossbar(pname);
         var ps = state.getPlayerState(pname);
-        if (ps != null) ps.setDead(true);
+        if (ps != null) {
+            ps.setDead(true);
+        }
 
         // If has anyone left
         var team = state.getTeam(pname);
@@ -52,10 +55,15 @@ public class GameManager {
             if (!Games.isTeamAlive(state, team)) {
                 for (String pn : team.getPlayers()) {
                     if (pn.equals(pname)) continue;
+
+                    // Set top
+                    int top = state.getTeamAlive() + 1;
+
+                    // Send title
                     var p = Bukkit.getPlayer(pn);
                     if (p == null) continue;
 
-                    p.sendTitle("§c§lTOP #" + state.getTeamAlive(), "§fKết thúc", 10, 60, 10);
+                    p.sendTitle("§c§lTOP #" + top, "§fKết thúc", 10, 60, 10);
 
                     // Kick
                     Tasks.sync(() -> {
@@ -66,6 +74,9 @@ public class GameManager {
                 }
             }
         }
+
+        // Update all other players
+        GameManagerTask.saveTop(state);
     }
 
     public void playerDead(Player player) {
@@ -106,9 +117,10 @@ public class GameManager {
 
             // Kick if not alive
             if (!teamAlive) {
+                int top = state.getTeamAlive() + 1;
                 for (Player p : team.getOnlinePlayers()) {
                     // Title
-                    Tasks.sync(() -> p.sendTitle("§c§lTOP #" + (state.getTeamAlive() + 1), "§fKết thúc", 10, 60, 10), 5);
+                    Tasks.sync(() -> p.sendTitle("§c§lTOP #" + top, "§fKết thúc", 10, 60, 10), 5);
 
                     // Kick
                     Tasks.sync(() -> {
@@ -118,6 +130,9 @@ public class GameManager {
                 }
             }
         }
+
+        // Update all other players
+        GameManagerTask.saveTop(state);
     }
 
     public void finish(boolean instantly) {
@@ -136,6 +151,7 @@ public class GameManager {
 
         // Has winner
         if (battleTeam != null) {
+            // Noti
             for (Player p : battleTeam.getOnlinePlayers()) {
                 p.sendTitle("§e§lTOP #" + state.getTeamAlive(), "§fChiến thắng", 10, 60, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);

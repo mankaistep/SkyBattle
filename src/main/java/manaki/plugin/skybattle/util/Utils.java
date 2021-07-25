@@ -18,6 +18,14 @@ import java.util.Random;
 
 public class Utils {
 
+    public static Map<String, String> read(String s) {
+        Map<String, String> map = Maps.newHashMap();
+        for (String s1 : s.split(";")) {
+            map.put(s1.split(":")[0], s1.split(":")[1]);
+        }
+        return map;
+    }
+
     public static void clearWorldGuardTemporaryData() {
         var plugin = SkyBattle.get();
         var path = plugin.getDataFolder().getPath().replace("SkyBattle", "WorldGuard//worlds");

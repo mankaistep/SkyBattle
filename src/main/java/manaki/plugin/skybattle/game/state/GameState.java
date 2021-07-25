@@ -54,8 +54,9 @@ public class GameState {
 
     // End
     private boolean isEnded;
+    private boolean isRanked;
 
-    public GameState(int id, String battleId, List<BattleTeam> battleTeams, WorldState ws) {
+    public GameState(int id, String battleId, List<BattleTeam> battleTeams, WorldState ws, boolean isRanked) {
         this.id = id;
         this.battleId = battleId;
         this.startTime = System.currentTimeMillis();
@@ -69,11 +70,13 @@ public class GameState {
         this.isEnded = false;
         this.isLoading = false;
         this.type = GameType.parse(this.startBattleTeams);
+        this.isRanked = isRanked;
 
         // Players
         playerStates = Maps.newConcurrentMap();
         for (Player p : this.getPlayers()) {
-            playerStates.put(p.getName(), new PlayerState(p, false));
+            var ps = new PlayerState(this, p, false);
+            playerStates.put(p.getName(), ps);
         }
 
 
@@ -130,6 +133,19 @@ public class GameState {
             for (String pn : battleTeam.getPlayers()) {
                 var p = Bukkit.getPlayer(pn);
                 if (p == null) continue;
+                players.add(p);
+            }
+        }
+        return players;
+    }
+
+    public List<Player> getAlivePlayers() {
+        List<Player> players = Lists.newArrayList();
+        for (BattleTeam battleTeam : this.currentBattleTeams) {
+            for (String pn : battleTeam.getPlayers()) {
+                var p = Bukkit.getPlayer(pn);
+                if (p == null) continue;
+                if (getPlayerState(p.getName()).isDead()) continue;
                 players.add(p);
             }
         }
@@ -221,6 +237,10 @@ public class GameState {
 
     public PlayerState getPlayerState(String name) {
         return this.playerStates.getOrDefault(name, null);
+    }
+
+    public boolean isRanked() {
+        return isRanked;
     }
 
     public BattleTeam getTeam(Player player) {

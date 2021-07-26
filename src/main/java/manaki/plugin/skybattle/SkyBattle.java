@@ -11,6 +11,7 @@ import manaki.plugin.skybattle.hide.VisionHides;
 import manaki.plugin.skybattle.listener.*;
 import manaki.plugin.skybattle.hide.Invisibles;
 import manaki.plugin.skybattle.placeholder.GamePlaceholder;
+import manaki.plugin.skybattle.placeholder.RankPlaceholder;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import manaki.plugin.skybattle.world.WorldListener;
@@ -93,7 +94,10 @@ public class SkyBattle extends JavaPlugin {
     }
 
     private void registerPlaceholders() {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new GamePlaceholder().register();
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new GamePlaceholder().register();
+            new RankPlaceholder().register();
+        }
     }
 
     public MainConfig getMainConfig() {

@@ -75,7 +75,7 @@ public class SkyBattle extends JavaPlugin {
 
     private void registerTasks() {
         new Invisibles().runTaskTimer(this, 0, 10);
-        new VisionHides().runTaskTimer(this, 0, 2);
+        new VisionHides().runTaskTimer(this, 0, 1);
         Tasks.async(() -> {
             Bukkit.getOnlinePlayers().forEach(Games::setListName);
         }, 0, 20);

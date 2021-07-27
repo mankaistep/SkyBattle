@@ -227,6 +227,10 @@ public class PlayerListener implements Listener {
         if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
         var target = (Player) e.getEntity();
         var damager = (Player) e.getDamager();
+        if (target == damager) {
+            e.setCancelled(true);
+            return;
+        }
 
         var state = Games.getCurrentGame(target);
         if (state == null) return;
@@ -245,6 +249,10 @@ public class PlayerListener implements Listener {
         if (!(((Projectile) e.getDamager()).getShooter() instanceof Player)) return;
         var target = (Player) e.getEntity();
         var damager = (Player) ((Projectile) e.getDamager()).getShooter();
+        if (target == damager) {
+            e.setCancelled(true);
+            return;
+        }
 
         var state = Games.getCurrentGame(target);
         if (state == null) return;

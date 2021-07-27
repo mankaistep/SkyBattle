@@ -155,6 +155,12 @@ public class GameManager {
             for (Player p : battleTeam.getOnlinePlayers()) {
                 p.sendTitle("§e§lTOP #" + state.getTeamAlive(), "§fChiến thắng", 10, 60, 10);
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
+
+                var ps = state.getPlayerState(p.getName());
+                ps.getResult().setWinner(true);
+                SkyBattle.get().getExecutor().sendResult(ps.getResult());
+
+                p.sendMessage("§c§lĐừng thoát vội, đợi tầm 5 giây rồi /thoat, thoát nhanh có nguy cơ mất điểm!");
             }
             var start = System.currentTimeMillis();
             new BukkitRunnable() {

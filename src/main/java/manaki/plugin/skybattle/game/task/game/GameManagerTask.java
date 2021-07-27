@@ -75,13 +75,6 @@ public class GameManagerTask extends ATask {
         if (state.canFinish()) {
             this.selfDestroy();
             Games.managerFromState(state).finish(false);
-
-            // Save winner
-            for (Player p : getState().getPlayers()) {
-                var ps = state.getPlayerState(p.getName());
-                ps.getResult().setWinner(true);
-                SkyBattle.get().getExecutor().sendResult(ps.getResult());
-            }
         }
     }
 

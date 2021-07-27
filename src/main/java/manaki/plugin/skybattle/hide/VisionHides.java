@@ -130,6 +130,7 @@ public class VisionHides extends BukkitRunnable {
     }
 
     public static boolean isBypassed(Player target) {
+        if (target.getGameMode() == GameMode.CREATIVE) return true;
         if (bypassHides.containsKey(target.getName()) && bypassHides.get(target.getName()) > System.currentTimeMillis()) {
             return true;
         }

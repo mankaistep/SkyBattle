@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class CustomItemListener implements Listener {
     public void onThrowTNT(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();
@@ -67,6 +69,7 @@ public class CustomItemListener implements Listener {
     public void onThrowFireball(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();
@@ -89,6 +92,7 @@ public class CustomItemListener implements Listener {
     public void onFireworkLaunch(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();
@@ -115,6 +119,7 @@ public class CustomItemListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         var p = e.getPlayer();
         if (Games.getCurrentGame(p) == null) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.getAction().name().startsWith("RIGHT")) return;
 
         var ishand = p.getInventory().getItemInMainHand();

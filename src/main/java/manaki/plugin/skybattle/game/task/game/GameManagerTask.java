@@ -7,7 +7,9 @@ import manaki.plugin.skybattle.game.state.result.PlayerResult;
 import manaki.plugin.skybattle.game.task.a.ATask;
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.team.BattleTeam;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -20,9 +22,21 @@ public class GameManagerTask extends ATask {
 
     @Override
     public void run() {
+        damageLowYPlayers(this.getState());
         saveTop(this.getState());
         checkValidPlayer();
         checkEnd();
+    }
+
+    public static void damageLowYPlayers(GameState state) {
+        for (Player p : state.getPlayers()) {
+            if (p.getLocation().getY() < 150) {
+                var maxhealth = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+                var d = maxhealth / 50;
+                p.damage(d);
+                p.sendActionBar(new TextComponent("§c§lBạn bị sát thương khi dưới y < 150"));
+            }
+        }
     }
 
     public static void saveTop(GameState state) {

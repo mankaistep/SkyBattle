@@ -160,7 +160,7 @@ public class GameManager {
                 ps.getResult().setWinner(true);
                 SkyBattle.get().getExecutor().sendResult(ps.getResult());
 
-                p.sendMessage("§c§lĐừng thoát vội, đợi tầm 5 giây rồi /thoat, thoát nhanh có nguy cơ mất điểm!");
+                p.sendMessage("§c§lĐừng thoát vội, đợi tầm 15 giây rồi /thoat, thoát nhanh có nguy cơ mất điểm!");
             }
             var start = System.currentTimeMillis();
             new BukkitRunnable() {

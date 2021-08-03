@@ -29,8 +29,9 @@ public class GameManagerTask extends ATask {
     }
 
     public static void damageLowYPlayers(GameState state) {
+        var bm = Games.battleFromState(state);
         for (Player p : state.getPlayers()) {
-            if (p.getLocation().getY() < 150) {
+            if (p.getLocation().getY() < bm.getSetting().get("low-y", Integer.class)) {
                 var maxhealth = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
                 var d = maxhealth / 50;
                 p.damage(d);

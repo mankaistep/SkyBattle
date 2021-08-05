@@ -141,10 +141,17 @@ public class Utils {
 
     public static void setBorder(World world, int centerX, int centerZ, int radius, double damage) {
         @NotNull WorldBorder wb = world.getWorldBorder();
-        wb.setCenter(centerX, centerZ);
-        wb.setSize(radius * 8);
-        wb.setWarningDistance(0);
         wb.setDamageAmount(damage);
+        if (radius > 0) {
+            wb.setCenter(centerX, centerZ);
+            wb.setSize(radius * 8);
+            wb.setWarningDistance(0);
+        }
+        else {
+            wb.setCenter(centerX + 5000, centerZ);
+            wb.setSize(1);
+            wb.setDamageBuffer(4990);
+        }
     }
 
     public static String format(int seconds) {
@@ -182,6 +189,23 @@ public class Utils {
         l.remove(ChatColor.RESET);
 
         return l;
+    }
+
+    public static int calScore(int top) {
+        if (top <= 4) return (5 - top) * 3;
+        else return (4 - top) * 3;
+    }
+
+    public static int getKillScore() {
+        return 1;
+    }
+
+    public static String getTopColor(int top) {
+        if (top == 1) return "§6";
+        if (top == 2) return "§c";
+        if (top == 3) return "§9";
+        if (top == 4) return "§f";
+        return "§7";
     }
 
 }

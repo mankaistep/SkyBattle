@@ -77,13 +77,14 @@ public class SpectatorGUI {
 
         List<String> lore = Lists.newArrayList();
         lore.add("§eThời gian: §f" + Utils.format(state.getTime()));
-        lore.add("§eNgười chơi: ");
+        lore.add("§eĐội: ");
         for (BattleTeam bt : state.getStartTeams()) {
+            lore.add(" " + bt.getColorChat() + bt.getColor().name() + " §f(" + bt.getScore() + "đ)");
             for (String pn : bt.getPlayers()) {
                 var ps = state.getPlayerState(pn);
                 var alive = ps != null && !ps.isDead();
-                if (alive) lore.add("§a ● " + pn);
-                else lore.add("§7 ● " + pn);
+                if (alive) lore.add(" §a ● " + pn);
+                else lore.add(" §7 ● " + pn);
             }
         }
         ism.setLore(lore);

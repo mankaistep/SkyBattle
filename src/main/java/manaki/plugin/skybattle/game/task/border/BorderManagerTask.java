@@ -53,6 +53,7 @@ public class BorderManagerTask extends ATask {
 
     public void borderCheck() {
         var state = this.getState();
+        var battle = Games.battleFromState(state);
 
         // Random border
         var bs = Games.randomizeBorder(state);
@@ -63,7 +64,9 @@ public class BorderManagerTask extends ATask {
         var currentBM = mm.getBorder(bs.getBorderId());
         var nextBorder = Games.getNextBorder(state);
         if (nextBorder == null) {
+            bs.setCurrentRadius(currentBM.getRadius());
             this.selfDestroy();
+            Utils.setBorder(state.getWorldState().toWorld(), bs.getCenter().getBlockX(), bs.getCenter().getBlockZ(), bs.getCurrentRadius(), battle.getSetting().get("border-damage", Integer.class));
             return;
         }
         var startR = currentBM.getRadius();
@@ -76,7 +79,6 @@ public class BorderManagerTask extends ATask {
         bs.setCurrentRadius(r);
 
         // Packet
-        var battle = Games.battleFromState(state);
         Utils.setBorder(state.getWorldState().toWorld(), bs.getCenter().getBlockX(), bs.getCenter().getBlockZ(), bs.getCurrentRadius(), battle.getSetting().get("border-damage", Integer.class));
     }
 

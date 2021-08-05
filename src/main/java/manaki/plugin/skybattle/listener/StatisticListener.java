@@ -2,6 +2,7 @@ package manaki.plugin.skybattle.listener;
 
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.PlayerState;
+import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -49,6 +50,10 @@ public class StatisticListener implements Listener {
             ps.addKill(1);
             killer.sendTitle("", "§c§l⚔ Hạ gục ⚔", 0, 50, 0);
             killer.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_HURT, 1, 1);
+
+            // Team score
+            var team = state.getTeam(killer);
+            team.addScore(Utils.getKillScore());
         }
 
         // Check assist

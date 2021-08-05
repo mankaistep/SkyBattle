@@ -489,7 +489,7 @@ public class Games {
         var state = getCurrentGame(p);
         if (state != null) {
             var team = state.getTeam(p);
-            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName());
+            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName() + " §7(" + team.getScore() + "đ)");
             return;
         }
 

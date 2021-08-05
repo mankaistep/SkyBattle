@@ -41,6 +41,9 @@ public class GameManagerTask extends ATask {
     }
 
     public static void saveTop(GameState state) {
+        for (BattleTeam bt : state.getCurrentTeams()) {
+            bt.setTop(state.getTeamAlive());
+        }
         for (Player p : state.getAlivePlayers()) {
             var ps = state.getPlayerState(p.getName());
             ps.getResult().setTop(state.getTeamAlive());
@@ -65,6 +68,7 @@ public class GameManagerTask extends ATask {
             var iter = battleTeam.getPlayers().iterator();
             while (iter.hasNext()) {
                 var pn = iter.next();
+                var ps = state.getPlayerState(pn);
                 var p = Bukkit.getPlayer(pn);
                 if (p != null) {
                     if (Games.isByPassedInvalid(p)) continue;
@@ -72,14 +76,14 @@ public class GameManagerTask extends ATask {
                     // Invalid
                     if (p.getWorld() != state.getWorldState().toWorld()) {
                         iter.remove();
-                        gm.playerDead(p);
+                        if (!ps.isDead()) gm.playerDead(p);
                     }
                 }
 
                 // Invalid
                 if (p == null) {
                     iter.remove();
-                    gm.playerQuit(pn);
+                    if (!ps.isDead()) gm.playerQuit(pn);
                 }
             }
         }

@@ -11,10 +11,14 @@ public class BattleTeam {
 
     private ChatColor color;
     private final List<String> players;
+    private int score;
+    private int top;
 
     public BattleTeam(ChatColor color, List<String> list) {
         this.color = color;
         this.players = list;
+        this.score = 0;
+        this.top = 8;
     }
 
     public BattleTeam(List<String> list) {
@@ -57,5 +61,25 @@ public class BattleTeam {
 
     public String getColorChat() {
         return ChatColor.valueOf(this.color.name()).toString();
+    }
+
+    public int getTop() {
+        return top;
+    }
+
+    public void setTop(int top) {
+        this.top = top;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void addScore(int value) {
+        this.score += value;
     }
 }

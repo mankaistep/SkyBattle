@@ -18,6 +18,10 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class GameManager {
 
     private final int WIN_WAITING_TIME = 30000;
@@ -48,16 +52,25 @@ public class GameManager {
             ps.setDead(true);
         }
 
+        // Top broadcast
+        for (Player p : state.getWorldState().toWorld().getPlayers()) {
+            p.sendMessage("§6" + pname + "§f đạt §6§lTop #" + ps.getResult().getTop());
+        }
+
         // If has anyone left
         var team = state.getTeam(pname);
         if (team != null) {
             // Kick if not alive
             if (!Games.isTeamAlive(state, team)) {
+                // Set top
+                int top = state.getTeamAlive() + 1;
+                team.setTop(top);
+
+                // Set score
+                team.addScore(Utils.calScore(top));
+
                 for (String pn : team.getPlayers()) {
                     if (pn.equals(pname)) continue;
-
-                    // Set top
-                    int top = state.getTeamAlive() + 1;
 
                     // Send title
                     var p = Bukkit.getPlayer(pn);
@@ -72,6 +85,10 @@ public class GameManager {
                         Games.backToMainServer(p);
                     }, 80);
                 }
+
+
+                // Team lose broadcast
+                teamEndBroadcast(team, top);
             }
         }
 
@@ -92,6 +109,11 @@ public class GameManager {
 
         // Clear data
         Tasks.async(() -> ConnectListener.clearData(player));
+
+        // Top broadcast
+        for (Player p : player.getWorld().getPlayers()) {
+            p.sendMessage("§6" + player.getName() + "§f đạt §6§lTop #" + ps.getResult().getTop());
+        }
 
         // If has anyone left
         var team = state.getTeam(player);
@@ -118,16 +140,24 @@ public class GameManager {
             // Kick if not alive
             if (!teamAlive) {
                 int top = state.getTeamAlive() + 1;
+
+                // Set score
+                team.addScore(Utils.calScore(top));
+                team.setTop(top);
+
                 for (Player p : team.getOnlinePlayers()) {
                     // Title
                     Tasks.sync(() -> p.sendTitle("§c§lTOP #" + top, "§fKết thúc", 10, 60, 10), 5);
-
+                    
                     // Kick
                     Tasks.sync(() -> {
                         // Back to spawn
                         Utils.toSpawn(p);
                     }, 80);
                 }
+
+                // Team lose broadcast
+                teamEndBroadcast(team, top);
             }
         }
 
@@ -146,8 +176,13 @@ public class GameManager {
 
         state.setEnded(true);
 
+
         // Winner
         BattleTeam battleTeam = state.getWinTeam();
+        battleTeam.addScore(Utils.calScore(1));
+
+        // Broadcast
+        endGameBroadcast(state);
 
         // Has winner
         if (battleTeam != null) {
@@ -234,4 +269,52 @@ public class GameManager {
         else SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), false);
     }
 
+    public void teamEndBroadcast(BattleTeam team, int top) {
+        for (Player p : state.getWorldState().toWorld().getPlayers()) {
+            var s = "";
+            for (String name : team.getPlayers()) {
+                s += name + ",";
+            }
+            if (s.length() > 0) s = s.substring(0, s.length() - 1);
+            p.sendMessage("§fĐội của §6" + s + "§f đạt §6§lTop #" + top + " §fvới số điểm là §6§l" + team.getScore() + "đ");
+        }
+    }
+
+    public void endGameBroadcast(GameState state) {
+        for (Player p : state.getWorldState().toWorld().getPlayers()) {
+            p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
+            p.sendMessage("§7-----------------------------------------");
+            p.sendMessage("        §e§lSKYBATTLE - KẾT THÚC");
+
+            var result = sort(state);
+            for (BattleTeam bt : result) {
+                // Prefix
+                var color = Utils.getTopColor(bt.getTop());
+                var s = color + "§l" + bt.getTop() + ". §r" + color;
+
+                // Players
+                for (String name : bt.getPlayers()) {
+                    s += name + ",";
+                }
+                if (s.length() > 0) s = s.substring(0, s.length() - 1);
+
+                // Score
+                s += " (" + bt.getScore() + "đ) ";
+                p.sendMessage("   " + s);
+            }
+
+            p.sendMessage("§7-----------------------------------------");
+        }
+    }
+
+    public static List<BattleTeam> sort(GameState state) {
+        var list = state.getCurrentTeams();
+        list.sort(new Comparator<BattleTeam>() {
+            @Override
+            public int compare(BattleTeam o1, BattleTeam o2) {
+                return Integer.compare(o1.getTop(), o2.getTop());
+            }
+        });
+        return list;
+    }
 }

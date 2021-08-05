@@ -25,7 +25,7 @@ public class BorderModel {
     }
 
     public int getRadius() {
-        return radius;
+        return Math.max(radius, 0);
     }
 
     public int getTime() {

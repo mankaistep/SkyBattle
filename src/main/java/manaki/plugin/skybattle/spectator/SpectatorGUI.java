@@ -79,7 +79,7 @@ public class SpectatorGUI {
         lore.add("§eThời gian: §f" + Utils.format(state.getTime()));
         lore.add("§eĐội: ");
         for (BattleTeam bt : state.getStartTeams()) {
-            lore.add(" " + bt.getColorChat() + bt.getColor().name() + " §f(" + bt.getScore() + "đ)");
+            lore.add(" " + bt.getColorChat() + bt.getColor().name() + " §f(" + bt.calScore() + "đ)");
             for (String pn : bt.getPlayers()) {
                 var ps = state.getPlayerState(pn);
                 var alive = ps != null && !ps.isDead();

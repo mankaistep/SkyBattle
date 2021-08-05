@@ -208,4 +208,7 @@ public class Utils {
         return "§7";
     }
 
+    public static int getBossKillScore() {
+        return 2;
+    }
 }

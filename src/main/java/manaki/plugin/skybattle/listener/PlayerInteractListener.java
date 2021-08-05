@@ -36,21 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerListener implements Listener {
-
-    // Hidden players join
-    @EventHandler
-    public void onHiddenPlayerJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-        VisionHides.show(p);
-    }
-
-    // Hidden players quit
-    @EventHandler
-    public void onHiddenPlayerQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        VisionHides.show(p);
-    }
+public class PlayerInteractListener implements Listener {
 
     // Death drop chest
     @EventHandler
@@ -179,31 +165,6 @@ public class PlayerListener implements Listener {
 
         Invisibles.hide(p.getName(), time);
         p.sendTitle("", "§aTàng hình (kể cả giáp, vũ khí) trong " + time / 1000 + " giây", 2, 25, 5);
-    }
-
-    // Player death
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
-        var p = e.getEntity();
-        var state = Games.getCurrentGame(p);
-        if (state == null) return;
-
-        var gm = Games.managerFromState(state);
-        gm.playerDead(p);
-    }
-
-    // Quit game
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        var p = e.getPlayer();
-
-        if (PlayerResult.hasPending(p.getName())) PlayerResult.remove(p.getName());
-
-        var state = Games.getCurrentGame(p);
-        if (state == null) return;
-
-        var gm = Games.managerFromState(state);
-        gm.playerQuit(p);
     }
 
     // Open supply

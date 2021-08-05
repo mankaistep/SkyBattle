@@ -53,7 +53,7 @@ public class BattleModel {
         return bossId;
     }
 
-    public int getTime() {
+    public int getBossTime() {
         return time;
     }
 

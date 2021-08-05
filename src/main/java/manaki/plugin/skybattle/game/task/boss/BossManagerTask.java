@@ -1,5 +1,6 @@
 package manaki.plugin.skybattle.game.task.boss;
 
+import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.GameState;
 import manaki.plugin.skybattle.game.task.a.ATask;
 
@@ -25,10 +26,9 @@ public class BossManagerTask extends ATask {
             return;
         }
 
+        var bm = Games.battleFromState(state);
         // Only spawn in last border or one team left
-        if (!state.isLastBorder() && state.getTeamAlive() != 1) {
-            return;
-        }
+        if (state.getTime() < bm.getBossTime()) return;
 
         // Spawn
         new BossPendingTask(state, 30000, "§6§lTriệu hồi trùm cuối").start();

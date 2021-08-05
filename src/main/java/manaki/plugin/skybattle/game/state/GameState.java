@@ -273,8 +273,7 @@ public class GameState {
     }
 
     public boolean canFinish() {
-        if (getTeamAlive() <= 0) return true;
-        return getTeamAlive() == 1 && this.boss != null && this.boss.isDead();
+        return getTeamAlive() == 1;
     }
 
     public BattleTeam getWinTeam() {
@@ -310,5 +309,9 @@ public class GameState {
 
     public void setEnded(boolean ended) {
         isEnded = ended;
+    }
+
+    public List<BattleTeam> getAliveTeams() {
+        return this.currentBattleTeams.stream().filter(bt -> Games.isTeamAlive(this, bt)).collect(Collectors.toList());
     }
 }

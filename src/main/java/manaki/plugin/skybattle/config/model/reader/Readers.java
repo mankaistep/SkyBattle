@@ -92,7 +92,7 @@ public class Readers {
         var id = file.getName().replace(".yml", "");
         var mapId = config.getString("map");
         var name = config.getString("name", "Không tên");
-        var time = config.getInt("time");
+        var time = config.getInt("boss-time", 300);
         var boss = config.getString("boss");
         var sm = new SettingModel(config.getConfigurationSection("setting").getValues(false));
 

@@ -2,18 +2,18 @@ package manaki.plugin.skybattle.listener;
 
 import manaki.plugin.skybattle.game.Games;
 import manaki.plugin.skybattle.game.state.PlayerState;
-import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.Map;
 
-public class StatisticListener implements Listener {
+public class PlayerStatisticListener implements Listener {
 
     /*
     Add damaged players
@@ -33,6 +33,7 @@ public class StatisticListener implements Listener {
         var ps = state.getPlayerState(damager.getName());
         ps.addDamaged(target.getName());
     }
+
     /*
     Add kill and assist
      */
@@ -51,9 +52,9 @@ public class StatisticListener implements Listener {
             killer.sendTitle("", "§c§l⚔ Hạ gục ⚔", 0, 50, 0);
             killer.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_HURT, 1, 1);
 
-            // Team score
+            // Team kill
             var team = state.getTeam(killer);
-            team.addScore(Utils.getKillScore());
+            team.addKill(1);
         }
 
         // Check assist

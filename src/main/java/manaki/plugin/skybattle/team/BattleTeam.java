@@ -1,6 +1,7 @@
 package manaki.plugin.skybattle.team;
 
 import com.google.common.collect.Lists;
+import manaki.plugin.skybattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,14 +12,17 @@ public class BattleTeam {
 
     private ChatColor color;
     private final List<String> players;
-    private int score;
+
     private int top;
+    private int kill;
+    private boolean killBoss;
 
     public BattleTeam(ChatColor color, List<String> list) {
         this.color = color;
         this.players = list;
-        this.score = 0;
+        this.kill = 0;
         this.top = 8;
+        this.killBoss = false;
     }
 
     public BattleTeam(List<String> list) {
@@ -71,15 +75,27 @@ public class BattleTeam {
         this.top = top;
     }
 
-    public int getScore() {
-        return score;
+    public int getKill() {
+        return kill;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setKill(int kill) {
+        this.kill = kill;
     }
 
-    public void addScore(int value) {
-        this.score += value;
+    public void addKill(int kill) {
+        this.kill += kill;
+    }
+
+    public int calScore() {
+        return Utils.calScore(this.top) + Utils.getKillScore() * this.kill + (this.killBoss ? Utils.getBossKillScore() : 0);
+    }
+
+    public boolean isKillBoss() {
+        return killBoss;
+    }
+
+    public void setKillBoss(boolean killBoss) {
+        this.killBoss = killBoss;
     }
 }

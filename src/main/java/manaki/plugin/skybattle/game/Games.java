@@ -335,7 +335,6 @@ public class Games {
     public static boolean isTeamAlive(GameState state, BattleTeam battleTeam) {
         for (String pn : battleTeam.getPlayers()) {
             var ps = state.getPlayerState(pn);
-            if (ps == null) return true;
             if (!ps.isDead()) return true;
         }
         return false;
@@ -343,7 +342,7 @@ public class Games {
 
     public static GameState getCurrentGame(Player player) {
         for (GameManager gm : managers) {
-            if (gm.getState().getPlayers().contains(player)) return gm.getState();
+            if (gm.getState().getPlayers().contains(player) && !gm.getState().isEnded()) return gm.getState();
         }
         return null;
     }
@@ -489,12 +488,20 @@ public class Games {
         var state = getCurrentGame(p);
         if (state != null) {
             var team = state.getTeam(p);
-            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName() + " §7(" + team.getScore() + "đ)");
+            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName() + " §7(" + team.calScore() + "đ)");
             return;
         }
 
         // Lobby
         p.setPlayerListName("§6Ready §f" + p.getName());
+    }
+
+    public static Player getTeammate(GameState state, Player p) {
+        var team = state.getTeam(p);
+        for (Player op : team.getOnlinePlayers()) {
+            if (op != p) return op;
+        }
+        return null;
     }
 
 }

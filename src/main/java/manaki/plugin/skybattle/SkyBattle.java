@@ -18,7 +18,6 @@ import manaki.plugin.skybattle.world.WorldListener;
 import manaki.plugin.skybattle.world.WorldLoader;
 import manaki.plugin.skybattle.world.WorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -65,12 +64,13 @@ public class SkyBattle extends JavaPlugin {
 
     public void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new WorldListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getPluginManager().registerEvents(new MobListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlacerListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new SpectatorListener(), this);
-        Bukkit.getPluginManager().registerEvents(new StatisticListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInOutListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerStatisticListener(), this);
     }
 
     private void registerTasks() {

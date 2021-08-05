@@ -1,10 +1,7 @@
 package manaki.plugin.skybattle.game.state.result;
 
-import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import manaki.plugin.skybattle.game.state.statistic.PlayerStatistic;
-
-import java.util.Map;
 
 public class PlayerResult {
 
@@ -22,9 +19,6 @@ public class PlayerResult {
         this.top = 8;
         this.statistic = new PlayerStatistic();
         this.isWinner = false;
-
-        // Add pending
-        addPending(name, this);
     }
 
     public String getName() {
@@ -61,26 +55,6 @@ public class PlayerResult {
 
     public String toString() {
         return new GsonBuilder().create().toJson(this);
-    }
-
-    // Statistics
-
-    private static Map<String, PlayerResult> pendingResults = Maps.newHashMap();
-
-    private static void addPending(String s, PlayerResult pr) {
-        pendingResults.put(s, pr);
-    }
-
-    public static boolean hasPending(String name) {
-        return pendingResults.containsKey(name);
-    }
-
-    public static PlayerResult get(String name) {
-        return pendingResults.get(name);
-    }
-
-    public static void remove(String name) {
-        pendingResults.remove(name);
     }
 
 

@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.util.List;
 import java.util.Map;
@@ -42,11 +43,22 @@ public class Games {
     private static int maxId = 0;
 
     public static void start(String battleId, List<BattleTeam> battleTeams, boolean isAsync, boolean isRanked) {
-        // Randomize color
+        // Randomize color + set team
         var colors = Utils.getColors();
         for (int i = 0; i < battleTeams.size(); i++) {
             var team = battleTeams.get(i);
-            team.setColor(colors.get(i));
+            var color = colors.get(i);
+            team.setColor(color);
+
+            var sbm = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
+            Team st;
+            if (sbm.getTeam(color.name()) != null) {
+                st = sbm.getTeam(color.name());
+            } else st = sbm.registerNewTeam(color.name());
+
+            for (String pname : team.getPlayers()) {
+                st.addEntry(pname);
+            }
         }
 
         // Load template world
@@ -487,9 +499,12 @@ public class Games {
         // In battle
         var state = getCurrentGame(p);
         if (state != null) {
-            var team = state.getTeam(p);
-            p.setPlayerListName(team.getColorChat() + team.getColor().name() + " §f" + p.getName() + " §7(" + team.calScore() + "đ)");
-            return;
+            var ps = state.getPlayerState(p.getName());
+            if (!ps.isDead()) {
+                var team = state.getTeam(p);
+                p.setPlayerListName(team.getColorChat() + "§l" + team.getColor().name() + " §f" + p.getName() + " §7(" + team.calScore() + "đ)");
+                return;
+            }
         }
 
         // Lobby

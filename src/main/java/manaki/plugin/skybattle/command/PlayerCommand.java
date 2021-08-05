@@ -22,8 +22,11 @@ public class PlayerCommand implements CommandExecutor {
             var p = (Player) sender;
             var state = Games.getCurrentGame(p);
             if (state != null) {
-                p.sendMessage("§cBạn đang trong một game, không thể dùng tính năng này!");
-                return false;
+                var ps = state.getPlayerState(p.getName());
+                if (!ps.isDead()) {
+                    p.sendMessage("§cBạn đang trong một game, không thể dùng tính năng này!");
+                    return false;
+                }
             }
             SpectatorGUI.open(p);
         }

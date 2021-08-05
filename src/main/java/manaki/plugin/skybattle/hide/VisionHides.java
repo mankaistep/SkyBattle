@@ -75,7 +75,12 @@ public class VisionHides extends BukkitRunnable {
             if (isHidden(p, target)) return;
 
             // Check teammate
-            if (Games.isTeammate(p, target)) return;
+            if (p.getWorld() == target.getWorld()) {
+                if (Games.isTeammate(p, target)) {
+                    var state = Games.getCurrentGame(p);
+                    if (!state.getPlayerState(target.getName()).isDead()) return;
+                }
+            }
 
             // Hide
             p.hidePlayer(SkyBattle.get(), target);

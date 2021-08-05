@@ -176,24 +176,21 @@ public class Utils {
     }
 
     public static List<ChatColor> getColors() {
-        List<ChatColor> l = Lists.newArrayList(ChatColor.values());
-        l.remove(ChatColor.BOLD);
-        l.remove(ChatColor.BLACK);
-        l.remove(ChatColor.DARK_BLUE);
-        l.remove(ChatColor.DARK_RED);
-        l.remove(ChatColor.DARK_PURPLE);
-        l.remove(ChatColor.ITALIC);
-        l.remove(ChatColor.MAGIC);
-        l.remove(ChatColor.UNDERLINE);
-        l.remove(ChatColor.STRIKETHROUGH);
-        l.remove(ChatColor.RESET);
+        List<ChatColor> l = Lists.newArrayList();
+        l.add(ChatColor.BLUE);
+        l.add(ChatColor.WHITE);
+        l.add(ChatColor.AQUA);
+        l.add(ChatColor.GOLD);
+        l.add(ChatColor.GRAY);
+        l.add(ChatColor.GREEN);
+        l.add(ChatColor.RED);
+        l.add(ChatColor.YELLOW);
 
         return l;
     }
 
     public static int calScore(int top) {
-        if (top <= 4) return (5 - top) * 3;
-        else return (4 - top) * 3;
+        return (8 - top) * 3;
     }
 
     public static int getKillScore() {

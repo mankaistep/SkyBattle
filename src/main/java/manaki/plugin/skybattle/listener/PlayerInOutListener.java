@@ -38,7 +38,10 @@ public class PlayerInOutListener implements Listener {
         if (ps.isDead()) return;
 
         var gm = Games.managerFromState(state);
-        gm.doPlayerOut(p, true);
+        Tasks.sync(() -> {
+            p.spigot().respawn();
+            gm.doPlayerOut(p, true);
+        });
     }
 
     // Quit game

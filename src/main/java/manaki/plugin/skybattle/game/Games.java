@@ -133,7 +133,7 @@ public class Games {
                     }
 
                     // Start tasks
-                    state.startTasks();
+                    Tasks.sync(state::startTasks, 20);
                 }, 40);
             }
         }.runTaskTimer(plugin, 0, 10);
@@ -354,7 +354,11 @@ public class Games {
 
     public static GameState getCurrentGame(Player player) {
         for (GameManager gm : managers) {
-            if (gm.getState().getPlayers().contains(player) && !gm.getState().isEnded()) return gm.getState();
+            if (gm.getState().getPlayers().contains(player) && !gm.getState().isEnded()) {
+                var state = gm.getState();
+                var ps = state.getPlayerState(player.getName());
+                if (!ps.isDead()) return state;
+            }
         }
         return null;
     }

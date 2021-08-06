@@ -29,6 +29,8 @@ public class GamePlaceholder extends PlaceholderExpansion {
         try {
             var state = Games.getCurrentGame(p);
             if (state != null) {
+                var ps = state.getPlayerState(p.getName());
+                if (ps.isDead()) return "...";
                 switch (s) {
                     case "homtiepte":
                         var remain = Games.getSupplyRemain(state) - 1;
@@ -48,13 +50,9 @@ public class GamePlaceholder extends PlaceholderExpansion {
                     case "battle_type":
                         return state.getType().getName();
                     case "player_assists": {
-                        var ps = state.getPlayerState(p.getName());
-                        if (ps == null) return 0 + "";
                         return ps.getAssist() + "";
                     }
                     case "player_kills": {
-                        var ps = state.getPlayerState(p.getName());
-                        if (ps == null) return 0 + "";
                         return ps.getKill() + "";
                     }
                 }

@@ -182,14 +182,17 @@ public class GameManager {
     // Method after game finished
     public void clean(boolean instantly) {
         // Clear entity
+        int c = 0;
         var iter = this.getState().getWorldState().toWorld().getEntities().iterator();
         while (iter.hasNext()) {
             var entity = iter.next();
             if (entity instanceof LivingEntity && !(entity instanceof Player)) {
                 iter.remove();
                 entity.remove();
+                c++;
             }
         }
+        SkyBattle.get().getLogger().warning("Killed " + c + " entities in template world");
 
         // Remove manager
         Games.removeManager(this);

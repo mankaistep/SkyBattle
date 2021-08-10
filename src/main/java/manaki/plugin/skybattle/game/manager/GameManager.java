@@ -17,6 +17,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -179,6 +181,16 @@ public class GameManager {
 
     // Method after game finished
     public void clean(boolean instantly) {
+        // Clear entity
+        var iter = this.getState().getWorldState().toWorld().getEntities().iterator();
+        while (iter.hasNext()) {
+            var entity = iter.next();
+            if (entity instanceof LivingEntity && !(entity instanceof Player)) {
+                iter.remove();
+                entity.remove();
+            }
+        }
+
         // Remove manager
         Games.removeManager(this);
 

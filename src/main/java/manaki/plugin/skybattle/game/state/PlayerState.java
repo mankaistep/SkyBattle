@@ -8,21 +8,21 @@ import java.util.Set;
 
 public class PlayerState {
 
-    private final Player player;
     private boolean isDead;
 
     private final Set<String> damaged;
     private final PlayerResult result;
 
+    public PlayerState(String playerName, GameState state, boolean isDead) {
+        this.isDead = isDead;
+        this.damaged = Sets.newHashSet();
+        this.result = new PlayerResult(playerName, state.getType().getPlayersInTeam(), state.isRanked());
+    }
+
     public PlayerState(GameState state, Player player, boolean isDead) {
-        this.player = player;
         this.isDead = isDead;
         this.damaged = Sets.newHashSet();
         this.result = new PlayerResult(player.getName(), state.getType().getPlayersInTeam(), state.isRanked());
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public boolean isDead() {

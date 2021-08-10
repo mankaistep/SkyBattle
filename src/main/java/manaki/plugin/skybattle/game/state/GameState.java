@@ -236,7 +236,7 @@ public class GameState {
     }
 
     public PlayerState getPlayerState(String name) {
-        return this.playerStates.getOrDefault(name, null);
+        return this.playerStates.getOrDefault(name, new PlayerState(name, this, true));
     }
 
     public boolean isRanked() {

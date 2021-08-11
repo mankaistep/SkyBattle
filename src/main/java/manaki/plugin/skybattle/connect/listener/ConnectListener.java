@@ -63,13 +63,13 @@ public class ConnectListener implements @NotNull PluginMessageListener {
                         clearData(p);
 
                         // Set equip
-                        for (String idata : tp.getItems()) {
-                            var item = Item.parse(idata);
-                            item.getData().setExp(0);
-                            item.getData().setLevel(0);
-                            var is = Items.build(p, item);
-                            equip(p, is, item);
-                        }
+//                        for (String idata : tp.getItems()) {
+//                            var item = Item.parse(idata);
+//                            item.getData().setExp(0);
+//                            item.getData().setLevel(0);
+//                            var is = Items.build(p, item);
+//                            equip(p, is, item);
+//                        }
 
                         // Update state
                         Travelers.updateState(p);

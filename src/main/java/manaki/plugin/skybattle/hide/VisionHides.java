@@ -31,9 +31,12 @@ public class VisionHides extends BukkitRunnable {
     public static void check(Player p, Player target) {
         if (p == target) return;
 
-        // Gm 1 check
-        if (p.getGameMode() == GameMode.CREATIVE) {
-            show(p, target);
+        // Admin check
+        if (p.hasPermission("skybattle.admin")) {
+            if (p.getWorld() == target.getWorld()) {
+                if (isHidden(p, target)) show(p, target);
+            }
+            else hide(p, target);
             return;
         }
 

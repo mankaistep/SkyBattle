@@ -15,6 +15,7 @@ import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
@@ -202,6 +203,19 @@ public class GameManager {
             SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), true);
         }, 20);
         else SkyBattle.get().getWorldLoader().unload(state.getWorldState().toWorldName(), false);
+    }
+
+    public void endBroadcast(Player target, Player killer) {
+        for (Player p : state.getWorldState().toWorld().getPlayers()) {
+            if (killer != null) p.sendMessage("§f" + target.getName() + " §cbị hạ bởi §e" + killer.getName());
+            else p.sendMessage("§f" + target.getName() + " §cbị loại khỏi cuộc chơi");
+
+            // To gm 1
+            if (p.getGameMode() != GameMode.SURVIVAL) {
+                if (killer != null) p.sendTitle("", "§6" + killer.getName() + " §c§l⚔ §7" + target.getName(), 5, 80, 5);
+                else p.sendTitle("", "§c§l⚔ §7" + target.getName(), 5, 80, 5);
+            }
+        }
     }
 
     public void teamEndBroadcast(BattleTeam team, int top) {

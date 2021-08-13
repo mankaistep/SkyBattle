@@ -353,11 +353,22 @@ public class Games {
     }
 
     public static GameState getCurrentGame(Player player) {
+        return getCurrentGame(player, false);
+    }
+
+    public static GameState getCurrentGame(Player player, boolean spectator) {
         for (GameManager gm : managers) {
-            if (gm.getState().getPlayers().contains(player) && !gm.getState().isEnded()) {
-                var state = gm.getState();
+            var state = gm.getState();
+            if (state.getPlayers().contains(player) && !state.isEnded()) {
                 var ps = state.getPlayerState(player.getName());
                 if (!ps.isDead()) return state;
+            }
+
+            // Spectator
+            if (spectator) {
+                if (state.getWorldState().toWorld().getPlayers().contains(player)) {
+                    if (player.getGameMode() != GameMode.SURVIVAL) return state;
+                }
             }
         }
         return null;

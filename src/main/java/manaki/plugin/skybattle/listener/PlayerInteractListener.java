@@ -105,10 +105,9 @@ public class PlayerInteractListener implements Listener {
         var state = Games.getCurrentGame(player);
         if (state == null) return;
 
-        for (Player p : state.getPlayers()) {
-            if (killer != null) p.sendMessage("§f" + player.getName() + " §cbị hạ bởi §e" + killer.getName());
-            else p.sendMessage("§f" + player.getName() + " §cbị loại khỏi cuộc chơi");
-        }
+        var gm = Games.managerFromState(state);
+        if (gm == null) return;
+        gm.endBroadcast(player, killer);
     }
 
     // Survival on join

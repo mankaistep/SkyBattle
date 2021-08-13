@@ -27,14 +27,14 @@ public class GamePlaceholder extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, @NotNull String s) {
         try {
-            var state = Games.getCurrentGame(p);
+            var state = Games.getCurrentGame(p, true);
             if (state != null) {
                 var ps = state.getPlayerState(p.getName());
-                if (ps.isDead()) return "...";
+//                if (ps.isDead()) return "...";
                 switch (s) {
                     case "homtiepte":
                         var remain = Games.getSupplyRemain(state) - 1;
-                        if (remain == Integer.MAX_VALUE) return "Không còn";
+                        if (remain > 10000) return "Không còn";
                         return Utils.format(remain);
                     case "player_remain":
                         return state.getPlayers().size() + "";

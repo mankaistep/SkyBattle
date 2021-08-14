@@ -36,7 +36,7 @@ public class GamePlaceholder extends PlaceholderExpansion {
                         if (remain > 10000) return "Không còn";
                         return Utils.format(remain);
                     case "player_remain":
-                        return state.getPlayers().size() + "";
+                        return state.getAlivePlayers().size() + "";
                     case "player_max":
                         return state.getType().getPlayersInTeam() * 8 + "";
                     case "team_remain":

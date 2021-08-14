@@ -134,10 +134,7 @@ public class GameState {
                 // Check online
                 var p = Bukkit.getPlayer(pn);
                 if (p == null) continue;
-
-                // Check dead
-                var ps = this.getPlayerState(pn);
-                if (!ps.isDead()) players.add(p);
+                players.add(p);
             }
         }
         return players;
@@ -149,7 +146,7 @@ public class GameState {
             for (String pn : battleTeam.getPlayers()) {
                 var p = Bukkit.getPlayer(pn);
                 if (p == null) continue;
-                if (getPlayerState(p.getName()).isDead()) continue;
+                if (this.hasPlayerState(pn) && getPlayerState(p.getName()).isDead()) continue;
                 players.add(p);
             }
         }
@@ -241,6 +238,10 @@ public class GameState {
 
     public PlayerState getPlayerState(String name) {
         return this.playerStates.getOrDefault(name, new PlayerState(name, this, true));
+    }
+
+    public boolean hasPlayerState(String name) {
+        return this.playerStates.containsKey(name);
     }
 
     public boolean isRanked() {

@@ -131,9 +131,13 @@ public class GameState {
         List<Player> players = Lists.newArrayList();
         for (BattleTeam battleTeam : this.currentBattleTeams) {
             for (String pn : battleTeam.getPlayers()) {
+                // Check online
                 var p = Bukkit.getPlayer(pn);
                 if (p == null) continue;
-                players.add(p);
+
+                // Check dead
+                var ps = this.getPlayerState(pn);
+                if (!ps.isDead()) players.add(p);
             }
         }
         return players;

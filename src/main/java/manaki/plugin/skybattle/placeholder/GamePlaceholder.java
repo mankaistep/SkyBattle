@@ -30,7 +30,6 @@ public class GamePlaceholder extends PlaceholderExpansion {
             var state = Games.getCurrentGame(p, true);
             if (state != null) {
                 var ps = state.getPlayerState(p.getName());
-//                if (ps.isDead()) return "...";
                 switch (s) {
                     case "homtiepte":
                         var remain = Games.getSupplyRemain(state) - 1;

@@ -76,10 +76,10 @@ public class SupplyPendingTask extends APendingTask {
                 c.remove();
 
                 // Spawn
-                Shulker shulker = (Shulker) l.getWorld().spawnEntity(l.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.SHULKER);
+                Shulker shulker = (Shulker) l.getWorld().spawnEntity(c.getLocation().getBlock().getLocation().add(0.5, 0, 0.5), EntityType.SHULKER);
                 shulker.setAI(false);
                 shulker.setGlowing(true);
-                shulker.setCustomName("§cĐánh em đi");
+                shulker.setCustomName("§c§lĐánh em đi");
                 shulker.setCustomNameVisible(true);
 
                 ss.setShulker(shulker);

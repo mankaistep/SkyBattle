@@ -266,3 +266,14 @@ command:
       - '[opplayercmd] tiemren'
   win:
     - '{100} [title] You won the game;Congratulations!'
+  start:
+    - '{5} [mess] &7&l------------------------------------------'
+    - '{5} [mess] &r            &e&lSKYBATTLE'
+    - '{5} [mess] &r &6&l1. &eĐảo khởi đầu chứa các đồ cần thiết'
+    - '{5} [mess] &r &6&l2. &eKhu trung tâm chứa Trang bị Đỏ'
+    - '{5} [mess] &r &6&l3. &eClick vào Cái đe để mở Tiệm rèn'
+    - '{5} [mess] &7&l------------------------------------------'
+    - '{5} [sound] ENTITY_EXPERIENCE_ORB_PICKUP;1;1'
+    - '{5} [title] &e&lSkybattle;&fĐọc &ahướng dẫn &fở chat;0;30;10'
+    - '{45} [title] &c;&fCẩn thận, coi chừng &crớt void'
+    - '{45} [sound] UI_BUTTON_CLICK;1;1'

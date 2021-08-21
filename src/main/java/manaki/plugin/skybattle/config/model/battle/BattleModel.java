@@ -21,8 +21,9 @@ public class BattleModel {
     private final SupplyModel supplyChest;
     private final Map<Material, List<Command>> blockCommands;
     private final List<Command> winCommands;
+    private final List<Command> startCommands;
 
-    public BattleModel(String id, String mapId, String name, String bossId, int time, int mobSpawnAfter, SettingModel setting, MobModel mobModel, Map<String, List<ChestGroupItemModel>> chest, SupplyModel supplyChest, Map<Material, List<Command>> blockCommands, List<Command> winCommands) {
+    public BattleModel(String id, String mapId, String name, String bossId, int time, int mobSpawnAfter, SettingModel setting, MobModel mobModel, Map<String, List<ChestGroupItemModel>> chest, SupplyModel supplyChest, Map<Material, List<Command>> blockCommands, List<Command> winCommands, List<Command> startCommands) {
         this.id = id;
         this.mapId = mapId;
         this.name = name;
@@ -35,6 +36,7 @@ public class BattleModel {
         this.supplyChest = supplyChest;
         this.blockCommands = blockCommands;
         this.winCommands = winCommands;
+        this.startCommands = startCommands;
     }
 
     public String getId() {
@@ -85,4 +87,7 @@ public class BattleModel {
         return winCommands;
     }
 
+    public List<Command> getStartCommands() {
+        return startCommands;
+    }
 }

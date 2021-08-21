@@ -20,6 +20,7 @@ import manaki.plugin.skybattle.game.state.result.PlayerResult;
 import manaki.plugin.skybattle.team.BattleTeam;
 import manaki.plugin.skybattle.util.Tasks;
 import manaki.plugin.skybattle.util.Utils;
+import manaki.plugin.skybattle.util.command.Command;
 import manaki.plugin.skybattle.world.WorldState;
 import me.manaki.plugin.shops.storage.ItemStorage;
 import org.bukkit.*;
@@ -121,19 +122,21 @@ public class Games {
                     for (Map.Entry<BattleTeam, String> e : teamLocations.entrySet()) {
                         var team = e.getKey();
                         var lid = e.getValue();
+                        var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
                         for (String pn : team.getPlayers()) {
                             var p = Bukkit.getPlayer(pn);
                             if (p == null) continue;
-                            var l = mm.getLocation(lid).toLocation(finalWorldState.toWorld());
                             p.teleport(l);
 
-                            p.sendTitle("§a§lBắt đầu!", "§fTrên đảo luôn có 3 rương", 10, 80, 10);
-                            p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+                            // Start commands
+                            for (Command cmd : bm.getStartCommands()) {
+                                cmd.execute(SkyBattle.get(), p, Map.of("%player%", p.getName()));
+                            }
                         }
                     }
 
                     // Start tasks
-                    Tasks.sync(state::startTasks, 20);
+                    Tasks.sync(state::startTasks, 40);
                 }, 40);
             }
         }.runTaskTimer(plugin, 0, 10);

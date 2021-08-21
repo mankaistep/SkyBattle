@@ -166,9 +166,10 @@ public class Readers {
             blockCommands.put(m, cmds);
         }
         List<Command> winCommands = config.getStringList("command.win").stream().map(Command::new).collect(Collectors.toList());
+        List<Command> startCommands = config.getStringList("command.start").stream().map(Command::new).collect(Collectors.toList());
         int mobSpawnAfter = config.getInt("mob-spawn-after", 60);
 
-        return new BattleModel(id, mapId, name, boss, time, mobSpawnAfter, sm, mm, chest, supplyModel, blockCommands, winCommands);
+        return new BattleModel(id, mapId, name, boss, time, mobSpawnAfter, sm, mm, chest, supplyModel, blockCommands, winCommands, startCommands);
     }
 
 }

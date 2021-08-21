@@ -106,7 +106,7 @@ public class GameManager {
     public void finish(boolean instantly) {
         // Istant stop
         if (instantly) {
-            for (var p : state.getPlayers()) {
+            for (var p : state.getWorldState().toWorld().getPlayers()) {
                 Utils.toSpawn(p);
             }
             this.clean(true);
@@ -144,6 +144,7 @@ public class GameManager {
 
                     if (team != null) {
                         for (Player p : team.getOnlinePlayers()) {
+                            if (p.getWorld() != state.getWorldState().toWorld()) continue;
                             p.sendActionBar(new TextComponent("§a§lTự động rời sau §c§l" + seconds + " giây"));
                         }
                     }
@@ -157,6 +158,7 @@ public class GameManager {
                         Tasks.sync(() -> {
                             if (team == null) return;
                             for (Player p : team.getOnlinePlayers()) {
+                                if (p.getWorld() != state.getWorldState().toWorld()) continue;
                                 Games.backToMainServer(p);
                             }
                         });
